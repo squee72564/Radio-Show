@@ -1,6 +1,6 @@
-import { Calendar, LayoutDashboard, Music, Settings, Archive, LucideProps } from "lucide-react";
-import { ForwardRefExoticComponent, JSX, RefAttributes } from "react";
+import { FileQuestionIcon, Calendar, LayoutDashboard, Music, Settings, Archive, type LucideIcon } from "lucide-react";
 import { SettingsSheet } from "./settings-sheet";
+import { AboutCollapsible } from "./about-collapsible";
 import Link from "next/link"
 
 import {
@@ -12,14 +12,21 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/components/ui/sidebar"
 
+interface SidebarComponentProps {
+  Title: string;
+  Items?: { title: string; url: string }[];
+  Icon: LucideIcon;
+}
 
 interface SidebarItems {
   title: string;
   url?: string;
-  icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
-  component?: JSX.Element | (() => JSX.Element);
+  icon: LucideIcon;
+  component?: React.ComponentType<SidebarComponentProps>
+  items?: {title: string, url:string }[];
 };
 
 const items: SidebarItems[] = [
@@ -44,8 +51,27 @@ const items: SidebarItems[] = [
     icon: Calendar,
   },
   {
+    title: "More Information",
+    component: AboutCollapsible,
+    items : [
+      {
+        title: "About",
+        url: "/about",
+      },
+            {
+        title: "Want to DJ?",
+        url: "/join",
+      },
+            {
+        title: "Contact",
+        url: "/contact",
+      },
+    ],
+    icon: FileQuestionIcon
+  },
+  {
     title: "Settings",
-    component: SettingsSheet, // use component reference, not JSX here
+    component: SettingsSheet,
     icon: Settings,
   },
 ];
@@ -59,31 +85,37 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="gap-5">
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                  {item.url ? (
-                    <Link href={item.url} className="flex items-center gap-2">
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
+                  item.url ? (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton tooltip={item.title} asChild>
+                        <Link href={item.url} className="flex items-center gap-2">
+                          {item.icon && <item.icon />}
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
                   ) : item.component ? (
-                    <div className="flex items-center gap-2">
-                      {typeof item.component === "function" ? <item.component /> : item.component}
-                    </div>
+                    <item.component key={item.title} Items={item.items} Title={item.title} Icon={item.icon} />
                   ) : (
-                    <div>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </div>
-                  )}
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton tooltip={item.title} asChild>
+                        <div>
+                          {item.icon && <item.icon />}
+                          <span>{item.title}</span>
+                        </div>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
               ))}
+              <SidebarMenuItem className="pt-auto">
+                <SidebarMenuButton tooltip={"Toggle Sidebar"} asChild>
+                  <SidebarTrigger/>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-
     </Sidebar>
   )
 }

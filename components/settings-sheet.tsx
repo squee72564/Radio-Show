@@ -1,8 +1,5 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -11,35 +8,49 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 
-import { Settings } from "lucide-react"
+import {
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar"
+
+import { type LucideIcon } from "lucide-react"
 import { ModeToggle } from "@/components/theme-toggle";
 
-export function SettingsSheet() {
+export function SettingsSheet({
+  Icon,
+  Title
+}: {
+  Items?: {title: string, url:string }[],
+  Title: string,
+  Icon: LucideIcon
+}) {
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-      <button className="sidebar-button flex items-center gap-2 w-full">
-        <Settings size={16} />
-        <span className="settings-text">Settings</span>
-      </button>
-      </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here.
-          </SheetDescription>
-        </SheetHeader>
-          <div className="mx-auto">
-            <span>Change Theme </span>
-            <ModeToggle/>
-          </div>
-        <SheetFooter>
-          {/* <SheetClose asChild>
-            <Button type="submit">Save changes</Button>
-          </SheetClose> */}
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+    <SidebarMenuItem>
+      <Sheet>
+        <SheetTrigger asChild>
+        <SidebarMenuButton tooltip={Title} >
+          <Icon />
+          <span className="settings-text">{Title}</span>
+        </SidebarMenuButton>
+        </SheetTrigger>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Edit profile</SheetTitle>
+            <SheetDescription>
+              Make changes to your profile here.
+            </SheetDescription>
+          </SheetHeader>
+            <div className="mx-auto">
+              <span>Change Theme </span>
+              <ModeToggle/>
+            </div>
+          <SheetFooter>
+            {/* <SheetClose asChild>
+              <Button type="submit">Save changes</Button>
+            </SheetClose> */}
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    </SidebarMenuItem>
   )
 }

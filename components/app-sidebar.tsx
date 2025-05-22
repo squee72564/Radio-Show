@@ -1,5 +1,5 @@
 import { Calendar, LayoutDashboard, Music, Settings, Archive } from "lucide-react"
-
+import { ModeToggle } from "@/components/theme-toggle";
 import Link from "next/link"
 
 import {
@@ -43,7 +43,7 @@ const items = [
 
 export function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="flex justify-center text-center mb-10 font-bold text-lg">Radio Show</SidebarGroupLabel>
@@ -58,11 +58,12 @@ export function AppSidebar() {
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              ))}
+              ))}                
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
     </Sidebar>
   )
 }

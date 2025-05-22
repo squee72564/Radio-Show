@@ -1,5 +1,6 @@
-import { Calendar, LayoutDashboard, Music, Settings, Archive } from "lucide-react"
-import { ModeToggle } from "@/components/theme-toggle";
+import { Calendar, LayoutDashboard, Music, Settings, Archive, LucideProps } from "lucide-react";
+import { ForwardRefExoticComponent, JSX, RefAttributes } from "react";
+import { SettingsSheet } from "./settings-sheet";
 import Link from "next/link"
 
 import {
@@ -13,11 +14,19 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-const items = [
+
+interface SidebarItems {
+  title: string;
+  url?: string;
+  icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
+  component?: JSX.Element | (() => JSX.Element);
+};
+
+const items: SidebarItems[] = [
   {
     title: "Dashboard",
     url: "/dashboard",
-    icon: LayoutDashboard
+    icon: LayoutDashboard,
   },
   {
     title: "Live Radio",
@@ -36,10 +45,10 @@ const items = [
   },
   {
     title: "Settings",
-    url: "#",
+    component: SettingsSheet, // use component reference, not JSX here
     icon: Settings,
   },
-]
+];
 
 export function AppSidebar() {
   return (
@@ -52,13 +61,24 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link href={item.url}>
+                  {item.url ? (
+                    <Link href={item.url} className="flex items-center gap-2">
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
+                  ) : item.component ? (
+                    <div className="flex items-center gap-2">
+                      {typeof item.component === "function" ? <item.component /> : item.component}
+                    </div>
+                  ) : (
+                    <div>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </div>
+                  )}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              ))}                
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

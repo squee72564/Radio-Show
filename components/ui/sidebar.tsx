@@ -276,9 +276,9 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <PanelLeftIcon />
+      <PanelLeftIcon className="mr-auto"/>
       {open && (
-        <span className="w-full settings-text">Close Sidebar</span>
+        <span className="w-full">Close Sidebar</span>
       )}
     </Button>
   )

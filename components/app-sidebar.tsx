@@ -81,7 +81,11 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="flex justify-center text-center mb-10 font-bold text-lg">Radio Show</SidebarGroupLabel>
+          <SidebarGroupLabel className="flex justify-center text-center mb-10 font-bold text-lg">
+            <Link href={"/"}>
+              Radio Show
+            </Link>
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-5">
               {items.map((item) => (

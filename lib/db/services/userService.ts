@@ -16,7 +16,7 @@ export async function findAllUsers() {
   return prisma.user.findMany();
 }
 
-export async function createUser(data: { email: string; name?: string }) {
+export async function createUser(data: { email: string; name: string, password: string }) {
   return prisma.user.create({ data });
 }
 
@@ -33,6 +33,7 @@ function generateRandomString(length: number): string {
 export async function createdUserIncrement() {
   const randName = generateRandomString(12);
   const randEmail = generateRandomString(8) + "@" + generateRandomString(3) + ".com";
-  const data: { email: string; name: string } = { email: randEmail, name: randName,};
+  const randPass = generateRandomString(12);
+  const data: { email: string; name: string, password:string } = { email: randEmail, name: randName, password: randPass};
   return prisma.user.create({ data });
 }

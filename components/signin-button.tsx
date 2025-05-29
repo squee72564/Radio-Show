@@ -1,4 +1,3 @@
-// components/SignInButton.tsx
 import { LucideIcon } from "lucide-react";
 import { SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
 import { signIn, signOut } from "@/auth";

@@ -90,9 +90,9 @@ export async function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="flex justify-center text-center mb-10 font-bold text-lg">
+          <SidebarGroupLabel className="flex justify-center text-center min-h-15 font-bold text-lg">
             <Link href={"/"}>
-              Radio Show
+              <span className="font-bold">Radio Show</span>
             </Link>
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -136,7 +136,7 @@ export async function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         { signedIn ? 
-          <UserNav user={{name: user.name ?? "Anon", email: user.email ?? "", avatar: user.image ?? "" }} /> :
+          <UserNav user={{name: user.name ?? "Anon", email: user.email ?? "", avatar: user.image ?? "", id: user.id ?? ""}} /> :
           <AnonNav />
         }
       </SidebarFooter>

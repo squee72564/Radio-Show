@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { findAllUsers } from "@/lib/db/services/userService";
 
 import { deleteUsers } from "@/lib/db/actions/userActions";
+import Link from "next/link";
 
 export default async function Dashboard() {
   const users = await findAllUsers();
@@ -18,7 +19,11 @@ export default async function Dashboard() {
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       {users && users.map((user, idx) => (
         <div key={idx}>
-          {user.name} - {user.email} - {user.name} - {user.id}
+          <Link
+            href={`/user/${user.id}`}
+          >
+            {user.name} - {user.email} - {user.name} - {user.id}
+          </Link>
         </div>
       ))}
     </div>

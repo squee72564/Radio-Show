@@ -35,9 +35,9 @@ export function SettingsSheet({
         </SheetTrigger>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Edit profile</SheetTitle>
+            <SheetTitle>Settings</SheetTitle>
             <SheetDescription>
-              Make changes to your profile here.
+              Changes will automatically be applied.
             </SheetDescription>
           </SheetHeader>
             <div className="mx-auto">

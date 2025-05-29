@@ -9,3 +9,7 @@ export async function listUsers() {
 export async function deleteUsers() {
   return userService.deleteAllUsers();
 }
+
+export async function findUserById(id: string) {
+  return userService.findUserById(id);
+}

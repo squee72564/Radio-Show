@@ -92,7 +92,7 @@
          If you don't want this, comment out the following line or read up on CORS.
     -->
     <http-headers>
-        <header type="cors" name="Access-Control-Allow-Origin" value="*"/>
+        <header type="cors" name="Access-Control-Allow-Origin" value="localhost:3000"/>
         <header type="cors" name="Access-Control-Allow-Headers" value="GET, OPTIONS, HEAD" />
         <header type="cors" name="Access-Control-Expose-Headers" value="Content-Type"/>
     </http-headers>
@@ -156,19 +156,6 @@
          All <mount> sections below are disabled by default,
          to activate them remove the comment markers around them and reload.
     -->
-
-    <mount>
-        <mount-name>/live</mount-name>
-        <password>sourcepassword123</password>
-        <max-listeners>200</max-listeners>
-        <public>1</public>
-        <file-name>/tmp/icecast-archives/live-%Y-%m-%d-%H%M.mp3</file-name>
-        <http-headers>
-            <header type="cors" name="Access-Control-Allow-Origin" value="*"/>
-            <header type="cors" name="Access-Control-Allow-Headers" value="GET, OPTIONS, HEAD" />
-            <header type="cors" name="Access-Control-Expose-Headers" value="Content-Type"/>
-        </http-headers>
-    </mount>
 
     <!-- Default settings for all mounts that don't have a specific <mount type="normal">.
     -->

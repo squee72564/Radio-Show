@@ -98,7 +98,7 @@ const audioCtxRef = useRef<AudioContext | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(100);
 
-  const togglePlay = () => {
+  const togglePlay = async () => {
     const audio = audioRef.current;
     if (!audio) return;
 
@@ -108,8 +108,12 @@ const audioCtxRef = useRef<AudioContext | null>(null);
     }
 
     if (audio.paused) {
-      audio.play();
-      setIsPlaying(true);
+      try {
+        await audio.play();
+        setIsPlaying(true);
+      } catch (err) {
+        console.warn("Play interrupted: ", err);
+      }
     } else {
       audio.pause();
       setIsPlaying(false);

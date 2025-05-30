@@ -7,19 +7,16 @@ export const metadata: Metadata = {
   title: "Live",
 };
 
-export default async function Live() {
+export default function Live() {
 
   return (
-    <div className="flex flex-col items-center pt-20 min-h-screen w-full">
-      <h1 className="text-3xl font-bold">Live Stream</h1>
-      <Card className="w-full max-w-xl shadow-xl border-muted mt-20">
+    <div className="flex flex-col items-center pt-20 px-4 min-h-screen w-full">
+      <Card className="mt-12 w-full max-w-2xl shadow-xl border-muted">
         <CardHeader className="flex items-center gap-2">
           <Volume2 className="text-primary" />
-          <CardTitle className="text-2xl font-semibold tracking-tight">
-            Now Playing
-          </CardTitle>
+          <CardTitle className="text-2xl font-semibold tracking-tight">Now Playing</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col items-center gap-4">
+        <CardContent className="flex flex-col items-center justify-center p-4">
           <LiveStreamPlayer />
         </CardContent>
       </Card>

@@ -6,7 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
 
-import Link from "next/link";
+import { PlayIcon, PauseIcon, LoaderIcon } from "lucide-react";
 
 function WaveformVisualizer({
   audioRef,
@@ -15,15 +15,23 @@ function WaveformVisualizer({
   audioRef: React.RefObject<HTMLAudioElement | null>;
   audioCtxRef: React.RefObject<AudioContext | null>;
 }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const [isTimeDomain, setIsTimeDomain] = useState(true);
+  const modeRef = useRef(true); // <-- holds latest mode
+
+  // Sync ref with state
+  useEffect(() => {
+    modeRef.current = isTimeDomain;
+  }, [isTimeDomain]);
 
   useEffect(() => {
     const audio = audioRef.current;
     const canvas = canvasRef.current;
     const canvasCtx = canvas?.getContext("2d");
 
-    if (!audio || !canvasCtx) return;
+    if (!audio || !canvas || !canvasCtx) return;
 
     if (!audioCtxRef.current) {
       audioCtxRef.current = new AudioContext();
@@ -35,68 +43,94 @@ function WaveformVisualizer({
       sourceRef.current = audioCtx.createMediaElementSource(audio);
     }
 
-    const source = sourceRef.current;
-    const analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 2048;
-    source.connect(analyser);
-    analyser.connect(audioCtx.destination);
+    if (!analyserRef.current) {
+      const analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 2048;
+      sourceRef.current.connect(analyser);
+      analyser.connect(audioCtx.destination);
+      analyserRef.current = analyser;
+    }
 
-    const bufferLength = analyser.fftSize;
+    const analyser = analyserRef.current;
+    const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
 
     const draw = () => {
-
-      if (!canvas) return;
-
       requestAnimationFrame(draw);
-      analyser.getByteTimeDomainData(dataArray);
-
-      canvasCtx.clearRect(0, 0, canvas?.width, canvas?.height);
+      canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
       canvasCtx.lineWidth = 2;
       canvasCtx.strokeStyle = "#4F45E5";
 
-      canvasCtx.beginPath();
-      const sliceWidth = canvas.width / bufferLength;
-      let x = 0;
-
-      for (let i = 0; i < bufferLength; i++) {
-        const v = dataArray[i] / 128.0;
-        const y = (v * canvas.height) / 2;
-
-        if (i === 0) {
-          canvasCtx.moveTo(x, y);
-        } else {
-          canvasCtx.lineTo(x, y);
+      if (modeRef.current) {
+        analyser.getByteTimeDomainData(dataArray);
+        const sliceWidth = canvas.width / bufferLength;
+        let x = 0;
+        canvasCtx.beginPath();
+        for (let i = 0; i < bufferLength; i++) {
+          const v = dataArray[i] / 128.0;
+          const y = (v * canvas.height) / 2;
+          if (i === 0) canvasCtx.moveTo(x, y);
+          else canvasCtx.lineTo(x, y);
+          x += sliceWidth;
         }
-
-        x += sliceWidth;
+        canvasCtx.lineTo(canvas.width, canvas.height / 2);
+        canvasCtx.stroke();
+      } else {
+        analyser.getByteFrequencyData(dataArray);
+        const barWidth = (canvas.width / bufferLength) * 2.5;
+        let x = 0;
+        for (let i = 0; i < bufferLength; i++) {
+          const barHeight = (dataArray[i] / 255) * canvas.height;
+          const y = canvas.height - barHeight;
+          canvasCtx.fillStyle = "#4F45E5";
+          canvasCtx.fillRect(x, y, barWidth, barHeight);
+          x += barWidth + 1;
+        }
       }
-
-      canvasCtx.lineTo(canvas.width, canvas.height / 2);
-      canvasCtx.stroke();
     };
 
     draw();
+  }, []);
 
-    return () => {
-      try {
-        analyser.disconnect();
-        source.disconnect();
-        audioCtx.suspend();
-      } catch (e) {
-        console.warn("Cleanup error:", e);
-      }
-    };
-  }, [audioRef]);
-
-  return <canvas ref={canvasRef} className="w-full h-24 rounded-md bg-secondary border border-border" />;
+  return (
+    <div className="w-full flex flex-col items-center gap-2">
+      <canvas
+        ref={canvasRef}
+        className="w-full max-w-full aspect-[4/1] rounded-md bg-secondary border border-border"
+      />
+      <Button
+        className="p-1 text-xs"
+        variant="outline"
+        onClick={() => setIsTimeDomain((prev) => !prev)}
+      >
+        View: {isTimeDomain ? "Time Domain" : "Frequency Domain"}
+      </Button>
+    </div>
+  );
 }
 
 function CustomPlayer({ streamUrl }: { streamUrl: string }) {
 const audioRef = useRef<HTMLAudioElement>(null);
 const audioCtxRef = useRef<AudioContext | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(100);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [volume, setVolume] = useState<number>(100);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleCanPlay = () => setIsLoading(false);
+    const handleLoadStart = () => setIsLoading(true);
+
+    audio.addEventListener("canplay", handleCanPlay);
+    audio.addEventListener("loadstart", handleLoadStart);
+
+    return () => {
+      audio.removeEventListener("canplay", handleCanPlay);
+      audio.removeEventListener("loadstart", handleLoadStart);
+    };
+  }, [streamUrl]);
 
   const togglePlay = async () => {
     const audio = audioRef.current;
@@ -128,12 +162,14 @@ const audioCtxRef = useRef<AudioContext | null>(null);
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 w-full max-w-md bg-muted p-4 rounded-xl shadow">
+    <div className="flex flex-col items-center w-full gap-4 bg-muted p-4 rounded-xl shadow">
       {audioRef && <WaveformVisualizer audioRef={audioRef} audioCtxRef={audioCtxRef} />}
-      <Button onClick={togglePlay}>
-        {isPlaying ? "Pause" : "Play"}
+      
+      <Button onClick={togglePlay} disabled={isLoading}>
+        {isLoading ? <LoaderIcon/> : isPlaying ? <PauseIcon/> : <PlayIcon/>}
       </Button>
-      <div className="flex flex-col w-full gap-2">
+      
+      <div className="w-full">
         <label htmlFor="volume" className="text-sm text-muted-foreground">
           Volume: {volume}%
         </label>
@@ -147,6 +183,7 @@ const audioCtxRef = useRef<AudioContext | null>(null);
           onValueChange={changeVolume}
         />
       </div>
+
       <audio ref={audioRef} src={streamUrl} autoPlay />
     </div>
   );
@@ -155,40 +192,47 @@ const audioCtxRef = useRef<AudioContext | null>(null);
 
 export default function LiveStreamPlayer() {
   const [streamUrl, setStreamUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const icecastUrl = "http://localhost:3000/api/live"
+  const [loading, setLoading] = useState<boolean>(true);
+  const icecastUrl: string = "http://localhost:3000/api/live"
+  
   useEffect(() => {
-    fetch(icecastUrl, { method: "HEAD" })
-      .then((res) => {
-        if (res.ok && res.headers.get("content-type")?.includes("audio")) {
-          setStreamUrl(icecastUrl);
-        } else {
-          throw new Error("No live stream at this time.");
-        }
-      })
-      .catch(() => {
-        setStreamUrl(null);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    let intervalId: NodeJS.Timeout;
+
+    const checkStream = () => {
+      fetch(icecastUrl, { method: "HEAD" })
+        .then((res) => {
+          const isAudio = res.ok && res.headers.get("content-type")?.includes("audio");
+          setStreamUrl(isAudio ? icecastUrl : null);
+        })
+        .catch(() => setStreamUrl(null))
+        .finally(() => setLoading(false));
+    };
+
+    checkStream(); // Initial check
+    intervalId = setInterval(checkStream, 15000); // Check every 15 seconds
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
   }, []);
+
 
   return (
     <>
       {loading ? (
-      <Skeleton className="w-full min-w-110 min-h-23 h-12 rounded-md" />
+      <Skeleton className=" w-full aspect-[4/1] rounded-md" />
     ) : streamUrl ? (
       <CustomPlayer streamUrl={icecastUrl}/>
     ) : (
-      <Alert variant="default" className="min-w-110">
+      <Alert variant="default" className="w-full aspect-[4/1]">
         <AlertTitle>No Live Stream</AlertTitle>
-        <AlertDescription>
-          There’s nothing live right now. Check back later or browse the <Link className="inline" href="/archive">archives</Link>
+        <AlertDescription className="text-base">
+          <p className="text-center w-full">
+            There’s nothing live right now. Check back later or browse the
+              <a className="text-blue-700/80" href="/archive"> archives</a>
+            .
+          </p>
         </AlertDescription>
       </Alert>
     )}
     </>
-
   );
 }

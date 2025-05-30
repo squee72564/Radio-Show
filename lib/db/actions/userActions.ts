@@ -1,6 +1,6 @@
 'use server';
 
-import * as userService from "../services/userService";
+import * as userService from "@/lib/db/services/userService";
 
 export async function listUsers() {
   return userService.findAllUsers();

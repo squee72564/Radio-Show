@@ -9,7 +9,6 @@ interface ArchiveTestInterface {
 };
 
 export default async function ArchiveList() {
-await new Promise((resolve) => setTimeout(resolve, 3000));
   const archives: ArchiveTestInterface[] = [
     {
       name: "Archive 1",

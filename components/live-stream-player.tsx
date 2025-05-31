@@ -7,6 +7,7 @@ import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
 
 import { PlayIcon, PauseIcon, LoaderIcon } from "lucide-react";
+import { Badge } from "./ui/badge";
 
 function WaveformVisualizer({
   audioRef,
@@ -18,10 +19,9 @@ function WaveformVisualizer({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
-  const [isTimeDomain, setIsTimeDomain] = useState(true);
-  const modeRef = useRef(true); // <-- holds latest mode
+  const [isTimeDomain, setIsTimeDomain] = useState<boolean>(true);
+  const modeRef = useRef<boolean>(true);
 
-  // Sync ref with state
   useEffect(() => {
     modeRef.current = isTimeDomain;
   }, [isTimeDomain]);
@@ -136,7 +136,6 @@ const audioCtxRef = useRef<AudioContext | null>(null);
     const audio = audioRef.current;
     if (!audio) return;
 
-    // Resume AudioContext on user gesture
     if (audioCtxRef.current?.state === "suspended") {
       audioCtxRef.current.resume();
     }
@@ -170,9 +169,9 @@ const audioCtxRef = useRef<AudioContext | null>(null);
       </Button>
       
       <div className="w-full">
-        <label htmlFor="volume" className="text-sm text-muted-foreground">
+        <Badge variant={"outline"} className="text-sm text-muted-foreground mb-1">
           Volume: {volume}%
-        </label>
+        </Badge>
         <Slider
           id="volume"
           defaultValue={[100]}
@@ -184,7 +183,7 @@ const audioCtxRef = useRef<AudioContext | null>(null);
         />
       </div>
 
-      <audio ref={audioRef} src={streamUrl} autoPlay />
+      <audio ref={audioRef} src={streamUrl} />
     </div>
   );
 }
@@ -208,10 +207,10 @@ export default function LiveStreamPlayer() {
         .finally(() => setLoading(false));
     };
 
-    checkStream(); // Initial check
-    intervalId = setInterval(checkStream, 15000); // Check every 15 seconds
+    checkStream();
+    intervalId = setInterval(checkStream, 10000);
 
-    return () => clearInterval(intervalId); // Cleanup on unmount
+    return () => clearInterval(intervalId);
   }, []);
 
 

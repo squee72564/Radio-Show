@@ -26,7 +26,7 @@ export default async function UserProfilePage({
       <Card className="flex items-center gap-6 p-6">
         <Avatar className="h-20 w-20">
           {userProfileInfo?.image && <AvatarImage src={userProfileInfo?.image} />}
-          <AvatarFallback>ANON</AvatarFallback>
+          <AvatarFallback>{userProfileInfo?.name?.charAt(0) ?? "?"}</AvatarFallback>
         </Avatar>
         {user && user.id === userProfileInfo?.id &&
           <Button className="absolute top-6 right-6 mr-5 mt-5" variant="secondary">

@@ -1,31 +1,38 @@
-"use server";
+import type { Metadata } from "next";
 
-import { auth } from "@/auth";
-import { findAllUsers } from "@/lib/db/services/userService";
+import RecentUsers from "@/components/recent-users";
+import RecentArchives from "@/components/recent-archives";
+import NextShow from "@/components/next-show";
+import { Suspense } from "react";
+import RecentUsersSkeleton from "@/components/recent-users-skeleton";
+import RecentArchivesSkeleton from "@/components/recent-archives-skeleton";
+import NextShowSkeleton from "@/components/next-show-skeleton";
 
-import { deleteUsers } from "@/lib/db/actions/userActions";
-import Link from "next/link";
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
 
 export default async function Dashboard() {
-  const users = await findAllUsers();
-
-  const session = await auth();
-  const user = session?.user;
-  const signedIn = !!user;
-
-  console.log(user);
-
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      {users && users.map((user, idx) => (
-        <div key={idx}>
-          <Link
-            href={`/user/${user.id}`}
-          >
-            {user.name} - {user.email} - {user.name} - {user.id}
-          </Link>
-        </div>
-      ))}
-    </div>
+    <main className="min-h-screen px-6 py-12 sm:px-16 bg-background text-foreground font-sans w-full">
+      <div className="max-w-6xl mx-auto mb-12">
+        <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
+      </div>
+
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+        <Suspense fallback={<RecentUsersSkeleton/>}>
+          <RecentUsers/>
+        </Suspense>
+
+        <Suspense fallback={<RecentArchivesSkeleton />}>
+          <RecentArchives/>
+        </Suspense>
+
+        <Suspense fallback={<NextShowSkeleton />}>
+          <NextShow/>
+        </Suspense>
+
+      </div>
+    </main>
   );
 }

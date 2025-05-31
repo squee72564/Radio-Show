@@ -218,21 +218,21 @@ export default function LiveStreamPlayer() {
   return (
     <>
       {loading ? (
-      <Skeleton className=" w-full aspect-[4/1] rounded-md" />
-    ) : streamUrl ? (
-      <CustomPlayer streamUrl={icecastUrl}/>
-    ) : (
-      <Alert variant="default" className="w-full aspect-[4/1]">
-        <AlertTitle>No Live Stream</AlertTitle>
-        <AlertDescription className="text-base">
-          <p className="text-center w-full">
-            There’s nothing live right now. Check back later or browse the
-              <a className="text-blue-700/80" href="/archive"> archives</a>
-            .
-          </p>
-        </AlertDescription>
-      </Alert>
-    )}
+        <Skeleton className=" w-full aspect-[4/1] rounded-md" />
+      ) : streamUrl ? (
+        <CustomPlayer streamUrl={icecastUrl}/>
+      ) : (
+        <Alert variant="default" className="w-full aspect-[4/1]">
+          <AlertTitle>No Live Stream</AlertTitle>
+          <AlertDescription className="text-base">
+            <p className="text-center w-full">
+              There’s nothing live right now. Check back later or browse the
+                <a className="text-blue-700/80" href="/archive"> archives</a>
+              .
+            </p>
+          </AlertDescription>
+        </Alert>
+      )}
     </>
   );
 }

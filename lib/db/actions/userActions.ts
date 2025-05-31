@@ -13,3 +13,7 @@ export async function deleteUsers() {
 export async function findUserById(id: string) {
   return userService.findUserById(id);
 }
+
+export async function findRecentUsers(count: number) {
+  return userService.findRecentUsers(count);
+}

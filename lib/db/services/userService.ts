@@ -15,3 +15,12 @@ export async function findUserByEmail(email: string) {
 export async function findAllUsers() {
   return prisma.user.findMany();
 }
+
+export async function findRecentUsers(count: number) {
+  return prisma.user.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: count,
+  });
+}

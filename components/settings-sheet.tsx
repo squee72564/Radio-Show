@@ -40,7 +40,7 @@ export function SettingsSheet({
               Changes will automatically be applied.
             </SheetDescription>
           </SheetHeader>
-            <div className="mx-auto">
+            <div className="flex flex-row  justify-center items-center gap-10 w-full">
               <span>Change Theme </span>
               <ModeToggle/>
             </div>

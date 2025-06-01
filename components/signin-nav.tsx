@@ -22,7 +22,9 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { MoreVerticalIcon, UserCircleIcon, LogIn, LogOut } from "lucide-react"
+import { User } from "next-auth";
 import Link from "next/link"
+import { JSX } from "react";
 
 const signInFnAsync = async () => {
   "use server";
@@ -34,12 +36,9 @@ const signOutFnAsync = async () => {
   await signOut();
 };
 
-export async function SignInOutNav() {
-  const session = await auth();
-  const user = session?.user;
+const UserInfo = ({user}: {user: User | undefined}): JSX.Element => {
   const signedIn = user !== undefined;
-
-  const userJSX = (
+  return (
     <>
       <Avatar className="h-8 w-8 rounded-lg">
         {signedIn ? (
@@ -59,6 +58,12 @@ export async function SignInOutNav() {
       </div>
     </>
   );
+};
+
+export async function SignInOutNav() {
+  const session = await auth();
+  const user = session?.user;
+  const signedIn = user !== undefined;
   
   return (
     <SidebarMenu>
@@ -69,7 +74,7 @@ export async function SignInOutNav() {
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                {userJSX}
+                <UserInfo user={user}/>
                 <MoreVerticalIcon className="ml-auto size-4" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
@@ -81,7 +86,7 @@ export async function SignInOutNav() {
             >
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  {userJSX}
+                  <UserInfo user={user}/>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />

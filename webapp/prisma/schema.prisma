@@ -458,27 +458,6 @@ model StreamRecording {
   @@index([status])
 }
 
-model NowPlaying {
-  id          String   @id // Singleton record, typically "main"
-  
-  // Current content
-  type        PlayingType
-  sessionId   String?
-  archiveId   String?
-  
-  // Timing
-  startedAt   DateTime?
-  duration    Int?      // Total duration in seconds
-  position    Int?      // Current position in seconds
-  
-  // Listener stats
-  listeners   Int       @default(0)
-  
-  updatedAt   DateTime  @updatedAt
-  
-  @@index([type])
-}
-
 // ============================================================================
 // ARCHIVE MODELS
 // ============================================================================
@@ -508,7 +487,6 @@ model StreamArchive {
   alternativeFormats Json? // { "ogg": "url", "m4a": "url", "flac": "url" }
   
   // Visual data
-  waveformData   Json?    // For visual representation
   thumbnailUrl   String?  // Waveform thumbnail
   
   // Processing status
@@ -533,137 +511,6 @@ model StreamArchive {
   @@index([isPublic])
   @@index([playCount])
   @@index([createdAt])
-}
-
-model FallbackPlaylist {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  
-  // Playlist behavior
-  playOrder   PlayOrder @default(WEIGHTED_RANDOM)
-  shuffle     Boolean   @default(true)
-  crossfade   Int       @default(3) // seconds
-  
-  // Filtering
-  categories  Json?     // Array of category IDs to include
-  tags        Json?     // Array of tag names to include
-  minDuration Int?      // Minimum track duration
-  maxDuration Int?      // Maximum track duration
-  
-  // Status
-  isActive    Boolean   @default(true)
-  isDefault   Boolean   @default(false) // Default fallback playlist
-  
-  // Items
-  items       FallbackPlaylistItem[]
-  
-  // Usage stats
-  totalPlays  Int       @default(0)
-  lastPlayed  DateTime?
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  @@index([isActive, isDefault])
-}
-
-model FallbackPlaylistItem {
-  id          String   @id @default(cuid())
-  
-  playlistId  String
-  playlist    FallbackPlaylist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
-  
-  archiveId   String
-  archive     StreamArchive @relation(fields: [archiveId], references: [id], onDelete: Cascade)
-  
-  // Playlist position
-  position    Int
-  weight      Int      @default(1) // For weighted random selection
-  
-  // Override metadata (optional)
-  customTitle String?
-  fadeIn      Int?     // Custom fade in duration
-  fadeOut     Int?     // Custom fade out duration
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  @@unique([playlistId, archiveId])
-  @@index([playlistId, position])
-  @@index([weight])
-}
-
-// ============================================================================
-// NOTIFICATION MODELS
-// ============================================================================
-
-model Notification {
-  id          String   @id @default(cuid())
-  
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // Notification content
-  type        NotificationType
-  title       String
-  message     String
-  
-  // Related entities
-  streamId    String?
-  sessionId   String?
-  archiveId   String?
-  
-  // Additional data
-  data        Json?
-  
-  // Status
-  isRead      Boolean  @default(false)
-  readAt      DateTime?
-  
-  // Delivery
-  channels    Json     // Array of delivery channels used
-  deliveredAt DateTime?
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  @@index([userId, isRead])
-  @@index([type])
-  @@index([createdAt])
-}
-
-model NotificationSubscription {
-  id          String   @id @default(cuid())
-  
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // Subscription preferences
-  streamReminders    Boolean @default(true)
-  streamStart        Boolean @default(true)
-  streamEnd          Boolean @default(false)
-  newArchives        Boolean @default(true)
-  systemAnnouncements Boolean @default(true)
-  
-  // Delivery preferences
-  emailEnabled       Boolean @default(true)
-  pushEnabled        Boolean @default(false)
-  webEnabled         Boolean @default(true)
-  
-  // Timing preferences
-  reminderMinutes    Int     @default(15) // Minutes before stream
-  quietHoursStart    String? // "22:00"
-  quietHoursEnd      String? // "08:00"
-  timezone           String  @default("UTC")
-  
-  // Push subscription data (for web push)
-  pushSubscription   Json?
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  @@unique([userId])
 }
 
 // ============================================================================

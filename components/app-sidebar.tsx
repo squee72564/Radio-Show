@@ -1,7 +1,6 @@
-import { FileQuestionIcon, Calendar, LayoutDashboard, Music, Settings, Archive, LogIn, LogOut, type LucideIcon } from "lucide-react";
+import { FileQuestionIcon, Calendar, LayoutDashboard, Music, Settings, Archive, type LucideIcon } from "lucide-react";
 import { SettingsSheet } from "./settings-sheet";
 import { AboutCollapsible } from "./about-collapsible";
-import SignInButton from "./signin-button";
 import Link from "next/link"
 
 import {
@@ -17,8 +16,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { auth } from "@/auth";
-import { UserNav } from "./user-nav";
-import { AnonNav } from "./anon-nav";
+import { SignInOutNav } from "./signin-nav";
 
 interface SidebarComponentProps {
   Title: string;
@@ -81,10 +79,7 @@ const items: SidebarItems[] = [
   },
 ];
 
-export async function AppSidebar() {
-  const session = await auth();
-  const user = session?.user;
-  const signedIn = !!user;
+export function AppSidebar() {
   
   return (
     <Sidebar collapsible="icon">
@@ -120,11 +115,6 @@ export async function AppSidebar() {
                     </SidebarMenuItem>
                   )
               ))}
-              <SignInButton
-                signedIn={signedIn}
-                Title={signedIn ? "Sign Out" : "Sign in with Google"}
-                Icon={signedIn ? LogOut : LogIn}
-              />
               <SidebarMenuItem className="pt-auto">
                 <SidebarMenuButton tooltip={"Toggle Sidebar"} asChild>
                   <SidebarTrigger/>
@@ -135,10 +125,7 @@ export async function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        { signedIn ? 
-          <UserNav user={{name: user.name ?? "Anon", email: user.email ?? "", avatar: user.image ?? "", id: user.id ?? ""}} /> :
-          <AnonNav />
-        }
+        <SignInOutNav />
       </SidebarFooter>
     </Sidebar>
   )

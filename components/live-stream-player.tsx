@@ -195,8 +195,6 @@ export default function LiveStreamPlayer() {
   const icecastUrl: string = "http://localhost:3000/api/live"
   
   useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-
     const checkStream = () => {
       fetch(icecastUrl, { method: "HEAD" })
         .then((res) => {
@@ -208,7 +206,7 @@ export default function LiveStreamPlayer() {
     };
 
     checkStream();
-    intervalId = setInterval(checkStream, 10000);
+    const intervalId: NodeJS.Timeout = setInterval(checkStream, 10000);
 
     return () => clearInterval(intervalId);
   }, []);

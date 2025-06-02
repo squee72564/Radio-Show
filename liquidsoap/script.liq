@@ -1,11 +1,13 @@
-# Define the sine wave source
-sine_wave = sine()
-
-# Send it to Icecast
+host = environment.get("ICECAST_HOST", default="icecast")
+port = int_of_string(environment.get("ICECAST_PORT", default="8000"))
+password = environment.get("ICECAST_PASSWORD", default="hackme")
+mount = environment.get("ICECAST_MOUNT", default="live")
+name = environment.get("ICECAST_NAME", default="radio show")
 output.icecast(%mp3,
-  host = "icecast",  # Docker service name
-  port = 8000,
-  password = "hackme",  # Match Icecast's source-password
-  mount = "live",
-  name = "My Stream"
-, sine_wave)
+  host=host,
+  port=port,
+  password=password,
+  mount=mount,
+  name=name,
+  sine()
+)

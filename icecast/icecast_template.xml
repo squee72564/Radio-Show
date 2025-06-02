@@ -16,7 +16,7 @@
          listings. You MUST configure it properly for YP listings to work!
          This is NOT your homepage address, it's the hostname for THIS server.
     -->
-    <hostname>icecast</hostname>
+    <hostname>${ICECAST_HOST}</hostname>
 
     <limits>
         <!-- Global maximum number of clients.
@@ -39,13 +39,13 @@
 
     <authentication>
         <!-- Sources log in with username 'source' -->
-        <source-password>hackme</source-password>
+        <source-password>${ICECAST_PASSWORD}</source-password>
         <!-- Relays log in with username 'relay' -->
-        <relay-password>hackme</relay-password>
+        <relay-password>${ICECAST_PASSWORD}</relay-password>
 
         <!-- Admin logs in with the username given below -->
-        <admin-user>admin</admin-user>
-        <admin-password>hackme</admin-password>
+        <admin-user>${ICECAST_ADMIN_USER}</admin-user>
+        <admin-password>${ICECAST_ADMIN_PASS}</admin-password>
     </authentication>
 
     <!-- set the mountpoint for a shoutcast source to use, the default if not
@@ -66,15 +66,11 @@
 
     <!-- You may have multiple <listen-socket> elements -->
     <listen-socket>
-        <port>8000</port>
+        <port>${ICECAST_PORT}</port>
         <bind-address>0.0.0.0</bind-address>
         <!-- <shoutcast-mount>/stream</shoutcast-mount> -->
     </listen-socket>
-    <!--
-    <listen-socket>
-        <port>8080</port>
-    </listen-socket>
-    -->
+
     <!--
     <listen-socket>
         <port>8443</port>

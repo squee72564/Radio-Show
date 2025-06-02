@@ -1,19 +1,22 @@
 FROM debian:bullseye
 
-# Install Icecast
+# Install Icecast and envsubst (via gettext package)
 RUN apt-get update && \
-    apt-get install -y icecast2 && \
+    apt-get install -y icecast2 gettext && \
     apt-get clean
 
-# Copy your Icecast config into the container
-COPY icecast.xml /etc/icecast2/icecast.xml
+# Copy Icecast config template
+COPY icecast_template.xml /etc/icecast2/icecast_template.xml
 
-# Create and mount the logs directory
+# Copy entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Create log directory and expose volume
 RUN mkdir -p /var/log/icecast2
 VOLUME /var/log/icecast2
 
-# Expose Icecast default port
+# Expose default Icecast port
 EXPOSE 8000
 
-# Run Icecast with your config
-CMD ["icecast2", "-c", "/etc/icecast2/icecast.xml"]
+ENTRYPOINT ["/entrypoint.sh"]

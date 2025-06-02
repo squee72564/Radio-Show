@@ -2,10 +2,12 @@ services:
   icecast:
     build: ./icecast
     container_name: icecast
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     volumes:
-      - ./icecast/icecast.xml:/etc/icecast2/icecast.xml:ro
+      - ./icecast/icecast_template.xml:/etc/icecast2/icecast_template.xml:ro
       - ./icecast/logs:/var/log/icecast2
     networks:
       - backend
@@ -15,6 +17,8 @@ services:
   liquidsoap:
     build: ./liquidsoap
     container_name: liquidsoap
+    env_file:
+      - .env
     depends_on:
       - icecast
     networks:

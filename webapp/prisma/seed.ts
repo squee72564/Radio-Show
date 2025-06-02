@@ -33,9 +33,6 @@ async function main() {
 
       chatEnabled: true,
       analyticsEnabled: true,
-
-      smtpConfigured: !!process.env.SMTP_HOST,
-      pushConfigured: !!process.env.VAPID_PUBLIC_KEY,
     },
   })
 
@@ -88,23 +85,6 @@ async function main() {
       })
     }
   }
-
-  // Create default fallback playlist
-  await prisma.fallbackPlaylist.upsert({
-    where: { id: 'default' },
-    update: {},
-    create: {
-      id: 'default',
-      name: 'Default Fallback',
-      description: 'Default playlist when no live streams are active',
-      playOrder: 'WEIGHTED_RANDOM',
-      shuffle: true,
-      crossfade: 3,
-      isActive: true,
-      isDefault: true,
-    },
-  })
-
 }
 
 main()

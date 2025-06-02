@@ -15,7 +15,6 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { auth } from "@/auth";
 import { SignInOutNav } from "./signin-nav";
 
 interface SidebarComponentProps {

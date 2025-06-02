@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export default async function UserProfilePage({
   params
 } : {
-    params: {id:string}
+    params: Promise<{id:string}>
 }) {
   const { id }: { id: string } = await params;
 

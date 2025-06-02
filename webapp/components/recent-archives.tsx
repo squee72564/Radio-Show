@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Badge } from "./ui/badge";
 
 export default async function RecentArchives() {
-  const archives: Array<any> = [];
+  const archives: Array<string> = [];
 
   return (
     <section className="min-h-41 max-h-41">

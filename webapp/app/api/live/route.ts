@@ -1,12 +1,15 @@
-import { NextResponse } from "next/server";
-
 export async function GET() {
-  const res = await fetch("http://localhost:8000/live");
-  const body = res.body;
-  return new NextResponse(body, {
-    status: res.status,
+  const upstream = await fetch("http://icecast:8000/live");
+
+  if (!upstream.body) {
+    return new Response("Stream not available", { status: 502 });
+  }
+
+  return new Response(upstream.body, {
+    status: upstream.status,
     headers: {
-      "Content-Type": res.headers.get("content-type") || "audio/mpeg",
+      "Content-Type": upstream.headers.get("content-type") || "audio/mpeg",
+      "Cache-Control": "no-store",
     },
   });
 }

@@ -90,7 +90,7 @@ function WaveformVisualizer({
     };
 
     draw();
-  }, []);
+  }, [audioCtxRef, audioRef]);
 
   return (
     <div className="w-full flex flex-col items-center gap-2">

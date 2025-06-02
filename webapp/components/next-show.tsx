@@ -2,7 +2,7 @@ import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 export default async function NextShow() {
-  const nextScheduledShow: any | null = null;
+  const nextScheduledShow: null = null;
 
   return (
     <section className="md:col-span-2 mt-4">

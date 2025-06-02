@@ -1,5 +1,5 @@
 import { Badge } from "./ui/badge";
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 
 interface ArchiveTestInterface {
   name: string;

@@ -16,7 +16,7 @@
          listings. You MUST configure it properly for YP listings to work!
          This is NOT your homepage address, it's the hostname for THIS server.
     -->
-    <hostname>localhost</hostname>
+    <hostname>icecast</hostname>
 
     <limits>
         <!-- Global maximum number of clients.
@@ -67,7 +67,7 @@
     <!-- You may have multiple <listen-socket> elements -->
     <listen-socket>
         <port>8000</port>
-        <!-- <bind-address>127.0.0.1</bind-address> -->
+        <bind-address>0.0.0.0</bind-address>
         <!-- <shoutcast-mount>/stream</shoutcast-mount> -->
     </listen-socket>
     <!--
@@ -92,11 +92,10 @@
          If you don't want this, comment out the following line or read up on CORS.
     -->
     <http-headers>
-        <header type="cors" name="Access-Control-Allow-Origin" value="localhost:3000"/>
+        <header type="cors" name="Access-Control-Allow-Origin" value="http://webapp:3000"/>
         <header type="cors" name="Access-Control-Allow-Headers" value="GET, OPTIONS, HEAD" />
         <header type="cors" name="Access-Control-Expose-Headers" value="Content-Type"/>
     </http-headers>
-
 
     <!-- Relaying
          You don't need this if you only have one server.
@@ -261,7 +260,7 @@
 
         <!-- Note that if <chroot> is turned on below, these paths must all
              be relative to the new root, not the original root -->
-        <logdir>./icecast/logs</logdir>
+        <logdir>/var/log/icecast2</logdir>
         <webroot>@pkgdatadir@/web</webroot>
         <adminroot>@pkgdatadir@/admin</adminroot>
         <reportxmldb>@pkgdatadir@/report-db.xml</reportxmldb>
@@ -297,12 +296,12 @@
 
     <security>
         <chroot>false</chroot>
-        <!--
+        
         <changeowner>
             <user>nobody</user>
             <group>nogroup</group>
         </changeowner>
-        -->
+       
 
         <tls-context>
             <!-- The certificate file containng public and optionally private key.

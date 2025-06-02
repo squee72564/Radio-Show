@@ -1,0 +1,56 @@
+services:
+  icecast:
+    build: ./icecast
+    container_name: icecast
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./icecast/icecast.xml:/etc/icecast2/icecast.xml:ro
+      - ./icecast/logs:/var/log/icecast2
+    networks:
+      - backend
+    user: "nobody:nogroup"
+    restart: unless-stopped
+
+  liquidsoap:
+    build: ./liquidsoap
+    container_name: liquidsoap
+    depends_on:
+      - icecast
+    networks:
+      - backend
+    restart: unless-stopped
+
+  webapp:
+    build:
+      context: ./webapp
+      args:
+        DATABASE_URL: ${DATABASE_URL}
+    container_name: webapp
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    networks:
+      - backend
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    env_file:
+      - .env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - backend
+    restart: unless-stopped
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  postgres-data:

@@ -12,6 +12,7 @@ services:
     networks:
       - backend
     user: "nobody:nogroup"
+    command: ./entrypoint.sh
     restart: unless-stopped
 
   liquidsoap:
@@ -24,6 +25,7 @@ services:
     networks:
       - backend
     restart: unless-stopped
+    command: liquidsoap /app/script.liq
 
   webapp:
     build:
@@ -39,6 +41,7 @@ services:
       - backend
     depends_on:
       - postgres
+    command: ./start.sh
     restart: unless-stopped
 
   postgres:

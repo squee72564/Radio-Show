@@ -9,8 +9,8 @@ RUN apt-get update && \
 COPY icecast_template.xml /etc/icecast2/icecast_template.xml
 
 # Copy entrypoint script
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
 
 # Create log directory and expose volume
 RUN mkdir -p /var/log/icecast2
@@ -18,5 +18,3 @@ VOLUME /var/log/icecast2
 
 # Expose default Icecast port
 EXPOSE 8000
-
-ENTRYPOINT ["/entrypoint.sh"]

@@ -1,5 +1,9 @@
+const icecastHost = process.env.ICECAST_HOST || "localhost";
+const icecastPort = process.env.ICECAST_PORT || "8000";
+const icecastMount = process.env.ICECAST_MOUNT || "live";
+
 export async function GET() {
-  const upstream = await fetch("http://icecast:8000/live");
+  const upstream = await fetch(`http://${icecastHost}:${icecastPort}/${icecastMount}`);
 
   if (!upstream.body) {
     return new Response("Stream not available", { status: 502 });

@@ -11,7 +11,6 @@ COPY prisma ./prisma/
 RUN npm install --legacy-peer-deps
 
 COPY . .
-RUN npm run build
 
 # Stage 2: Runtime
 FROM node:20-alpine
@@ -26,7 +25,5 @@ COPY --from=builder /app .
 # Copy your start script and make executable
 COPY start.sh .
 RUN chmod +x start.sh
-
-ENV NODE_ENV=production
 
 EXPOSE 3000

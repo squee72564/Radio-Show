@@ -1,0 +1,37 @@
+services:
+  icecast:
+    env_file:
+      - .env.prod
+    volumes:
+      - ./icecast/icecast_template.xml:/etc/icecast2/icecast_template.xml:ro
+      - prod-icecast-logs:/var/log/icecast2
+
+  liquidsoap:
+    env_file:
+      - .env.prod
+
+  webapp:
+    build: ./webapp
+    container_name: webapp
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.prod
+    environment:
+      NODE_ENV: "production"
+    networks:
+      - backend
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    command: ./start.sh
+
+  postgres:
+    env_file:
+      - .env.prod
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
+  prod-icecast-logs:

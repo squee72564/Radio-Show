@@ -1,0 +1,24 @@
+services:
+  icecast:
+    env_file:
+      - .env.dev
+    volumes:
+      - ./icecast/icecast_template.xml:/etc/icecast2/icecast_template.xml:ro
+      - ./icecast/logs:/logs
+
+  liquidsoap:
+    env_file:
+      - .env.dev
+    volumes:
+      - ./liquidsoap:/app
+
+  postgres:
+    env_file:
+      - .env.dev
+    ports:
+      - "15432:5432"
+    volumes:
+      - dev-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  dev-postgres-data:

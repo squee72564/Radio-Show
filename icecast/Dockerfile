@@ -3,8 +3,7 @@ FROM debian:bullseye
 # Install Icecast and envsubst (via gettext package)
 RUN apt-get update && \
     apt-get install -y icecast2 gettext && \
-    apt-get clean \
-    apt-get install -y mime-support
+    apt-get clean
 
 # Copy Icecast config template
 COPY icecast_template.xml /etc/icecast2/icecast_template.xml

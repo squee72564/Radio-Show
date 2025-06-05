@@ -86,12 +86,12 @@ meta_stream = insert_metadata(base_stream)
 live_stream_ref := meta_stream
 
 # Output to Icecast Server
-output.icecast(%mp3,
+output.icecast(%mp3(bitrate=320),
   host=host,
   port=port,
   password=password,
   mount=mount,
   name=name,
-  fallible=true,
+  fallible=true, # Right now the stream can go down
   meta_stream
 )

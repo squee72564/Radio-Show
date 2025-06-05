@@ -171,6 +171,12 @@
     </mount>
     -->
 
+    <mount type="normal">
+        <mount-name>/live</mount-name>
+        <genre>Muzak</genre>
+        <stream-description>This is the icecast mount for Radio Show.</stream-description>
+    </mount>
+
     <!-- Normal mounts -->
     <!--
     <mount type="normal">

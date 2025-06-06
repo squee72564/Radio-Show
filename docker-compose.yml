@@ -2,8 +2,6 @@ services:
   icecast:
     build: ./icecast
     container_name: icecast
-    ports:
-      - "8000:8000"
     networks:
       - backend
     restart: unless-stopped

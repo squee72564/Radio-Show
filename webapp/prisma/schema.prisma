@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
 }
 
@@ -22,11 +22,15 @@ model User {
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
-  StreamerApplication StreamerApplication?
-  Stream              Stream[]
-  StreamSchedule      StreamSchedule[]
+  // Streaming related MODELS
+  streamSchedules StreamSchedule[]
+  streamInstances StreamInstance[]
+
+  // RBAC
+  status Role @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Account {
@@ -84,528 +88,57 @@ model Authenticator {
   @@id([userId, credentialID])
 }
 
-model StreamerApplication {
-  id     String @id @default(cuid())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+model StreamMetadata {
+  id String @id @default(cuid())
 
-  // Application details
-  contentDescription String
-  plannedSchedule    String?
-
-  // Approval workflow
-  status     ApplicationStatus @default(PENDING)
-  reviewedAt DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([status])
-}
-
-// ============================================================================
-// INFRASTRUCTURE MODELS
-// ============================================================================
-
-model IcecastServer {
-  id       String @id @default(cuid())
-  name     String
-  hostname String
-  port     Int    @default(8000)
-
-  // Admin credentials (encrypted)
-  adminUser String @default("admin")
-  adminPass String // Encrypted password
-
-  // Server configuration
-  maxClients  Int     @default(1000)
-  maxSources  Int     @default(25)
-  location    String?
-  description String?
-
-  // Resource management
-  mountPointPools MountPointPool[]
-  streams         Stream[]
-
-  // Health monitoring
-  isActive        Boolean      @default(true)
-  lastHealthCheck DateTime?
-  healthStatus    ServerHealth @default(UNKNOWN)
-  responseTime    Int? // in milliseconds
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([isActive])
-  @@index([healthStatus])
-}
-
-model MountPointPool {
-  id       String        @id @default(cuid())
-  serverId String
-  server   IcecastServer @relation(fields: [serverId], references: [id], onDelete: Cascade)
-
-  mountPoint  String  @unique
-  isReserved  Boolean @default(false) // For dedicated streams
-  isAvailable Boolean @default(true)
-
-  // Current allocation - just the back reference, no relation definition
-  currentSession StreamSession?
-
-  // Configuration
-  maxBitrate   Int @default(320)
-  maxListeners Int @default(200)
-
-  // Usage tracking
-  totalUsageHours Float     @default(0)
-  lastUsed        DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([serverId])
-  @@index([isAvailable, isReserved])
-}
-
-// ============================================================================
-// STREAM CONFIGURATION MODELS
-// ============================================================================
-
-model Stream {
-  id          String  @id @default(cuid())
   title       String
-  description String?
-  slug        String  @unique
+  description String   @default("No Description")
+  tags        String[] @default(["Muzak"])
 
-  // User relationship
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  // Mount point strategy
-  mountType      MountType @default(DYNAMIC)
-  dedicatedMount String?   @unique // For DEDICATED type only
-
-  // IceCast server
-  icecastServerId String
-  icecastServer   IcecastServer @relation(fields: [icecastServerId], references: [id])
-
-  // Stream quality configuration
-  defaultBitrate Int    @default(128)
-  defaultFormat  String @default("mp3")
-  maxBitrate     Int    @default(128)
-  channels       Int    @default(2)
-  sampleRate     Int    @default(44100)
-
-  // Resource limits
-  maxListeners   Int @default(100)
-  maxStreamHours Int @default(24) // per week
-
-  // Features
-  autoRecord       Boolean @default(true)
-  enableChat       Boolean @default(true)
-  requiresApproval Boolean @default(false)
-
-  // Categorization
-  tags StreamTag[]
-
-  // Status
-  isActive Boolean @default(true)
-  isPublic Boolean @default(true)
-
-  // Related records
-  credentials StreamCredentials?
-  sessions    StreamSession[]
-  schedules   StreamSchedule[]
-
-  // Analytics
-  totalSessions  Int   @default(0)
-  totalListeners Int   @default(0)
-  totalHours     Float @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
-  @@index([slug])
-  @@index([isActive, isPublic])
-  @@index([icecastServerId])
+  startTime      DateTime        @db.Timetz(0)
+  endTime        DateTime        @db.Timetz(0)
+  rrule          String
+  StreamSchedule StreamSchedule?
 }
-
-model StreamCredentials {
-  id       String @id @default(cuid())
-  streamId String @unique
-  stream   Stream @relation(fields: [streamId], references: [id], onDelete: Cascade)
-
-  // IceCast source credentials
-  sourcePassword String // Encrypted password
-  streamKey      String @unique // Alternative auth method
-
-  // Harbor/Liquidsoap credentials (if used)
-  harborPassword String? // Encrypted
-  harborPort     Int?
-
-  // Security
-  allowedIPs Json? // Array of allowed IP addresses
-  lastUsedIP String?
-  lastUsed   DateTime?
-
-  // Rotation
-  isActive  Boolean   @default(true)
-  rotatedAt DateTime  @default(now())
-  expiresAt DateTime? // Optional expiration
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([streamKey])
-  @@index([isActive])
-}
-
-model StreamTag {
-  id   String @id @default(cuid())
-  name String @unique
-  slug String @unique
-
-  streams Stream[]
-
-  usageCount Int     @default(0) // Added missing field
-  isActive   Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([usageCount])
-  @@index([isActive])
-}
-
-// ============================================================================
-// SCHEDULING MODELS
-// ============================================================================
 
 model StreamSchedule {
   id String @id @default(cuid())
 
-  // Stream relationship
-  streamId String
-  stream   Stream @relation(fields: [streamId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
-  // User relationship (denormalized for easier queries)
+  metadataId String         @unique
+  metadata   StreamMetadata @relation(fields: [metadataId], references: [id], onDelete: Cascade)
+
+  status      ScheduleStatus @default(PENDING)
+  submittedAt DateTime       @default(now())
+  reviewedAt  DateTime?
+
+  StreamInstance StreamInstance[]
+}
+
+model StreamInstance {
+  id String @id @default(cuid())
+
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  startTime DateTime
-  endTime   DateTime
-  timezone  String   @default("UTC")
+  start DateTime
+  end   DateTime
 
-  // Recurrence configuration (RFC 5545 RRULE format)
-  recurrenceRule String? // e.g., "FREQ=WEEKLY;BYDAY=MO,WE,FR"
-  recurrenceEnd  DateTime? // When the recurrence stops
-  exceptions     Json? // Array of dates to skip
-
-  // Status and approval
-  status     ScheduleStatus @default(PENDING)
-  approvedAt DateTime?
-
-  // Generated sessions from this schedule
-  sessions StreamSession[]
-
-  isActive Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([streamId])
-  @@index([userId])
-  @@index([startTime, endTime])
-  @@index([status])
-}
-
-model StreamSession {
-  id String @id @default(cuid())
-
-  // Stream relationship
-  streamId String
-  stream   Stream @relation(fields: [streamId], references: [id], onDelete: Cascade)
-
-  // Optional schedule relationship
-  scheduleId String?
-  schedule   StreamSchedule? @relation(fields: [scheduleId], references: [id], onDelete: SetNull)
-
-  // Mount point allocation - StreamSession owns this relationship
-  mountPointId String?         @unique
-  mountPoint   MountPointPool? @relation(fields: [mountPointId], references: [id])
-
-  // Session details
-  title       String
-  description String?
-
-  // Timing
-  scheduledStart DateTime
-  scheduledEnd   DateTime
-  actualStart    DateTime?
-  actualEnd      DateTime?
-
-  // Status
-  status StreamStatus @default(SCHEDULED)
-
-  // IceCast runtime information
-  sourceIp  String?
-  userAgent String?
-  streamUrl String?
-  statsUrl  String?
-
-  // Stream quality (actual values during broadcast)
-  actualBitrate  Int?
-  actualFormat   String?
-  actualChannels Int?
-
-  // Statistics
-  peakListeners    Int    @default(0)
-  totalListeners   Int    @default(0)
-  totalBytes       BigInt @default(0)
-  averageListeners Float?
-
-  // Related records
-  analytics  StreamAnalytics[]
-  recordings StreamRecording[]
-  archive    StreamArchive?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([streamId])
-  @@index([scheduleId])
-  @@index([scheduledStart])
-  @@index([status])
-  @@index([actualStart])
-}
-
-// ============================================================================
-// LIVE STREAMING MODELS
-// ============================================================================
-
-model StreamAnalytics {
-  id String @id @default(cuid())
-
-  sessionId String
-  session   StreamSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-
-  timestamp DateTime @default(now())
-
-  // Listener statistics
-  listeners Int
-  bandwidth BigInt // Bytes per second
-
-  // Technical metrics
-  sourceQuality Json? // Bitrate, format, etc.
-
-  @@index([sessionId])
-  @@index([timestamp])
-}
-
-model StreamRecording {
-  id String @id @default(cuid())
-
-  sessionId String
-  session   StreamSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-
-  // Recording configuration
-  format    String  @default("mp3")
-  bitrate   Int     @default(128)
-  autoStart Boolean @default(true)
-
-  // Recording status
-  status    RecordingStatus @default(PENDING)
-  startTime DateTime?
-  endTime   DateTime?
-
-  // File information
-  tempFilePath String? // Local temp file during recording
-  duration     Int? // Duration in seconds
-  fileSize     BigInt? // Size in bytes
-
-  // Processing
-  processingStarted   DateTime?
-  processingCompleted DateTime?
-  processingError     String?
-
-  // Output
-  archive StreamArchive?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([sessionId])
-  @@index([status])
-}
-
-// ============================================================================
-// ARCHIVE MODELS
-// ============================================================================
-
-model StreamArchive {
-  id String @id @default(cuid())
-
-  // Source session/recording
-  sessionId   String?          @unique
-  session     StreamSession?   @relation(fields: [sessionId], references: [id], onDelete: SetNull)
-  recordingId String?          @unique
-  recording   StreamRecording? @relation(fields: [recordingId], references: [id], onDelete: SetNull)
-
-  // Archive metadata
-  title       String
-  description String?
-
-  // File information
-  originalUrl String // Object storage URL for original
-  audioUrl    String // Processed/optimized version
-  audioSize   BigInt // File size in bytes
-  duration    Int // Duration in seconds
-  format      String // Primary format
-  bitrate     Int? // Audio bitrate
-
-  // Alternative formats
-  alternativeFormats Json? // { "ogg": "url", "m4a": "url", "flac": "url" }
-
-  // Visual data
-  thumbnailUrl String? // Waveform thumbnail
-
-  // Processing status
-  processingStatus ArchiveStatus @default(PROCESSING)
-  processingError  String?
-  processingSteps  Json? // Step-by-step processing status
-
-  // Usage tracking
-  playCount     Int @default(0) // Added missing field
-  downloadCount Int @default(0)
-
-  // Availability
-  isPublic Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([processingStatus])
-  @@index([isPublic])
-  @@index([playCount])
-  @@index([createdAt])
-}
-
-// ============================================================================
-// SYSTEM CONFIGURATION
-// ============================================================================
-
-model SystemConfig {
-  id String @id
-
-  // General settings
-  siteName    String  @default("Internet Radio")
-  siteUrl     String
-  description String?
-
-  // Streaming limits
-  maxConcurrentStreams   Int @default(10)
-  maxStreamDurationHours Int @default(6)
-  maxRecordingSizeMB     Int @default(2000)
-
-  // User limits per tier
-  defaultMaxStreams   Int @default(1)
-  defaultMaxListeners Int @default(100)
-  defaultMaxSchedules Int @default(10)
-
-  // Archive settings
-  maxArchiveSizeMB Int @default(2000)
-
-  // Fallback settings
-  fallbackEnabled       Boolean @default(true)
-  fallbackCrossfade     Int     @default(3)
-  deadAirTimeoutSeconds Int     @default(30)
-
-  // Content policies
-  requireStreamApproval   Boolean @default(false)
-  requireScheduleApproval Boolean @default(false)
-
-  // Feature flags
-  chatEnabled      Boolean @default(true)
-  analyticsEnabled Boolean @default(true)
-
-  updatedAt DateTime @updatedAt
-}
-
-// ============================================================================
-// ENUMS
-// ============================================================================
-
-enum UserRole {
-  LISTENER
-  STREAMER
-  ADMIN
-}
-
-enum ApplicationStatus {
-  PENDING
-  APPROVED
-  REJECTED
-  SUSPENDED
-}
-
-enum MountType {
-  DEDICATED // Permanent mount point
-  DYNAMIC // Assigned per session
-  SHARED // Multiple shows on rotation
-}
-
-enum ServerHealth {
-  HEALTHY
-  DEGRADED
-  UNHEALTHY
-  UNKNOWN
+  streamScheduleId String
+  streamSchedule   StreamSchedule @relation(fields: [streamScheduleId], references: [id], onDelete: Cascade)
 }
 
 enum ScheduleStatus {
   PENDING
   APPROVED
   REJECTED
-  ACTIVE
-  COMPLETED
-  CANCELLED
 }
 
-enum StreamStatus {
-  SCHEDULED
-  PREPARING // Pre-stream setup phase
-  LIVE
-  ENDING // Stream ending, cleanup in progress
-  ENDED
-  CANCELLED
-  FAILED
-}
-
-enum RecordingStatus {
-  PENDING
-  RECORDING
-  STOPPING
-  PROCESSING
-  COMPLETED
-  FAILED
-}
-
-enum ArchiveStatus {
-  PROCESSING
-  READY
-  FAILED
-  EXPIRED
-}
-
-enum PlayOrder {
-  SEQUENTIAL
-  RANDOM
-  WEIGHTED_RANDOM
-  POPULARITY
-}
-
-enum PlayingType {
-  LIVE
-  ARCHIVE
-  SILENCE
+enum Role {
+  USER
+  STREAMER
+  ADMIN
+  OWNER
 }

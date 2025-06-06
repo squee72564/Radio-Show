@@ -13,7 +13,8 @@ export async function POST(req: Request) {
     authenticated: true,
     meta: {
       title: "Test Title From Api",
-      user: "Test User From API"
+      user: "Test User From API",
+      timelimit: 60,
     }
   };
 

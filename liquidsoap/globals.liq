@@ -33,9 +33,9 @@ current_meta = ref(
   ]
 );
 
-live_stream_ref = ref(null())       # Ref for livestream; used in callbacks declared before livestream defined
+live_stream_ref       = ref(null())   # Ref for livestream
 
-client_addr_ref = ref(null())       # Keeps track of client 
-client_timelimit_ref = ref(null())  # Keeps track of client timelimit
+client_addr_ref       = ref(null())   # Keeps track of client 
+client_timelimit_ref  = ref(null())   # Keeps track of client timelimit
 
-disconnect_called_ref = ref(false)  # Keeps track of if disconnect callback was called
+disconnect_called_ref = ref(false)    # Keeps track of if disconnect callback was called

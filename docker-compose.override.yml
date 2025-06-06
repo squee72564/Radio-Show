@@ -5,6 +5,8 @@ services:
     volumes:
       - ./icecast/icecast_template.xml:/etc/icecast2/icecast_template.xml:ro
       - ./icecast/logs:/logs
+    ports:
+      - "8000:8000"
 
   liquidsoap:
     env_file:

@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     meta: {
       title: "Test Title From Api",
       user: "Test User From API",
-      timelimit: 60,
+      timelimit: 1.0 * 60.0 * 60.0,
     }
   };
 

@@ -11,3 +11,5 @@
 .env.prod
 
 /icecast/logs
+
+/liquidsoap/*.mp3

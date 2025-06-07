@@ -20,6 +20,7 @@ let radioshow.harbor_mount      = environment.get("HARBOR_MOUNT", default="/dj")
 
 let radioshow.url = environment.get("SITE_URL", default="http://host.docker.internal:3000")
 
+let radioshow.temp_filename = "/app/test.mp3"
 
 # <-----
 # Global References
@@ -27,15 +28,16 @@ let radioshow.url = environment.get("SITE_URL", default="http://host.docker.inte
 
 current_meta = ref(
   [
-    ("title", "None"),
-    ("genre", "None"),
-    ("liq_remaining", "0.")
+    ("title", ""),
+    ("genre", ""),
+    ("timelimit", ""),
   ]
 );
 
 live_stream_ref       = ref(null())   # Ref for livestream
 
 client_addr_ref       = ref(null())   # Keeps track of client 
-client_timelimit_ref  = ref(null())   # Keeps track of client timelimit
 
 disconnect_called_ref = ref(false)    # Keeps track of if disconnect callback was called
+
+live_stream_active = ref(false)        # Keep track of if we are recording

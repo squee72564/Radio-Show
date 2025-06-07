@@ -19,6 +19,7 @@ function WaveformVisualizer({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
+  const hasConnectedAudioSource = useRef<boolean>(false);
   const [isTimeDomain, setIsTimeDomain] = useState<boolean>(true);
   const modeRef = useRef<boolean>(true);
 
@@ -39,14 +40,15 @@ function WaveformVisualizer({
 
     const audioCtx = audioCtxRef.current;
 
-    if (!sourceRef.current) {
+    if (!sourceRef.current && !hasConnectedAudioSource.current) {
       sourceRef.current = audioCtx.createMediaElementSource(audio);
+      hasConnectedAudioSource.current = true;
     }
 
     if (!analyserRef.current) {
       const analyser = audioCtx.createAnalyser();
       analyser.fftSize = 2048;
-      sourceRef.current.connect(analyser);
+      sourceRef.current?.connect(analyser);
       analyser.connect(audioCtx.destination);
       analyserRef.current = analyser;
     }
@@ -87,6 +89,11 @@ function WaveformVisualizer({
           x += barWidth + 1;
         }
       }
+
+      return () => {
+        analyser?.disconnect();
+        sourceRef.current?.disconnect();
+      };
     };
 
     draw();
@@ -96,7 +103,7 @@ function WaveformVisualizer({
     <div className="w-full flex flex-col items-center gap-2">
       <canvas
         ref={canvasRef}
-        className="w-full max-w-full aspect-[4/1] rounded-md bg-secondary border border-border"
+        className="w-full max-w-full aspect-[4/1] bg-primary/50 rounded-xl"
       />
       <Button
         className="p-1 text-xs"
@@ -109,49 +116,68 @@ function WaveformVisualizer({
   );
 }
 
-function CustomPlayer({ streamUrl }: { streamUrl: string }) {
-const audioRef = useRef<HTMLAudioElement>(null);
-const audioCtxRef = useRef<AudioContext | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+function CustomPlayer({ streamUrl, isStreamLive }: { streamUrl: string, isStreamLive: boolean }) {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
   const [volume, setVolume] = useState<number>(100);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    return () => {
+      if (audioCtxRef.current?.state === "running") {
+        audioCtxRef.current.close();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const handleCanPlay = () => setIsLoading(false);
+    if (isStreamLive) {
+      console.log("Stream is live — reloading audio");
+      audio.src = streamUrl; // reset in case stream is re-enabled
+      audio.load();
+    } else {
+      console.log("Stream is offline — stopping audio");
+      setIsLoading(true);
+      audio.pause();
+      audio.removeAttribute("src");
+      audio.load();
+    }
+  }, [isStreamLive, streamUrl]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleCanPlay = async () => {
+
+      if (audioCtxRef.current?.state === "suspended") {
+        audioCtxRef.current.resume();
+      }
+
+      if (audio.paused) {
+        try {
+          await audio.play();
+        } catch (err) {
+          console.warn("Autoplay failed: ", err);
+        }
+      }
+
+      setIsLoading(false);
+    };
+
     const handleLoadStart = () => setIsLoading(true);
 
-    audio.addEventListener("canplay", handleCanPlay);
     audio.addEventListener("loadstart", handleLoadStart);
+    audio.addEventListener("canplay", handleCanPlay);
 
     return () => {
       audio.removeEventListener("canplay", handleCanPlay);
       audio.removeEventListener("loadstart", handleLoadStart);
     };
-  }, [streamUrl]);
-
-  const togglePlay = async () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    if (audioCtxRef.current?.state === "suspended") {
-      audioCtxRef.current.resume();
-    }
-
-    if (audio.paused) {
-      try {
-        await audio.play();
-        setIsPlaying(true);
-      } catch (err) {
-        console.warn("Play interrupted: ", err);
-      }
-    } else {
-      audio.pause();
-      setIsPlaying(false);
-    }
-};
+  }, []);
 
   const changeVolume = (val: number[]) => {
     const audio = audioRef.current;
@@ -161,16 +187,12 @@ const audioCtxRef = useRef<AudioContext | null>(null);
   };
 
   return (
-    <div className="flex flex-col items-center w-full gap-4 bg-muted p-4 rounded-xl shadow">
+    <div className="flex flex-col items-center w-full gap-4 bg-muted p-4">
       {audioRef && <WaveformVisualizer audioRef={audioRef} audioCtxRef={audioCtxRef} />}
-      
-      <Button onClick={togglePlay} disabled={isLoading}>
-        {isLoading ? <LoaderIcon/> : isPlaying ? <PauseIcon/> : <PlayIcon/>}
-      </Button>
       
       <div className="w-full">
         <Badge variant={"outline"} className="text-sm text-muted-foreground mb-1">
-          Volume: {volume}%
+          {!isStreamLive ? "Offline" : isLoading ? "Loading..." : `Volume: ${volume}%`}
         </Badge>
         <Slider
           id="volume"
@@ -190,46 +212,46 @@ const audioCtxRef = useRef<AudioContext | null>(null);
 
 
 export default function LiveStreamPlayer() {
-  const [streamUrl, setStreamUrl] = useState<string | null>(null);
+  const streamUrl: string = "http://localhost:3000/api/live";
   const [loading, setLoading] = useState<boolean>(true);
-  const icecastUrl: string = "http://localhost:3000/api/live"
-  
+  const [isStreamLive, setIsStreamLive] = useState<boolean>(true);
+
   useEffect(() => {
     const checkStream = () => {
-      fetch(icecastUrl, { method: "HEAD" })
+      fetch(streamUrl, { method: "HEAD" })
         .then((res) => {
-          const isAudio = res.ok && res.headers.get("content-type")?.includes("audio");
-          setStreamUrl(isAudio ? icecastUrl : null);
+          const isAudio = (res.ok && res.headers.get("content-type")?.includes("audio") || false);
+          setIsStreamLive(isAudio);
         })
-        .catch(() => setStreamUrl(null))
+        .catch(() => setIsStreamLive(false))
         .finally(() => setLoading(false));
     };
 
     checkStream();
-    const intervalId: NodeJS.Timeout = setInterval(checkStream, 10000);
-
+    const intervalId = setInterval(checkStream, 1000 * 5);
     return () => clearInterval(intervalId);
-  }, []);
-
+  }, [streamUrl]);
 
   return (
-    <>
-      {loading ? (
-        <Skeleton className=" w-full aspect-[4/1] rounded-md" />
-      ) : streamUrl ? (
-        <CustomPlayer streamUrl={icecastUrl}/>
-      ) : (
-        <Alert variant="default" className="w-full aspect-[4/1]">
-          <AlertTitle>No Live Stream</AlertTitle>
+    <div className="flex flex-col gap-4 w-full">
+      <CustomPlayer streamUrl={streamUrl} isStreamLive={isStreamLive}/>
+
+      {loading || !isStreamLive ? (
+        <Alert variant="default" className="w-full">
+          <AlertTitle>Stream appears to be offline</AlertTitle>
           <AlertDescription className="text-base">
-            <p className="text-center w-full">
-              There’s nothing live right now. Check back later or browse the
-                <a className="text-blue-700/80" href="/archive"> archives</a>
-              .
+            <p className="text-center">
+              The live stream connection may be down.
+              <br />
+              Check back later or visit the <a className="text-blue-700/80" href="/archive">archives</a>.
             </p>
           </AlertDescription>
         </Alert>
+      ) : (
+        <Alert variant="default" className="w-full">
+          <AlertTitle>Stream is online</AlertTitle>
+        </Alert>
       )}
-    </>
+    </div>
   );
 }

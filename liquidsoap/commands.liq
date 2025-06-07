@@ -2,15 +2,19 @@
 base_stream.register_command(
   description="Force-disconnect the current live DJ",
   "stop_dj",
-  fun (_) -> begin
-    log(
-      level=3,
-      label="live_dj.stop_dj",
-      "Force stopping live DJ! - Timelimit Exceeded"
-    )
-    base_stream.stop();
-    "Live DJ stopped."
-  end
+  fun (_) -> (
+    if base_stream.is_active() then
+      log(
+        level=3,
+        label="live_dj.stop_dj",
+        "Force stopping live DJ!"
+      )
+      base_stream.stop();
+      "Live DJ stopped."
+    else
+      "No DJ connected."
+    end
+  )
 )
 
 # Register a command to log the status of the server
@@ -21,10 +25,15 @@ base_stream.register_command(
     log(
       level=3,
       label="live_dj.log_status",
-      "Stream status: #{base_stream.status()}\n" ^
-      "\t- active: #{base_stream.is_active()}\n" ^
-      "\t- ready: #{base_stream.is_ready()}\n" ^
-      "\t- up: #{base_stream.is_up()}"
+      "Stream status:\n" ^
+      "\t- #{base_stream.status()}\n" ^
+      "\t- id: #{base_stream.id()}\n" ^
+      "\t- buffer_len: #{base_stream.buffer_length()}\n" ^
+      "\t- time: #{base_stream.time()}\n" ^
+      "\t- self_sync: #{base_stream.self_sync()}\n" ^
+      "\t- is_active: #{base_stream.is_active()}\n" ^
+      "\t- is_ready: #{base_stream.is_ready()}\n" ^
+      "\t- is_up: #{base_stream.is_up()}"
     )
     "Logged"
   end

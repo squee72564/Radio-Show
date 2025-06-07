@@ -3,19 +3,11 @@ def harbor_connect_callback(headers)
   live_stream_active := true
   disconnect_called_ref := false
 
-  if null.defined(client_addr_ref()) then
-    log(
-      level=2,
-      label="harbor_connect_callback",
-      "Client at #{ null.get(client_addr_ref()) } Connected."
-    )
-  else
-    log(
-      level=2,
-      label="harbor_connect_callback",
-      "Client Connected."
-    )
-  end
+  log(
+    level=2,
+    label="harbor_connect_callback",
+    "Client at #{ client_addr_ref() } Connected."
+  )
 
   list.iter(
     fun (x) -> begin
@@ -27,38 +19,39 @@ def harbor_connect_callback(headers)
     headers
   )
 
+  # Disconnect input.harbor after allotted time with 30s extra window
+  thread.run(
+    delay=timeout_ref() + 30.,
+    fun () -> (
+      ignore(server.execute("live_dj.stop_dj"))
+    )
+  )
+
   ignore(server.execute("live_dj.log_status"))
 end
 
 def harbor_disconnect_callback()
-  if disconnect_called_ref() then
+  # if disconnect_called_ref() then
+  #   log(
+  #     level=2,
+  #     label="harbor_disconnect_callback",
+  #     "Disconnect already handled. Ignoring."
+  #   )
+  #   ()
+  # else
     log(
       level=2,
       label="harbor_disconnect_callback",
-      "Disconnect already handled. Ignoring."
+      "Client at #{ client_addr_ref() } Disconnected."
     )
-    ()
-  else
-    if null.defined(client_addr_ref()) then
-      log(
-        level=2,
-        label="harbor_disconnect_callback",
-        "Client at #{ null.get(client_addr_ref()) } Disconnected."
-      )
-    else
-      log(
-        level=2,
-        label="harbor_disconnect_callback",
-        "Client Disconnected."
-      )
-    end
     
     # Clean up data tracking live user
     # Maybe add variable for sanity checks if live
     # Add function to write 
     disconnect_called_ref := true
-    client_addr_ref := null()
+    client_addr_ref := "None"
+    live_stream_active := false
 
     ignore(server.execute("live_dj.log_status"))
-  end
+  # end
 end

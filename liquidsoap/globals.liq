@@ -26,18 +26,12 @@ let radioshow.temp_filename = "/app/test.mp3"
 # Global References
 # -----> #
 
-current_meta = ref(
-  [
-    ("title", ""),
-    ("genre", ""),
-    ("timelimit", ""),
-  ]
-);
+meta_stream_ref       = ref(null())   # Ref for livestream with .insert_metadata
 
-live_stream_ref       = ref(null())   # Ref for livestream
-
-client_addr_ref       = ref(null())   # Keeps track of client 
+client_addr_ref       = ref("None")   # Keeps track of client 
 
 disconnect_called_ref = ref(false)    # Keeps track of if disconnect callback was called
 
-live_stream_active = ref(false)        # Keep track of if we are recording
+live_stream_active    = ref(false)    # Keep track of if we are recording
+
+timeout_ref           = ref(1.0 * 60.0 * 60.0)

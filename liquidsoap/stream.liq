@@ -4,8 +4,8 @@ base_stream = input.harbor(
   id="live_dj",
   port=radioshow.harbor_port,
   password=radioshow.harbor_password,
-  buffer=5.0,
-  max=20.0,
+  buffer=10.0,
+  max=(1. * 60. * 60.),
   timeout=5.0,
   auth=radioshow.auth_callback,
   on_connect=harbor_connect_callback,
@@ -30,8 +30,13 @@ output.file(
     # Again maybe do something with the file here - maybe run some process that
     # will copy it to a safe place and then send to the object storage, then
     # take care of deleting it?
-    file.copy(radioshow.temp_filename, "/app/archive.mp3")
-    log(level=3, label="outfile.on_close", "\t- Copied #{radioshow.temp_filename} file to /app/archive.mp3.")
+    thread.run(
+      delay=0.,
+      fun () -> begin
+        file.copy(radioshow.temp_filename, "/app/archive.mp3")
+        log(level=3, label="outfile.on_close", "\t- Copied #{radioshow.temp_filename} file to /app/archive.mp3.")
+      end
+    )
   end,
   fallible=true,
   radioshow.temp_filename,
@@ -59,6 +64,8 @@ output.icecast(%mp3(bitrate=320),
       label="icecast.on_stop",
       "Icecast output has stopped."
     )
+
+    # Poll websocket here?
   end,
   meta_wrapped_stream
 )

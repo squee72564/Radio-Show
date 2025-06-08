@@ -57,6 +57,12 @@ output.icecast(%mp3(bitrate=320),
       label="icecast.on_start",
       "Started Icecast output has started."
     )
+    radioshow.post(
+      timeout=5.0,
+      "stream_status",
+      json.stringify("live")
+    )
+    ()
   end,
   on_stop= fun() -> begin
     log(
@@ -64,8 +70,13 @@ output.icecast(%mp3(bitrate=320),
       label="icecast.on_stop",
       "Icecast output has stopped."
     )
-
     # Poll websocket here?
-  end,
+    radioshow.post(
+      timeout=5.0,
+      "stream_status",
+      json.stringify("offline")
+    )
+    ()
+    end,
   meta_wrapped_stream
 )

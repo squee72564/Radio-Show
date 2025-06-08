@@ -230,7 +230,7 @@ export default function LiveStreamPlayer() {
   const streamUrl: string = "http://localhost:3000/api/live";
   const status = useStreamStatus(() => "ws://localhost:3000/api/ws");
   const [loading, setLoading] = useState<boolean>(true);
-  const [isStreamLive, setIsStreamLive] = useState<boolean>(true);
+  const [isStreamLive, setIsStreamLive] = useState<boolean>(false);
 
   useEffect(() => {
     let retries = 3;
@@ -256,7 +256,7 @@ export default function LiveStreamPlayer() {
         timeoutId = setTimeout(checkStream, 3000);
       } else {
         setIsStreamLive(false);
-        setLoading(false);
+        setLoading(true);
       }
     };
 
@@ -264,7 +264,7 @@ export default function LiveStreamPlayer() {
       checkStream();
     } else {
       setIsStreamLive(false);
-      setLoading(false);
+      setLoading(true);
     }
 
     return () => clearTimeout(timeoutId);
@@ -275,11 +275,7 @@ export default function LiveStreamPlayer() {
     <div className="flex flex-col gap-4 w-full">
       <CustomPlayer streamUrl={streamUrl} isStreamLive={isStreamLive}/>
 
-      {loading ? (
-        <Alert variant="default" className="w-full">
-          <AlertTitle>Loading...</AlertTitle>
-        </Alert>
-      ): !isStreamLive ? (
+      { !isStreamLive ? (
         <Alert variant="default" className="w-full">
           <AlertTitle>Stream appears to be offline</AlertTitle>
           <AlertDescription className="text-base">
@@ -289,6 +285,11 @@ export default function LiveStreamPlayer() {
               Check back later or visit the <Link className="text-blue-700/80" href="/archive">archives</Link>.
             </p>
           </AlertDescription>
+        </Alert>
+      
+      ): loading ? (
+        <Alert variant="default" className="w-full">
+          <AlertTitle>Loading...</AlertTitle>
         </Alert>
       ) : (
         <Alert variant="default" className="w-full">

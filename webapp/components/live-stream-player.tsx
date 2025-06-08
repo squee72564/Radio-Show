@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import useAudioVisualizer from "@/hooks/use-audiovisualizer";
+import { useStreamStatus } from '@/hooks/use-streamstatus';
+import { useAudioVisualizer } from "@/hooks/use-audiovisualizer";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
@@ -122,7 +123,6 @@ function CustomPlayer({ streamUrl, isStreamLive }: { streamUrl: string, isStream
   }, [isStreamLive]);
 
   useEffect(() => {
-    console.log("event listener useEffect")
     const audio = audioRef.current;
     if (!audio) return;
 
@@ -228,24 +228,48 @@ function CustomPlayer({ streamUrl, isStreamLive }: { streamUrl: string, isStream
 
 export default function LiveStreamPlayer() {
   const streamUrl: string = "http://localhost:3000/api/live";
+  const status = useStreamStatus(() => "ws://localhost:3000/api/ws");
   const [loading, setLoading] = useState<boolean>(true);
   const [isStreamLive, setIsStreamLive] = useState<boolean>(true);
 
   useEffect(() => {
+    let retries = 3;
+    let timeoutId: NodeJS.Timeout;
+
     const checkStream = () => {
       fetch(streamUrl, { method: "HEAD" })
         .then((res) => {
-          const isAudio = (res.ok && res.headers.get("content-type")?.includes("audio") || false);
-          setIsStreamLive(isAudio);
+          const isAudio = res.ok && res.headers.get("content-type")?.includes("audio");
+          if (isAudio) {
+            setIsStreamLive(true);
+            setLoading(false);
+          } else {
+            retry();
+          }
         })
-        .catch(() => setIsStreamLive(false))
-        .finally(() => setLoading(false));
+        .catch(retry);
     };
 
-    checkStream();
-    const intervalId = setInterval(checkStream, 1000 * 10);
-    return () => clearInterval(intervalId);
-  }, [streamUrl]);
+    const retry = () => {
+      if (retries > 0) {
+        retries--;
+        timeoutId = setTimeout(checkStream, 3000);
+      } else {
+        setIsStreamLive(false);
+        setLoading(false);
+      }
+    };
+
+    if (status === 'live') {
+      checkStream();
+    } else {
+      setIsStreamLive(false);
+      setLoading(false);
+    }
+
+    return () => clearTimeout(timeoutId);
+  }, [status]);
+
 
   return (
     <div className="flex flex-col gap-4 w-full">

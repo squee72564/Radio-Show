@@ -1,69 +1,50 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import useAudioVisualizer from "@/hooks/use-audiovisualizer";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
-
-import { PlayIcon, PauseIcon, LoaderIcon } from "lucide-react";
-import { Badge } from "./ui/badge";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 function WaveformVisualizer({
   audioRef,
   audioCtxRef,
+  sourceNodeRef,
+  analyserRef,
+  isTimeDomain
 }: {
   audioRef: React.RefObject<HTMLAudioElement | null>;
   audioCtxRef: React.RefObject<AudioContext | null>;
+  sourceNodeRef: React.RefObject<MediaElementAudioSourceNode | null>;
+  analyserRef: React.RefObject<AnalyserNode | null>;
+  isTimeDomain: boolean
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const hasConnectedAudioSource = useRef<boolean>(false);
-  const [isTimeDomain, setIsTimeDomain] = useState<boolean>(true);
-  const modeRef = useRef<boolean>(true);
-
-  useEffect(() => {
-    modeRef.current = isTimeDomain;
-  }, [isTimeDomain]);
 
   useEffect(() => {
     const audio = audioRef.current;
     const canvas = canvasRef.current;
     const canvasCtx = canvas?.getContext("2d");
-
-    if (!audio || !canvas || !canvasCtx) return;
-
-    if (!audioCtxRef.current) {
-      audioCtxRef.current = new AudioContext();
-    }
-
-    const audioCtx = audioCtxRef.current;
-
-    if (!sourceRef.current && !hasConnectedAudioSource.current) {
-      sourceRef.current = audioCtx.createMediaElementSource(audio);
-      hasConnectedAudioSource.current = true;
-    }
-
-    if (!analyserRef.current) {
-      const analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 2048;
-      sourceRef.current?.connect(analyser);
-      analyser.connect(audioCtx.destination);
-      analyserRef.current = analyser;
-    }
-
+    const source = sourceNodeRef.current;
     const analyser = analyserRef.current;
+
+    if (!audio || !canvas || !canvasCtx || !audioCtxRef.current || !source || !analyser)
+      return;
+
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
+    let animationFrameId: number;
 
     const draw = () => {
-      requestAnimationFrame(draw);
+      animationFrameId = requestAnimationFrame(draw);
+
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
       canvasCtx.lineWidth = 2;
-      canvasCtx.strokeStyle = "#4F45E5";
+      canvasCtx.strokeStyle = "#181363";
 
-      if (modeRef.current) {
+      if (isTimeDomain) {
         analyser.getByteTimeDomainData(dataArray);
         const sliceWidth = canvas.width / bufferLength;
         let x = 0;
@@ -84,91 +65,75 @@ function WaveformVisualizer({
         for (let i = 0; i < bufferLength; i++) {
           const barHeight = (dataArray[i] / 255) * canvas.height;
           const y = canvas.height - barHeight;
-          canvasCtx.fillStyle = "#4F45E5";
+          canvasCtx.fillStyle = "#070a2e";
           canvasCtx.fillRect(x, y, barWidth, barHeight);
           x += barWidth + 1;
         }
       }
-
-      return () => {
-        analyser?.disconnect();
-        sourceRef.current?.disconnect();
-      };
     };
 
     draw();
-  }, [audioCtxRef, audioRef]);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [audioRef, audioCtxRef, analyserRef, isTimeDomain]);
 
   return (
-    <div className="w-full flex flex-col items-center gap-2">
-      <canvas
-        ref={canvasRef}
-        className="w-full max-w-full aspect-[4/1] bg-primary/50 rounded-xl"
-      />
-      <Button
-        className="p-1 text-xs"
-        variant="outline"
-        onClick={() => setIsTimeDomain((prev) => !prev)}
-      >
-        View: {isTimeDomain ? "Time Domain" : "Frequency Domain"}
-      </Button>
-    </div>
+    <canvas
+      ref={canvasRef}
+      className="w-full max-w-full aspect-[4/1] bg-primary/50 rounded-xl"
+    />
   );
 }
 
 function CustomPlayer({ streamUrl, isStreamLive }: { streamUrl: string, isStreamLive: boolean }) {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const audioCtxRef = useRef<AudioContext | null>(null);
+  
+  const {
+    audioCtxRef,
+    analyserRef,
+    sourceNodeRef,
+    isInitialized,
+    initAudioGraph,
+    resumeIfSuspended,
+  } = useAudioVisualizer(audioRef);
+
+  const [isTimeDomain, setIsTimeDomain] = useState<boolean>(true);
   const [volume, setVolume] = useState<number>(100);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    return () => {
-      if (audioCtxRef.current?.state === "running") {
-        audioCtxRef.current.close();
-      }
-    };
-  }, []);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     if (isStreamLive) {
-      console.log("Stream is live — reloading audio");
-      audio.src = streamUrl; // reset in case stream is re-enabled
+      audio.pause();
+      audio.removeAttribute("src");
+      audio.load();
+      audio.src = streamUrl;
       audio.load();
     } else {
-      console.log("Stream is offline — stopping audio");
-      setIsLoading(true);
       audio.pause();
       audio.removeAttribute("src");
       audio.load();
     }
-  }, [isStreamLive, streamUrl]);
+  }, [isStreamLive]);
 
   useEffect(() => {
+    console.log("event listener useEffect")
     const audio = audioRef.current;
     if (!audio) return;
 
     const handleCanPlay = async () => {
-
-      if (audioCtxRef.current?.state === "suspended") {
-        audioCtxRef.current.resume();
-      }
-
-      if (audio.paused) {
-        try {
-          await audio.play();
-        } catch (err) {
-          console.warn("Autoplay failed: ", err);
-        }
-      }
-
       setIsLoading(false);
     };
 
-    const handleLoadStart = () => setIsLoading(true);
+    const handleLoadStart = () => {
+      setIsLoading(true);
+      setIsPlaying(false);
+    }
 
     audio.addEventListener("loadstart", handleLoadStart);
     audio.addEventListener("canplay", handleCanPlay);
@@ -187,9 +152,60 @@ function CustomPlayer({ streamUrl, isStreamLive }: { streamUrl: string, isStream
   };
 
   return (
-    <div className="flex flex-col items-center w-full gap-4 bg-muted p-4">
-      {audioRef && <WaveformVisualizer audioRef={audioRef} audioCtxRef={audioCtxRef} />}
-      
+    <div className="flex flex-col items-center text-center w-full gap-4 bg-muted p-4 rounded-xl">
+      <div
+        className="flex flex-col justify-center items-center w-full max-w-full aspect-[4/1] bg-primary/10 rounded-xl"
+      >
+      { !isStreamLive ? (
+        <>
+          <p>{"乁( ⁰͡ Ĺ̯ ⁰͡ ) ㄏ"}</p>
+          <p>Offline.</p>
+        </>
+      ) : isLoading ? (
+          <>
+            <p>{"( ͡~ ͜ʖ ͡°)"}</p>
+            <p>Loading...</p>
+          </>
+      ) : !isPlaying ? (
+        <div
+          onClick={async () => {
+            const audio = audioRef.current;
+            if (!audio) return;
+
+            if (!isInitialized) initAudioGraph();
+            await resumeIfSuspended();
+
+            try {
+              await audio.play();
+              setIsPlaying(true);
+            } catch (err) {
+              console.error("Playback failed:", err);
+            }
+          }}
+        >
+          <>
+            <p>{"(♡´౪`♡)"}</p>
+            <p>Click to Play!</p>
+          </>
+        </div>
+      ) : (
+        audioRef &&
+          <WaveformVisualizer
+            audioRef={audioRef}
+            audioCtxRef={audioCtxRef}
+            sourceNodeRef={sourceNodeRef}
+            analyserRef={analyserRef}
+            isTimeDomain={isTimeDomain}
+          />
+      )}
+      </div>
+      <Button
+        className="p-1 text-xs"
+        variant="outline"
+        onClick={() => setIsTimeDomain((prev) => !prev)}
+      >
+        View: {isTimeDomain ? "Time Domain" : "Frequency Domain"}
+      </Button>
       <div className="w-full">
         <Badge variant={"outline"} className="text-sm text-muted-foreground mb-1">
           {!isStreamLive ? "Offline" : isLoading ? "Loading..." : `Volume: ${volume}%`}
@@ -210,7 +226,6 @@ function CustomPlayer({ streamUrl, isStreamLive }: { streamUrl: string, isStream
   );
 }
 
-
 export default function LiveStreamPlayer() {
   const streamUrl: string = "http://localhost:3000/api/live";
   const [loading, setLoading] = useState<boolean>(true);
@@ -228,7 +243,7 @@ export default function LiveStreamPlayer() {
     };
 
     checkStream();
-    const intervalId = setInterval(checkStream, 1000 * 5);
+    const intervalId = setInterval(checkStream, 1000 * 10);
     return () => clearInterval(intervalId);
   }, [streamUrl]);
 
@@ -236,14 +251,18 @@ export default function LiveStreamPlayer() {
     <div className="flex flex-col gap-4 w-full">
       <CustomPlayer streamUrl={streamUrl} isStreamLive={isStreamLive}/>
 
-      {loading || !isStreamLive ? (
+      {loading ? (
+        <Alert variant="default" className="w-full">
+          <AlertTitle>Loading...</AlertTitle>
+        </Alert>
+      ): !isStreamLive ? (
         <Alert variant="default" className="w-full">
           <AlertTitle>Stream appears to be offline</AlertTitle>
           <AlertDescription className="text-base">
             <p className="text-center">
               The live stream connection may be down.
               <br />
-              Check back later or visit the <a className="text-blue-700/80" href="/archive">archives</a>.
+              Check back later or visit the <Link className="text-blue-700/80" href="/archive">archives</Link>.
             </p>
           </AlertDescription>
         </Alert>

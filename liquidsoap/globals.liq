@@ -20,7 +20,7 @@ let radioshow.harbor_mount      = environment.get("HARBOR_MOUNT", default="/dj")
 
 let radioshow.url = environment.get("SITE_URL", default="http://host.docker.internal:3000")
 
-let radioshow.temp_filename = "/app/test.mp3"
+let radioshow.temp_filename = "/app/files/test.mp3"
 
 # <-----
 # Global References

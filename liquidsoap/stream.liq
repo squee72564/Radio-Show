@@ -33,7 +33,7 @@ output.file(
     thread.run(
       delay=0.,
       fun () -> begin
-        file.copy(radioshow.temp_filename, "/app/archive.mp3")
+        file.copy(radioshow.temp_filename, "/app/files/archive.mp3")
         log(level=3, label="outfile.on_close", "\t- Copied #{radioshow.temp_filename} file to /app/archive.mp3.")
       end
     )
@@ -57,12 +57,11 @@ output.icecast(%mp3(bitrate=320),
       label="icecast.on_start",
       "Started Icecast output has started."
     )
-    radioshow.post(
+    ignore(radioshow.post(
       timeout=5.0,
       "stream_status",
       json.stringify("live")
-    )
-    ()
+    ))
   end,
   on_stop= fun() -> begin
     log(
@@ -71,12 +70,11 @@ output.icecast(%mp3(bitrate=320),
       "Icecast output has stopped."
     )
     # Poll websocket here?
-    radioshow.post(
+    ignore(radioshow.post(
       timeout=5.0,
       "stream_status",
       json.stringify("offline")
-    )
-    ()
+    ))
     end,
   meta_wrapped_stream
 )

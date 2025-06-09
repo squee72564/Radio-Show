@@ -9,6 +9,15 @@ services:
   liquidsoap:
     env_file:
       - .env.prod
+    volumes:
+      - prod-liq-files:/app/files
+      - ./liquidsoap/auth.liq:/app/auth.liq:ro
+      - ./liquidsoap/callbacks.liq:/app/callbacks.liq:ro
+      - ./liquidsoap/commands.liq:/app/commands.liq:ro
+      - ./liquidsoap/globals.liq:/app/globals.liq:ro
+      - ./liquidsoap/script.liq:/app/script.liq:ro
+      - ./liquidsoap/stream.liq:/app/stream.liq:ro
+      - ./liquidsoap/utils.liq:/app/utils.liq:ro
 
   webapp:
     build: ./webapp
@@ -35,3 +44,4 @@ services:
 volumes:
   postgres-data:
   prod-icecast-logs:
+  prod-liq-files:

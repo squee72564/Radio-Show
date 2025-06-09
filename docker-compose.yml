@@ -18,6 +18,7 @@ services:
     networks:
       - backend
     restart: unless-stopped
+    user: 100:101
     command: liquidsoap /app/script.liq
 
   postgres:

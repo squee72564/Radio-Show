@@ -78,7 +78,7 @@ function WaveformVisualizer({
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [audioRef, audioCtxRef, analyserRef, isTimeDomain]);
+  }, [sourceNodeRef, audioRef, audioCtxRef, analyserRef, isTimeDomain]);
 
   return (
     <canvas
@@ -120,7 +120,7 @@ function CustomPlayer({ streamUrl, isStreamLive }: { streamUrl: string, isStream
       audio.removeAttribute("src");
       audio.load();
     }
-  }, [isStreamLive]);
+  }, [streamUrl, isStreamLive]);
 
   useEffect(() => {
     const audio = audioRef.current;

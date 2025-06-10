@@ -1,8 +1,4 @@
-import { FileQuestionIcon, Calendar, LayoutDashboard, Music, Settings, Archive, type LucideIcon } from "lucide-react";
-import { SettingsSheet } from "./settings-sheet";
-import { AboutCollapsible } from "./about-collapsible";
 import Link from "next/link"
-
 import {
   Sidebar,
   SidebarContent,
@@ -16,69 +12,9 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { SignInOutNav } from "./signin-nav";
+import { SidebarItems } from "@/app/types/sidebar";
 
-interface SidebarComponentProps {
-  Title: string;
-  Items?: { title: string; url: string }[];
-  Icon: LucideIcon;
-}
-
-interface SidebarItems {
-  title: string;
-  url?: string;
-  icon: LucideIcon;
-  component?: React.ComponentType<SidebarComponentProps>
-  items?: {title: string, url:string }[];
-};
-
-const items: SidebarItems[] = [
-  {
-    title: "Dashboard",
-    url: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Live Radio",
-    url: "/live",
-    icon: Music,
-  },
-  {
-    title: "Archived Shows",
-    url: "/archive",
-    icon: Archive,
-  },
-  {
-    title: "Calendar",
-    url: "/calendar",
-    icon: Calendar,
-  },
-  {
-    title: "More Information",
-    component: AboutCollapsible,
-    items : [
-      {
-        title: "About",
-        url: "/about",
-      },
-            {
-        title: "Want to DJ?",
-        url: "/join",
-      },
-            {
-        title: "Contact",
-        url: "/contact",
-      },
-    ],
-    icon: FileQuestionIcon
-  },
-  {
-    title: "Settings",
-    component: SettingsSheet,
-    icon: Settings,
-  },
-];
-
-export function AppSidebar() {
+export function AppSidebar({title, sidebarItems} : {title: string, sidebarItems: SidebarItems[]}) {
   
   return (
     <Sidebar collapsible="icon">
@@ -86,12 +22,12 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel className="flex justify-center text-center min-h-15 font-bold text-lg">
             <Link href={"/"}>
-              <span className="font-bold">Radio Show</span>
+              <span className="font-bold">{title}</span>
             </Link>
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-5">
-              {items.map((item) => (
+              {sidebarItems.map((item) => (
                   item.url ? (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton tooltip={item.title} asChild>

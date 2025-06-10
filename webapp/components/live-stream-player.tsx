@@ -182,6 +182,7 @@ function CustomPlayer({ streamUrl, isStreamLive }: { streamUrl: string, isStream
               console.error("Playback failed:", err);
             }
           }}
+          className="flex flex-col justify-center w-full h-full hover:font-bold"
         >
           <>
             <p>{"(♡´౪`♡)"}</p>

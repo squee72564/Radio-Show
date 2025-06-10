@@ -1,20 +1,31 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
-export function useWebSocket(url: () => string) {
-  const ref = useRef<WebSocket | null>(null);
-  const target = useRef(url);
-  const [, update] = useState(0);
+export function useWebSocket(urlFn: () => string) {
+  const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    if (ref.current) return;
-    const socket = new WebSocket(target.current());
-    ref.current = socket;
-    update((p) => p + 1);
+    const ws = new WebSocket(urlFn());
+    socketRef.current = ws;
 
-    return () => socket.close();
+    ws.onopen = () => {
+      console.log('[WebSocket] Connected');
+    };
+
+    ws.onerror = (e) => {
+      console.log('[WebSocket] Error:', e);
+    };
+
+    ws.onclose = (e) => {
+      console.log('[WebSocket] Closed:', e.reason);
+    };
+
+    return () => {
+      ws.close(1000, 'Component unmounted');
+      socketRef.current = null;
+    };
   }, []);
 
-  return ref.current;
+  return socketRef;
 }

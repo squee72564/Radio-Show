@@ -5,8 +5,7 @@ import { Badge } from "./ui/badge";
 
 export default async function UserPendingStreamsCard({userId}: {userId: string}) {
   const pendingStreams = await findAllStreamsByTypeAndUser(userId, $Enums.ScheduleStatus.PENDING);
-  await new Promise(resolve => setTimeout(resolve, 2000));
-
+  
   return (
     <Card className="flex-1">
       <CardHeader>

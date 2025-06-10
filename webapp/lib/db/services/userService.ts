@@ -24,3 +24,14 @@ export async function findRecentUsers(count: number) {
     take: count,
   });
 }
+
+export async function updateUserBio(userId: string, newBio: string) {
+  return await prisma.user.update({
+    where: { id: userId },
+    data: { bio: newBio }
+  });
+}
+
+export async function getUserCount() {
+  return await prisma.user.count();
+}

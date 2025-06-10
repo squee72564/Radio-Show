@@ -7,6 +7,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 export default async function UserProfilePage({
   params
@@ -23,15 +25,29 @@ export default async function UserProfilePage({
   
   return (
     <div className="w-full p-6 space-y-6">
-      <Card className="flex items-center gap-6 p-6">
-        <Avatar className="h-20 w-20">
+      <Card className="flex gap-6 p-6">
+        {userProfileInfo && 
+          <CardHeader>
+            <Badge className="px-5 py-3 rounded-2xl font-bold" variant={"outline"}>
+              {userProfileInfo.status}
+          </Badge>
+          </CardHeader>
+        }
+        <div className="w-full">
+        <Avatar className="h-30 w-30 mx-auto">
           {userProfileInfo?.image && <AvatarImage src={userProfileInfo?.image} />}
-          <AvatarFallback>{userProfileInfo?.name?.charAt(0) ?? "?"}</AvatarFallback>
+          <AvatarFallback className="font-bold text-2xl">{userProfileInfo?.name?.charAt(0) ?? "?"}</AvatarFallback>
         </Avatar>
+        </div>
+
         {user && user.id === userProfileInfo?.id &&
-          <Button className="absolute top-6 right-6 mr-5 mt-5" variant="secondary">
-            Edit
-          </Button>
+          <Link
+            href={`/user/edit/${user.id}`}
+          >
+            <Button className="absolute top-6 right-6 mr-5 mt-5" variant="outline">
+              Edit Profile
+            </Button>
+          </Link>
         }
         <div className="flex flex-col justify-center items-center flex-1">
           <h2 className="text-2xl font-bold">{userProfileInfo?.name}</h2>
@@ -51,7 +67,7 @@ export default async function UserProfilePage({
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                This section contains a short bio, interests, or other personal details.
+                {userProfileInfo?.bio}
               </p>
             </CardContent>
           </Card>

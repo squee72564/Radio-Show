@@ -22,6 +22,8 @@ model User {
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
+  bio           String?
+
   // Streaming related MODELS
   streamSchedules StreamSchedule[]
   streamInstances StreamInstance[]

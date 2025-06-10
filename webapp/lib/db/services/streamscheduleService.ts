@@ -11,6 +11,16 @@ export async function findAllPendingApprovalSchedules() {
     orderBy: { submittedAt: "desc" },
   });
 }
+
+export async function findAllStreamsByTypeAndUser(userId: string, status: $Enums.ScheduleStatus) {
+  return await prisma.streamSchedule.findMany({
+    where: {status: status, userId: userId},
+    include: {
+      metadata: true
+    }
+  })
+}
+
 export async function getStreamCountByStatus(status: $Enums.ScheduleStatus) {
   return await prisma.streamSchedule.count({
     where: { status: status },

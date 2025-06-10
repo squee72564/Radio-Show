@@ -35,10 +35,7 @@ export default async function UpdateBioCard({user}: {user: User}) {
           />
         </CardContent>
         <div className="flex flex-row justify-center gap-20">
-          <Button type="submit">Update Bio</Button>
-          <Link href={`/user/${user?.id}`}>
-            <Button variant={"destructive"}>Cancel</Button>
-          </Link>
+          <Button type="submit">Save Changes</Button>
         </div>
       </form>
     </Card>

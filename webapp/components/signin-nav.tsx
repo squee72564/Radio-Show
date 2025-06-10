@@ -5,7 +5,6 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,8 +20,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { MoreVerticalIcon, UserCircleIcon, LogIn, LogOut } from "lucide-react"
-import { User } from "next-auth";
+
+import { isUserAdmin } from "@/lib/utils";
+import { MoreVerticalIcon, UserCircleIcon, LogIn, LogOut, CrownIcon } from "lucide-react"
+import { User } from "@prisma/client";
 import Link from "next/link"
 import { JSX } from "react";
 
@@ -62,9 +63,9 @@ const UserInfo = ({user}: {user: User | undefined}): JSX.Element => {
 
 export async function SignInOutNav() {
   const session = await auth();
-  const user = session?.user;
-  const signedIn = user !== undefined;
-  
+  const user = session?.user as User | undefined;
+  const signedIn = !!user;
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -91,16 +92,29 @@ export async function SignInOutNav() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                {signedIn && 
-                  <Link
-                    href={`/user/${user.id}`}
-                    className="w-full"
-                  >
-                    <DropdownMenuItem className="w-full">
-                      <UserCircleIcon />
-                      User Profile
-                    </DropdownMenuItem>
-                  </Link>
+                {signedIn &&
+                  <>
+                    <Link
+                      href={`/user/${user.id}`}
+                      className="w-full"
+                    >
+                      <DropdownMenuItem className="w-full">
+                        <UserCircleIcon />
+                        User Profile
+                      </DropdownMenuItem>
+                    </Link>
+                    { isUserAdmin(user.status) &&
+                      <Link
+                        href={`/admin/dashboard`}
+                        className="w-full"
+                      >
+                        <DropdownMenuItem className="w-full">
+                          <CrownIcon />
+                          Admin Panel
+                        </DropdownMenuItem>
+                      </Link> 
+                    }
+                  </>
                 }
                 <form
                   action={signedIn ? signOutFnAsync : signInFnAsync}

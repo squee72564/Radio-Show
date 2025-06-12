@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import bcrypt from "bcryptjs";
+import { $Enums } from "@prisma/client";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -15,4 +16,8 @@ export function encryptSync(password: string) {
   const salt = bcrypt.genSaltSync(saltRounds);
   const hash = bcrypt.hashSync(password, salt);
   return hash;
+}
+
+export function isUserAdmin(status: $Enums.Role) {
+  return (status === $Enums.Role.ADMIN|| status === $Enums.Role.OWNER)
 }

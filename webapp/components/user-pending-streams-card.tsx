@@ -1,4 +1,4 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { findAllStreamsByTypeAndUser } from "@/lib/db/actions/streamscheduleActions";
 import { $Enums } from "@prisma/client";
 import { Badge } from "./ui/badge";
@@ -15,7 +15,7 @@ export default async function UserPendingStreamsCard({userId}: {userId: string})
         {pendingStreams.length == 0 ? (
           <Badge variant={"outline"}>No Pending Streams</Badge>
         ) : (
-            pendingStreams.map((stream, idx) => (
+            pendingStreams.map((stream) => (
               <div key={stream.id}>
                 {stream.metadata.title}
               </div>

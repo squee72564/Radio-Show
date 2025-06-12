@@ -3,7 +3,6 @@ import { User } from "@prisma/client";
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import Link from "next/link"
 
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"

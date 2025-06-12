@@ -5,6 +5,7 @@ import { AppSidebar } from "@/components/sidebar";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard",
+  description: "Admin Dashboard for Radio Show"
 };
 
 export default function RootLayout({

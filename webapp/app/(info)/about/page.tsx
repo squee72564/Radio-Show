@@ -3,6 +3,12 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { HeadphonesIcon, Disc3Icon, RocketIcon, EarthIcon} from "lucide-react"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "About",
+  description: "About page for Radio Show",
+};
 
 export default function AboutPage() {
   return (
@@ -87,7 +93,7 @@ export default function AboutPage() {
         </CardHeader>
         <CardContent className="pt-6">
           <p className="text-muted-foreground">
-            Radio Show is built for the people — by the people. It's open-source and community-driven. No ads, no corporate agendas, just pure music.
+            {"Radio Show is built for the people — by the people. It's open-source and community-driven. No ads, no corporate agendas, just pure music."}
           </p>
           <a href="https://github.com/squee72564/Radio-Show" target="_blank" rel="noopener noreferrer">
             <Button className="mt-4" variant="outline">

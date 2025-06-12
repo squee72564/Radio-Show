@@ -3,6 +3,13 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
 import { NotebookPenIcon, RocketIcon, BookHeadphonesIcon } from "lucide-react"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Sign Up To Stream",
+  description: "Join Information page for Radio Show",
+};
+
 
 export default function DJSignupPage() {
   return (

@@ -2,7 +2,12 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { MailQuestionIcon, BugOffIcon } from "lucide-react"
-import Link from "next/link"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Contact page for Radio Show",
+};
 
 export default function Contact() {
   return (

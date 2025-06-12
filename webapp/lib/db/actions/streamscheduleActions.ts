@@ -1,6 +1,6 @@
 'use server';
 
-import { $Enums } from "@prisma/client";
+import { $Enums, StreamSchedule } from "@prisma/client";
 
 import * as streamScheduleService from "@/lib/db/services/streamscheduleService";
 
@@ -14,4 +14,8 @@ export async function findAllStreamsByTypeAndUser(userId: string, status: $Enums
 
 export async function getStreamCountByStatus(status: $Enums.ScheduleStatus) {
   return streamScheduleService.getStreamCountByStatus(status);
+}
+
+export async function generateStreamInstances(streamSchedule: StreamSchedule) {
+  return streamScheduleService.generateStreamInstances(streamSchedule);
 }

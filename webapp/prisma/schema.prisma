@@ -90,31 +90,27 @@ model Authenticator {
   @@id([userId, credentialID])
 }
 
-model StreamMetadata {
-  id String @id @default(cuid())
-
-  title       String
-  description String   @default("No Description")
-  tags        String[] @default(["Muzak"])
-
-  startTime      DateTime        @db.Timetz(0)
-  endTime        DateTime        @db.Timetz(0)
-  rrule          String
-  StreamSchedule StreamSchedule?
-}
-
 model StreamSchedule {
   id String @id @default(cuid())
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
-  metadataId String         @unique
-  metadata   StreamMetadata @relation(fields: [metadataId], references: [id], onDelete: Cascade)
-
+  // Application Information
   status      ScheduleStatus @default(PENDING)
   submittedAt DateTime       @default(now())
   reviewedAt  DateTime?
+
+  // Stream Metadata
+  title       String
+  description String   @default("No Description")
+  tags        String[] @default(["Muzak"])
+
+  startTime      DateTime        @db.Timetz(0)
+  endTime        DateTime        @db.Timetz(0)
+  startDate      DateTime
+  endDate        DateTime
+  rrule          String
 
   StreamInstance StreamInstance[]
 }
@@ -125,8 +121,8 @@ model StreamInstance {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  start DateTime
-  end   DateTime
+  scheduledStart DateTime
+  scheduledEnd   DateTime
 
   streamScheduleId String
   streamSchedule   StreamSchedule @relation(fields: [streamScheduleId], references: [id], onDelete: Cascade)

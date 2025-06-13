@@ -2,8 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { findAllStreamsByTypeAndUser } from "@/lib/db/actions/streamscheduleActions";
 import { $Enums } from "@prisma/client";
 import { Badge } from "./ui/badge";
-import { RRule } from "rrule";
-import { CalendarRange, Clock4, Repeat } from "lucide-react";
+import StreamInfoCard from "./stream-info-card";
 
 export default async function UserActiveStreamsCard({userId}: {userId: string}) {
   const activeStreams = await findAllStreamsByTypeAndUser(userId, $Enums.ScheduleStatus.APPROVED);
@@ -18,37 +17,9 @@ export default async function UserActiveStreamsCard({userId}: {userId: string}) 
           <Badge variant={"outline"}>No Pending Streams</Badge>
         ) : (
           <div className="space-y-2 overflow-y-auto max-h-10">
-            {activeStreams.map((stream) => {
-              const startTime = stream.startTime.toISOString().slice(11, 16);
-              const endTime = stream.endTime.toISOString().slice(11, 16);
-              const startDate = stream.startDate.toDateString();
-              const endDate = stream.endDate.toDateString();
-              const recurrence = RRule.fromString(stream.rrule).toText();
-
-              return (
-                <div
-                  key={stream.id}
-                  className="border rounded-xl p-4 shadow-sm bg-muted/50 space-y-2"
-                >
-                  <div className="text-lg font-semibold">{stream.title}</div>
-
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Clock4 className="w-4 h-4" />
-                    <span>{startTime} – {endTime}</span>
-                  </div>
-
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CalendarRange className="w-4 h-4" />
-                    <span>{startDate} to {endDate}</span>
-                  </div>
-
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Repeat className="w-4 h-4" />
-                    <span>{recurrence}</span>
-                  </div>
-                </div>
-              );
-            })}
+            {activeStreams.map((stream, idx) => (
+              <StreamInfoCard key={idx} stream={stream} />
+            ))}
           </div>
         )}
       </CardContent>

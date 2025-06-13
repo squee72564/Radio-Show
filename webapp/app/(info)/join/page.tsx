@@ -4,6 +4,8 @@ import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
 import { NotebookPenIcon, RocketIcon, BookHeadphonesIcon } from "lucide-react"
 import { Metadata } from "next"
+import { auth, signIn } from "@/auth"
+import { redirect } from "next/navigation"
 
 export const metadata: Metadata = {
   title: "Sign Up To Stream",
@@ -11,7 +13,11 @@ export const metadata: Metadata = {
 };
 
 
-export default function DJSignupPage() {
+export default async function DJSignupPage() {
+  const session = await auth();
+  const user = session?.user;
+  const signedIn = !!user;
+
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
       <h1 className="text-4xl font-bold mb-4">Become a DJ</h1>
@@ -59,11 +65,32 @@ export default function DJSignupPage() {
         <CardContent>
           <div>
             <p className="text-muted-foreground mb-4">
-              Hit the button below to create your DJ account and start scheduling your shows.
+              {signedIn ? (
+                "Click below to start the application."
+              ): (
+                "Click below to login with Google and start the application."
+              )}
+              
             </p>
-            <Link href="/signup">
-              <Button variant="outline">Sign Up to DJ</Button>
-            </Link>
+            {signedIn ? (
+              <Link href="/user/apply">
+                <Button variant="outline">Apply to DJ</Button>
+              </Link>
+            ): (
+              <Button
+                variant="outline"
+                onClick={ async () => {
+                  "use server";
+                  await signIn("google", {
+                    redirect: true,
+                    redirectTo: "/user/apply",
+                  });
+                }}
+              >
+                Login with Google and Apply
+              </Button>
+            )}
+
           </div>
         </CardContent>
       </Card>

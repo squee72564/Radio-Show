@@ -1,5 +1,6 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 export default function ApplyToStream() {
   return (
@@ -13,12 +14,17 @@ export default function ApplyToStream() {
       </p>
     </CardContent>
     <CardFooter className="space-x-10">
-      <Button variant={"outline"}>
-        Apply
-      </Button>
-      <Button variant={"outline"}>
-        Live Streaming Information
-      </Button>
+      <Link href={"/user/apply"}>
+        <Button variant={"outline"}>
+          Apply
+        </Button>
+      </Link>
+      <Link href={"/user/apply"}>
+        <Button variant={"outline"}>
+          Live Streaming Information 
+        </Button>
+      </Link>
+
     </CardFooter>
     </Card>
   );

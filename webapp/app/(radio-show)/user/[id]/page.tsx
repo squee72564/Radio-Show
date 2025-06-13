@@ -42,7 +42,7 @@ export default async function UserProfilePage({
 
         {user && user.id === userProfileInfo?.id &&
           <Link
-            href={`/user/edit/${user.id}`}
+            href={`/user/edit`}
           >
             <Button className="absolute top-6 right-6 mr-5 mt-5" variant="outline">
               Edit Profile

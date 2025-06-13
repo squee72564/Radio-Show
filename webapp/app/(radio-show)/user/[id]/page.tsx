@@ -9,6 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { findAllStreamsByTypeAndUser } from "@/lib/db/actions/streamscheduleActions";
+import { $Enums } from "@prisma/client";
+import { redirect } from "next/navigation";
+import StreamInfoCard from "@/components/stream-info-card";
 
 export default async function UserProfilePage({
   params
@@ -21,36 +25,41 @@ export default async function UserProfilePage({
   const session = await auth();
   const user = session?.user;
 
-  const shows: Array<{title:string}> = [];
+  if (!userProfileInfo) {
+    redirect("/dashboard");
+  }
+
+  const shows = await findAllStreamsByTypeAndUser(userProfileInfo?.id, $Enums.ScheduleStatus.APPROVED);
   
   return (
     <div className="w-full p-6 space-y-6">
       <Card className="flex gap-6 p-6">
-        {userProfileInfo && 
-          <CardHeader>
+        { 
+          <CardHeader className="flex flex-row w-full items-center justify-between">
             <Badge className="px-5 py-3 rounded-2xl font-bold" variant={"outline"}>
               {userProfileInfo.status}
-          </Badge>
+            </Badge>
+            {user && user.id === userProfileInfo?.id &&
+              <Link
+                href={`/user/edit`}
+              >
+                <Button variant="outline">
+                  Edit Profile
+                </Button>
+              </Link>
+            }
           </CardHeader>
         }
         <div className="w-full">
         <Avatar className="h-30 w-30 mx-auto">
-          {userProfileInfo?.image && <AvatarImage src={userProfileInfo?.image} />}
-          <AvatarFallback className="font-bold text-2xl">{userProfileInfo?.name?.charAt(0) ?? "?"}</AvatarFallback>
+          <AvatarImage src={userProfileInfo.image || ""} />
+          <AvatarFallback className="font-bold text-2xl">{userProfileInfo.name?.charAt(0) ?? "?"}</AvatarFallback>
         </Avatar>
         </div>
 
-        {user && user.id === userProfileInfo?.id &&
-          <Link
-            href={`/user/edit`}
-          >
-            <Button className="absolute top-6 right-6 mr-5 mt-5" variant="outline">
-              Edit Profile
-            </Button>
-          </Link>
-        }
+
         <div className="flex flex-col justify-center items-center flex-1">
-          <h2 className="text-2xl font-bold">{userProfileInfo?.name}</h2>
+          <h2 className="text-2xl font-bold">{userProfileInfo.name || userProfileInfo.email}</h2>
         </div>
       </Card>
 
@@ -66,34 +75,45 @@ export default async function UserProfilePage({
               <CardTitle>About</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
-                {userProfileInfo?.bio}
+              <p className="text-md text-muted-foreground">
+                {userProfileInfo.bio}
               </p>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="shows">
-          <Card>
-            <CardHeader className="flex">
-              <CardTitle>Past Shows</CardTitle>
+        <TabsContent value="shows" className="flex md:flex-row flex-col w-full">
+          <Card className="w-full md:w-1/2">
+            <CardHeader>
+              <CardTitle>Past Archives</CardTitle>
             </CardHeader>
             <CardContent>
-              {
-                shows.length === 0 ?
-                  <p className="text-center">No Shows for {userProfileInfo?.name}</p>
-                :
-                  <ul className="space-y-2 overflow-auto max-h-50 p-2">
-                  {shows.map((show, idx) => (
-                    <li
-                      key={idx}
-                      className="border p-4 rounded-md hover:-translate-y-1 duration-300 hover:border-white/30"
-                    >
-                      {show.title}
-                    </li>
+              {shows.length === 0 ? (
+                <Badge variant="outline" className="text-center">No Past Archives</Badge>
+              ): (
+                <div className="space-y-2 overflow-auto max-h-50 p-2">
+                  {shows.map((stream, idx) => (
+                    // TODO: Replace with archive
+                    <StreamInfoCard key={idx} stream={stream} />
                   ))}
-                  </ul>
-              }
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          <Card className="w-full md:w-1/2">
+            <CardHeader>
+              <CardTitle>Streams</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {shows.length === 0 ? (
+                <Badge variant="outline" className="text-center">No Active Streams</Badge>
+              ): (
+                <div className="space-y-2 overflow-auto max-h-50 p-2">
+                  {shows.map((stream, idx) => (
+                    <StreamInfoCard key={idx} stream={stream} />
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

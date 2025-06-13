@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/db/prismaClient";
 import { $Enums, StreamInstance, StreamSchedule } from "@prisma/client";
-import { RRule, rrulestr } from 'rrule'
 
 export async function findAllPendingApprovalSchedules() {
   return await prisma.streamSchedule.findMany({
@@ -21,57 +20,84 @@ export async function getStreamCountByStatus(status: $Enums.ScheduleStatus) {
   });
 }
 
-export async function generateStreamInstances(schedule: StreamSchedule) {
-  const {
-    startTime,
-    endTime,
-    startDate,
-    endDate,
-    rrule,
-    id: streamScheduleId,
-    userId,
-  } = schedule;
-
-  const dtstart = new Date(
-    Date.UTC(
-      startDate.getUTCFullYear(),
-      startDate.getUTCMonth(),
-      startDate.getUTCDate(),
-      startTime.getUTCHours(),
-      startTime.getUTCMinutes()
-    )
-  );
-
-  const until = new Date(
-    Date.UTC(
-      endDate.getUTCFullYear(),
-      endDate.getUTCMonth(),
-      endDate.getUTCDate(),
-      endTime.getUTCHours(),
-      endTime.getUTCMinutes()
-    )
-  );
-
-  const rule = rrulestr(rrule, {
-    dtstart,
-  }) as RRule;
-
-  const occurrences = rule.between(dtstart, until, true);
-  const durationMs = endTime.getTime() - startTime.getTime()
-
-  const data = occurrences.map((scheduledStart) => {
-    const scheduledEnd = new Date(scheduledStart.getTime() + durationMs);
-
-    return {
-      scheduledStart,
-      scheduledEnd,
-      userId,
-      streamScheduleId,
-    };
-  })
-
-  await prisma.streamInstance.createMany({
-    data,
+export async function populateStreamInstances(
+  validatedInstances: {
+    scheduledStart: Date;
+    scheduledEnd: Date;
+    userId: string;
+    streamScheduleId: string;
+  }[]
+) {
+  return await prisma.streamInstance.createMany({
+    data: validatedInstances,
     skipDuplicates: true,
-  })
+  });
+}
+
+export async function getStreamInstanceConflicts(
+  proposedInstances: {
+    scheduledStart: Date;
+    scheduledEnd: Date;
+  }[]
+) {
+  const orConditions = proposedInstances.map(({ scheduledStart, scheduledEnd }) => ({
+    AND: [
+      { scheduledStart: { lt: scheduledEnd } },
+      { scheduledEnd: { gt: scheduledStart } },
+    ],
+  }));
+
+  const conflicts = await prisma.streamInstance.findMany({
+    where: {
+      OR: orConditions,
+      streamSchedule: {
+        status: $Enums.ScheduleStatus.APPROVED,
+      },
+    },
+  });
+
+  return conflicts;
+}
+
+export async function isStreamInstancesConflicting(
+  proposedInstances: {
+    scheduledStart: Date;
+    scheduledEnd: Date;
+  }[]
+) {
+  const orConditions = proposedInstances.map(({ scheduledStart, scheduledEnd }) => ({
+    AND: [
+      { scheduledStart: { lt: scheduledEnd } },
+      { scheduledEnd: { gt: scheduledStart } },
+    ],
+  }));
+
+  const conflicts = await prisma.streamInstance.findFirst({
+    where: {
+      OR: orConditions,
+      streamSchedule: {
+        status: $Enums.ScheduleStatus.APPROVED,
+      },
+    },
+  });
+
+  return !!conflicts;
+}
+
+export async function createStreamSchedule(data: {
+  userId: string;
+  status: $Enums.ScheduleStatus;
+  submittedAt: Date;
+  title: string;
+  description: string;
+  tags: string[];
+  startTime: Date;
+  endTime: Date;
+  startDate: Date;
+  endDate: Date;
+  rrule: string;
+}) {
+  return prisma.streamSchedule.create({
+    data
+  });
 }

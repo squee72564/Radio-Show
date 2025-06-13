@@ -11,17 +11,12 @@ import { Suspense } from "react"
 import UserStreamsSkeleton from "@/components/user-streams-skeleton"
 
 
-export default async function UserProfileEditPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { id }: { id: string } = await params
+export default async function UserProfileEditPage() {
   const session = await auth()
   const user = session?.user as User | undefined;
   const signedIn = !!user;
 
-  if (!signedIn || id !== user.id) {
+  if (!signedIn) {
     redirect("/dashboard");
   }
 

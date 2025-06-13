@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { $Enums, StreamSchedule } from "@prisma/client";
+import { $Enums } from "@prisma/client";
 import { RRule, rrulestr } from "rrule";
 
 export function cn(...inputs: ClassValue[]) {

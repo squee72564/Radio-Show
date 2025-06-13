@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db/prismaClient";
-import { $Enums, StreamInstance, StreamSchedule } from "@prisma/client";
+import { $Enums } from "@prisma/client";
 
 export async function findAllPendingApprovalSchedules() {
   return await prisma.streamSchedule.findMany({

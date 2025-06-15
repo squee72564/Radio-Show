@@ -35,3 +35,7 @@ export async function updateUserBio(userId: string | undefined, newBio: string) 
 export async function getUserCount() {
   return await userService.getUserCount();
 }
+
+export async function changeUserRole(userId: string, newRole: $Enums.Role) {
+  return await userService.changeUserRole(userId, newRole);
+}

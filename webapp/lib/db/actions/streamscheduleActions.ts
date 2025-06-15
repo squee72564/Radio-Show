@@ -1,15 +1,72 @@
 'use server';
 
 import * as streamScheduleService from "@/lib/db/services/streamscheduleService";
+import * as userService from "@/lib/db/services/userService";
+
 
 import { StreamScheduleFormState } from "@/app/types/stream-schedule";
 import { streamScheduleSchema } from "@/validations/stream-schedule";
 import { generateStreamInstances } from "@/lib/utils";
 
-import { $Enums } from "@prisma/client";
+import { $Enums, StreamSchedule, User } from "@prisma/client";
+
+export async function getStreamInstancesByDateRange(dateStart: Date, dateEnd: Date) {
+  return streamScheduleService.getStreamInstancesByDateRange(dateStart, dateEnd);
+}
+
+export async function setStreamStatus(stream: StreamSchedule & {user: User}, status: $Enums.ScheduleStatus) {
+  if (status == $Enums.ScheduleStatus.APPROVED) {
+    
+    const proposedInstances = await generateStreamInstances({
+      startTime: stream.startTime,
+      endTime: stream.endTime,
+      startDate: stream.startDate,
+      endDate: stream.endDate,
+      rrule: stream.rrule
+    });
+
+    const conflicts = await streamScheduleService.isStreamInstancesConflicting(proposedInstances)
+
+    if (conflicts) {
+      return {success: false, message: "", error: "There are already approved schedules that would conflict"}
+    }
+
+    await streamScheduleService.populateStreamInstances(
+      proposedInstances.map((instance) => {
+        return {
+          scheduledStart: instance.scheduledStart,
+          scheduledEnd: instance.scheduledEnd,
+          userId: stream.userId,
+          streamScheduleId: stream.id
+        };
+      }
+    ));
+
+    await streamScheduleService.approveStream(stream.id);
+
+    if (stream.user.status === $Enums.Role.USER) {
+      await userService.changeUserRole(stream.userId, $Enums.Role.STREAMER);
+    }
+
+    return {success: true, message: "Stream Approved", error: ""}
+
+  } else if (status == $Enums.ScheduleStatus.REJECTED) {
+
+    await streamScheduleService.rejectStream(stream.id);
+    await streamScheduleService.revokeStreamInstances(stream.id);
+    return {success: true, message: "Stream Rejected", error: ""}
+  }
+
+  return {success: false, message: "Stream set to pending", error: ""};
+  
+}
 
 export async function findAllStreamsByStatus(status: $Enums.ScheduleStatus) {
   return await streamScheduleService.findAllStreamsByStatus(status);
+}
+
+export async function findAllStreamsByStatusWithUser(status: $Enums.ScheduleStatus) {
+  return await streamScheduleService.findAllStreamsByStatusWithUser(status);
 }
 
 export async function findAllStreamsByStatusAndUser(userId: string, status: $Enums.ScheduleStatus) {
@@ -20,40 +77,8 @@ export async function getStreamCountByStatus(status: $Enums.ScheduleStatus) {
   return streamScheduleService.getStreamCountByStatus(status);
 }
 
-export async function createStreamSchedule(data: {
-  userId: string;
-  status: $Enums.ScheduleStatus;
-  submittedAt: Date;
-  title: string;
-  description: string;
-  tags: string[];
-  startTime: Date;
-  endTime: Date;
-  startDate: Date;
-  endDate: Date;
-  rrule: string;
-}) {
+export async function createStreamSchedule(data: Omit<StreamSchedule, "id">) {
   return streamScheduleService.createStreamSchedule(data);
-}
-
-export async function populateStreamInstances(
-  validatedInstances: {
-    scheduledStart: Date;
-    scheduledEnd: Date;
-    userId: string;
-    streamScheduleId: string;
-  }[]
-) {
-  return streamScheduleService.populateStreamInstances(validatedInstances);
-}
-
-export async function checkStreamInstanceConflicts(
-  proposedInstances: {
-    scheduledStart: Date;
-    scheduledEnd: Date;
-  }[]
-) {
-  return streamScheduleService.isStreamInstancesConflicting(proposedInstances);
 }
 
 export async function streamScheduleFormSubmit(
@@ -119,12 +144,7 @@ export async function streamScheduleFormSubmit(
     rrule,
   });
 
-  console.log("Generated instances:");
-  proposedInstances.forEach(i =>
-    console.log(i.scheduledStart.toISOString(), "-", i.scheduledEnd.toISOString())
-  );
-  
-  const conflicts = await checkStreamInstanceConflicts(proposedInstances)
+  const conflicts = await streamScheduleService.isStreamInstancesConflicting(proposedInstances)
 
   if (conflicts) {
     console.log(proposedInstances);
@@ -139,7 +159,7 @@ export async function streamScheduleFormSubmit(
   }
 
   // Create Stream Schedule Here
-  const scheduleData = {
+  const scheduleData: Omit<StreamSchedule, "id"> = {
     status: $Enums.ScheduleStatus.PENDING,
     submittedAt: new Date(),
     
@@ -152,6 +172,7 @@ export async function streamScheduleFormSubmit(
 
     startDate: startDate,
     endDate: endDate,
+    reviewedAt: null,
 
     rrule: rrule,
     userId: userId,
@@ -159,20 +180,9 @@ export async function streamScheduleFormSubmit(
 
   const pendingSchedule = await createStreamSchedule(scheduleData);
 
-  const streamInstances = await populateStreamInstances(
-    proposedInstances.map((instance) => {
-      return {
-        scheduledStart: instance.scheduledStart,
-        scheduledEnd: instance.scheduledEnd,
-        userId: userId,
-        streamScheduleId: pendingSchedule.id
-      };
-    }
-  ));
-
   return {
     success: true,
-    message: `Broadcast application created successfully for ${streamInstances.count} instances.`,
+    message: `Broadcast application created successfully for ${pendingSchedule.title}.`,
     errors: {},
     values: {}
   };

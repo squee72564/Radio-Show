@@ -40,3 +40,10 @@ export async function updateUserBio(userId: string, newBio: string) {
 export async function getUserCount() {
   return await prisma.user.count();
 }
+
+export async function changeUserRole(userId: string, newRole: $Enums.Role) {
+  return await prisma.user.update({
+    where: {id: userId},
+    data: {status: newRole}
+  });
+}

@@ -1,18 +1,18 @@
+"use server";
+
 import { Suspense } from "react";
 import { auth } from "@/auth";
 import { listUsersByRole } from "@/lib/db/actions/userActions";
 import { isUserAdmin } from "@/lib/utils";
 import { $Enums, User } from "@prisma/client";
 import { redirect } from "next/navigation";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
-import { UsersIcon } from "lucide-react";
+import { UserRoundCogIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { UserManagementCard } from "@/components/user-mangement-card";
 
-export function UserGroupTabContent({
+export async function UserGroupTabContent({
   loader,
 }: {
   loader: () => Promise<User[]>;
@@ -29,27 +29,15 @@ export function UserGroupTabContent({
   );
 }
 
-function UserList({ users }: { users: User[] }) {
+async function UserList({ users }: { users: User[] }) {
   if (users.length === 0) {
     return <p className="text-sm text-muted-foreground">No users found.</p>;
   }
 
   return (
     <div className="space-y-2">
-      {users.map((user) => (
-        <Card key={user.id} className="w-full">
-          <CardContent className="flex items-center gap-4 p-4">
-            <Avatar>
-              <AvatarImage src={user.image || undefined} alt={user.name || "User"} />
-              <AvatarFallback>{user.name?.charAt(0) ?? "U"}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <p className="font-medium truncate">{user.name}</p>
-              <p className="text-sm text-muted-foreground truncate">{user.email}</p>
-            </div>
-            <Badge variant="outline">{user.status}</Badge>
-          </CardContent>
-        </Card>
+      {users.map((user, idx) => (
+        <UserManagementCard key={idx} user={user} />
       ))}
     </div>
   );
@@ -101,7 +89,7 @@ export default async function AdminUsersPage() {
   return (
     <div className="p-6 space-y-6 w-full">
       <h1 className="text-2xl font-bold flex items-center gap-2">
-        <UsersIcon className="w-6 h-6" /> Admin: User Management
+        <UserRoundCogIcon className="w-6 h-6" /> Admin: User Management
       </h1>
       <Separator />
 

@@ -11,8 +11,16 @@ export function saltAndHashPassword(password: string): string {
   return password;
 }
 
+export function isUserRole(userStatus: $Enums.Role, role: $Enums.Role) {
+  return userStatus == role;
+}
+
 export function isUserAdmin(status: $Enums.Role) {
   return (status === $Enums.Role.ADMIN|| status === $Enums.Role.OWNER)
+}
+
+export function isUserOwner(status: $Enums.Role) {
+  return (status === $Enums.Role.OWNER)
 }
 
 export async function generateStreamInstances({

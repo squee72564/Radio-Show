@@ -8,6 +8,8 @@ import ApprovedSchedulesCard from "@/components/approved-schedules-count-card";
 import PendingSchedulesCard from "@/components/pending-schedules-count-card";
 import { redirect } from "next/navigation";
 import { isUserAdmin } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
+import { ShieldUserIcon } from "lucide-react";
 
 export default async function AdminDashboard() {
   const session = await auth();
@@ -19,8 +21,10 @@ export default async function AdminDashboard() {
 
   return (
     <div className="w-full p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-
+      <h1 className="text-2xl font-bold flex items-center gap-2">
+        <ShieldUserIcon className="w-6 h-6" /> Admin: Dashboard
+      </h1>
+      <Separator />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Suspense fallback={<SkeletonCard title="Pending Schedules" />}>
           <PendingSchedulesCard />

@@ -7,12 +7,18 @@ import {
   LayoutDashboard,
   Music,
   Settings,
-  UserRoundCogIcon
+  UserRoundCogIcon,
+  ShieldUserIcon
 } from "lucide-react";
 import { AboutCollapsible } from "./about-collapsible";
 import { SettingsSheet } from "./settings-sheet";
 
 export const adminItems: SidebarItems[] = [
+  {
+    title: "Admin Dashboard",
+    url: "/admin/dashboard",
+    icon: ShieldUserIcon,
+  },
   {
     title: "Main Dashboard",
     url: "/dashboard",

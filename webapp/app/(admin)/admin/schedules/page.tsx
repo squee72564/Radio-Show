@@ -5,15 +5,15 @@ import { $Enums, StreamSchedule, User } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UsersIcon } from "lucide-react";
+import { CalendarCogIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { findAllStreamsByStatus } from "@/lib/db/actions/streamscheduleActions";
-import StreamInfoCard from "@/components/stream-info-card";
+import { findAllStreamsByStatusWithUser } from "@/lib/db/actions/streamscheduleActions";
+import ScheduleManagementCard from "@/components/schedule-management-card";
 
 export function UserGroupTabContent({
   loader,
 }: {
-  loader: () => Promise<StreamSchedule[]>;
+  loader: () => Promise<(StreamSchedule & {user: User})[]>;
 }) {
   const LazyList = async () => {
     const schedules = await loader();
@@ -27,7 +27,7 @@ export function UserGroupTabContent({
   );
 }
 
-function ScheduleList({ schedules }: { schedules: StreamSchedule[] }) {
+function ScheduleList({ schedules }: { schedules: (StreamSchedule & {user: User})[] }) {
   if (schedules.length === 0) {
     return <p className="text-sm text-muted-foreground">No schedules found.</p>;
   }
@@ -35,7 +35,7 @@ function ScheduleList({ schedules }: { schedules: StreamSchedule[] }) {
   return (
     <div className="space-y-2">
       {schedules.map((schedule, idx) => (
-        <StreamInfoCard key={idx} stream={schedule}/>
+        <ScheduleManagementCard key={idx} stream={schedule}/>
       ))}
     </div>
   );
@@ -63,17 +63,17 @@ export default async function AdminSchedulePage() {
     {
       value: "pending",
       label: "Pending",
-      loader: () => findAllStreamsByStatus($Enums.ScheduleStatus.PENDING),
+      loader: () => findAllStreamsByStatusWithUser($Enums.ScheduleStatus.PENDING),
     },
     {
       value: "approved",
       label: "Approved",
-      loader: () => findAllStreamsByStatus($Enums.ScheduleStatus.APPROVED),
+      loader: () => findAllStreamsByStatusWithUser($Enums.ScheduleStatus.APPROVED),
     },
     {
-      value: "users",
-      label: "Users",
-      loader: () => findAllStreamsByStatus($Enums.ScheduleStatus.REJECTED),
+      value: "rejected",
+      label: "Rejected",
+      loader: () => findAllStreamsByStatusWithUser($Enums.ScheduleStatus.REJECTED),
     },
   ];
 
@@ -81,7 +81,7 @@ export default async function AdminSchedulePage() {
   return (
     <div className="p-6 space-y-6 w-full">
       <h1 className="text-2xl font-bold flex items-center gap-2">
-        <UsersIcon className="w-6 h-6" /> Admin: Schedule Management
+        <CalendarCogIcon className="w-6 h-6" /> Admin: Schedule Management
       </h1>
       <Separator />
 

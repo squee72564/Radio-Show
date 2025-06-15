@@ -5,7 +5,6 @@ import Link from "next/link"
 import { NotebookPenIcon, RocketIcon, BookHeadphonesIcon } from "lucide-react"
 import { Metadata } from "next"
 import { auth, signIn } from "@/auth"
-import { redirect } from "next/navigation"
 
 export const metadata: Metadata = {
   title: "Sign Up To Stream",

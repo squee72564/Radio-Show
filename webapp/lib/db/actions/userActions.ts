@@ -1,9 +1,14 @@
 'use server';
 
 import * as userService from "@/lib/db/services/userService";
+import { $Enums } from "@prisma/client";
 
 export async function listUsers() {
   return userService.findAllUsers();
+}
+
+export async function listUsersByRole(role: $Enums.Role) {
+  return userService.findUsersByRole(role);
 }
 
 export async function deleteUsers() {

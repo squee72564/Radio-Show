@@ -1,18 +1,19 @@
 'use server';
 
-import { $Enums } from "@prisma/client";
-
 import * as streamScheduleService from "@/lib/db/services/streamscheduleService";
+
 import { StreamScheduleFormState } from "@/app/types/stream-schedule";
 import { streamScheduleSchema } from "@/validations/stream-schedule";
 import { generateStreamInstances } from "@/lib/utils";
 
-export async function findAllPendingApprovalSchedules() {
-  return streamScheduleService.findAllPendingApprovalSchedules();
+import { $Enums } from "@prisma/client";
+
+export async function findAllStreamsByStatus(status: $Enums.ScheduleStatus) {
+  return await streamScheduleService.findAllStreamsByStatus(status);
 }
 
-export async function findAllStreamsByTypeAndUser(userId: string, status: $Enums.ScheduleStatus) {
-  return streamScheduleService.findAllStreamsByTypeAndUser(userId, status);
+export async function findAllStreamsByStatusAndUser(userId: string, status: $Enums.ScheduleStatus) {
+  return streamScheduleService.findAllStreamsByStatusAndUser(userId, status);
 }
 
 export async function getStreamCountByStatus(status: $Enums.ScheduleStatus) {
@@ -36,14 +37,14 @@ export async function createStreamSchedule(data: {
 }
 
 export async function populateStreamInstances(
-  data: {
+  validatedInstances: {
     scheduledStart: Date;
-  scheduledEnd: Date;
+    scheduledEnd: Date;
     userId: string;
     streamScheduleId: string;
   }[]
 ) {
-  return streamScheduleService.populateStreamInstances(data);
+  return streamScheduleService.populateStreamInstances(validatedInstances);
 }
 
 export async function checkStreamInstanceConflicts(

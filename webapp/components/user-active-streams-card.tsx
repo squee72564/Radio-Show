@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { findAllStreamsByTypeAndUser } from "@/lib/db/actions/streamscheduleActions";
+import { findAllStreamsByStatusAndUser } from "@/lib/db/actions/streamscheduleActions";
 import { $Enums } from "@prisma/client";
 import { Badge } from "./ui/badge";
 import StreamInfoCard from "./stream-info-card";
 
 export default async function UserActiveStreamsCard({userId}: {userId: string}) {
-  const activeStreams = await findAllStreamsByTypeAndUser(userId, $Enums.ScheduleStatus.APPROVED);
+  const activeStreams = await findAllStreamsByStatusAndUser(userId, $Enums.ScheduleStatus.APPROVED);
 
   return (
     <Card className="flex-1">

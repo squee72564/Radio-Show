@@ -1,14 +1,13 @@
 import { prisma } from "@/lib/db/prismaClient";
 import { $Enums } from "@prisma/client";
 
-export async function findAllPendingApprovalSchedules() {
+export async function findAllStreamsByStatus(status: $Enums.ScheduleStatus) {
   return await prisma.streamSchedule.findMany({
-    where: { status: "PENDING" },
-    orderBy: { submittedAt: "desc" },
-  });
+    where: {status: status}
+  })
 }
 
-export async function findAllStreamsByTypeAndUser(userId: string, status: $Enums.ScheduleStatus) {
+export async function findAllStreamsByStatusAndUser(userId: string, status: $Enums.ScheduleStatus) {
   return await prisma.streamSchedule.findMany({
     where: {status: status, userId: userId},
   })

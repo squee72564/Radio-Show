@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { findAllStreamsByTypeAndUser } from "@/lib/db/actions/streamscheduleActions";
+import { findAllStreamsByStatusAndUser } from "@/lib/db/actions/streamscheduleActions";
 import { $Enums } from "@prisma/client";
 import { redirect } from "next/navigation";
 import StreamInfoCard from "@/components/stream-info-card";
@@ -29,7 +29,7 @@ export default async function UserProfilePage({
     redirect("/dashboard");
   }
 
-  const shows = await findAllStreamsByTypeAndUser(userProfileInfo?.id, $Enums.ScheduleStatus.APPROVED);
+  const shows = await findAllStreamsByStatusAndUser(userProfileInfo?.id, $Enums.ScheduleStatus.APPROVED);
   
   return (
     <div className="w-full p-6 space-y-6">

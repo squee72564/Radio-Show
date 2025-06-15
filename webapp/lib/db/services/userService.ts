@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db/prismaClient";
+import { $Enums } from "@prisma/client";
 
 export async function deleteAllUsers() {
   return prisma.user.deleteMany();
@@ -14,6 +15,10 @@ export async function findUserByEmail(email: string) {
 
 export async function findAllUsers() {
   return prisma.user.findMany();
+}
+
+export async function findUsersByRole(role: $Enums.Role) {
+  return prisma.user.findMany({where: {status: role}});
 }
 
 export async function findRecentUsers(count: number) {

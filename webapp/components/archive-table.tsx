@@ -25,8 +25,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { useState } from "react";
-import { ArrowUpDown } from "lucide-react";
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
+import { ArrowUp, ArrowDown, Minus } from "lucide-react";
+import { Card, CardContent, CardHeader } from "./ui/card";
 
 export const columns: ColumnDef<(StreamArchive & {
     user: Partial<User>,
@@ -53,16 +53,26 @@ export const columns: ColumnDef<(StreamArchive & {
   },
   {
     accessorKey: "createdAt",
-    header: ({column}) => (
-      <Button
-        variant={"ghost"}
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="text-center w-full"
-      >
-       Date
-       <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: ({column}) => {
+      const sortState = column.getIsSorted();
+
+      return (
+        <Button
+          variant={"ghost"}
+          onClick={() => column.toggleSorting(sortState === "asc")}
+          className="text-center w-full"
+        >
+        Date
+          {sortState === "asc" ? (
+            <ArrowUp className="ml-2 h-4 w-4" />
+          ) : sortState === "desc" ? (
+            <ArrowDown className="ml-2 h-4 w-4" />
+          ) : (
+            <Minus className="ml-2 h-4 w-4 opacity-50" />
+          )}
+        </Button>
+      )
+    },
     cell: ({row}) => {
       const date = row.getValue("createdAt") as Date
       return <div className="truncate text-center">{date.toLocaleDateString()}</div>

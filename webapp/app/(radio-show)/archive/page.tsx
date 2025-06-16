@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
 
-import ArchiveList from "@/components/archive-list";
-import ArchiveListSkeleton from "@/components/archive-list-skeleton";
-import { Suspense } from "react";
 import { Separator } from "@/components/ui/separator";
 import { ArchiveIcon } from "lucide-react";
 import ArchiveDataTable, { columns } from "@/components/archive-table";
 import { StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
-import { arch } from "os";
 
 let archive =   {
   id: "testid",

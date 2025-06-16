@@ -39,7 +39,7 @@ export const columns: ColumnDef<(StreamArchive & {
     header: () => <div className="text-center">Title</div>,
     cell: ({row}) => {
       const title = row.getValue("title") as string
-      return <div className="text-center">{title ?? "Untitled"}</div>
+      return <div className="truncate text-center">{title ?? "Untitled"}</div>
     }
   },
   {
@@ -48,7 +48,7 @@ export const columns: ColumnDef<(StreamArchive & {
     header: () => <div className="text-center">User</div>,
     cell: ({row}) => {
       const userName = row.getValue("username") as string
-      return <div className="text-center">{userName ?? "Unknown"}</div>
+      return <div className="truncate text-center">{userName ?? "Unknown"}</div>
     }
   },
   {
@@ -65,7 +65,7 @@ export const columns: ColumnDef<(StreamArchive & {
     ),
     cell: ({row}) => {
       const date = row.getValue("createdAt") as Date
-      return <div className="text-center">{date.toLocaleDateString()}</div>
+      return <div className="truncate text-center">{date.toLocaleDateString()}</div>
     }
   }
 ]
@@ -128,7 +128,7 @@ export default function ArchiveDataTable<TData, TValue>({
         </Button>
       </CardHeader>
       <CardContent className="border">
-        <Table>
+        <Table className="table-fixed w-full`">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

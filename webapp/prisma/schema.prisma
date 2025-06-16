@@ -27,6 +27,7 @@ model User {
   // Streaming related MODELS
   streamSchedules StreamSchedule[]
   streamInstances StreamInstance[]
+  streamArchives  StreamArchive[]
 
   // RBAC
   status Role @default(USER)
@@ -113,6 +114,8 @@ model StreamSchedule {
   rrule          String
 
   StreamInstance StreamInstance[]
+  streamArchives StreamArchive[]
+
 }
 
 model StreamInstance {
@@ -126,6 +129,30 @@ model StreamInstance {
 
   streamScheduleId String
   streamSchedule   StreamSchedule @relation(fields: [streamScheduleId], references: [id], onDelete: Cascade)
+
+  streamArchives StreamArchive[]
+}
+
+model StreamArchive {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  streamScheduleId String
+  streamSchedule   StreamSchedule @relation(fields: [streamScheduleId], references: [id], onDelete: Cascade)
+
+  streamInstanceId String
+  streamInstance   StreamInstance @relation(fields: [streamInstanceId], references: [id], onDelete: Cascade)
+
+  url               String
+  durationInSeconds Int?
+  fileSizeBytes     Int?
+  format            String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([streamInstanceId])
 }
 
 enum ScheduleStatus {

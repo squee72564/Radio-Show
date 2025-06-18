@@ -24,7 +24,7 @@ export default async function UserProfileEditPage() {
     <div className="w-full mx-auto p-6 space-y-6">
       <UpdateBioCard user={user} />
       <ApplyToStream/>
-      <div className="flex flex-col w-full gap-6 sm:gap-2 sm:flex-row">
+      <div className="flex flex-col w-full gap-6 sm:gap-2 sm:flex-row max-h-[395px]">
         <Suspense fallback={<UserStreamsSkeleton title={"Your Streams Pending Approval"}/>}>
           <UserPendingStreamsCard userId={user.id}/>
         </Suspense>

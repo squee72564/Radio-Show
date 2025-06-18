@@ -6,8 +6,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 export default function StreamInfoCard({stream}: {stream: StreamSchedule}) {
   const startTime = stream.startTime.toISOString().slice(11, 16);
   const endTime = stream.endTime.toISOString().slice(11, 16);
-  const startDate = stream.startDate.toDateString();
-  const endDate = stream.endDate.toDateString();
+  const startDate = stream.startDate.toISOString().split("T")[0];
+  const endDate = stream.endDate.toISOString().split("T")[0];
   const recurrence = RRule.fromString(stream.rrule).toText();
 
   return (

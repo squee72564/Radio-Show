@@ -113,9 +113,14 @@ model StreamSchedule {
   endDate        DateTime
   rrule          String
 
+  // Stream Credentials
+  password    String
+
   StreamInstance StreamInstance[]
   streamArchives StreamArchive[]
 
+  @@index([userId, password])
+  @@unique([userId, password])
 }
 
 model StreamInstance {

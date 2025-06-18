@@ -132,3 +132,9 @@ export async function createStreamSchedule(data: Omit<StreamSchedule, "id">) {
     data
   });
 }
+
+export async function getStreamScheduleById(id: string) {
+  return prisma.streamSchedule.findUnique({
+    where: {id: id}
+  })
+}

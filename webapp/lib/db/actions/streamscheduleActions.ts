@@ -4,7 +4,7 @@ import * as streamScheduleService from "@/lib/db/services/streamscheduleService"
 import * as userService from "@/lib/db/services/userService";
 
 
-import { StreamScheduleFormState } from "@/app/types/stream-schedule";
+import { StreamScheduleFormState, Weekday } from "@/app/types/stream-schedule";
 import { streamScheduleSchema } from "@/validations/stream-schedule";
 import { generateStreamInstances } from "@/lib/utils";
 
@@ -87,7 +87,7 @@ export async function streamScheduleFormSubmit(
   formData: FormData
 ): Promise<StreamScheduleFormState> {
 
-  const days = formData.getAll("days") as ["MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU", ...("MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU")[]];
+  const days = formData.getAll("days") as [Weekday, ...(Weekday)[]];
   const raw = Object.fromEntries(formData.entries());
   const clean = Object.fromEntries(
     Object.entries(raw).filter(([key]) => !key.startsWith("$ACTION_") && !key.startsWith("$"))
@@ -116,7 +116,10 @@ export async function streamScheduleFormSubmit(
       ...prevState,
       success: false,
       message: "Start time cannot be before end time",
-      errors: {["start-time"]: ["Start time must be before end time"], ["end-time"]: ["End time must be after start time"]},
+      errors: {
+        ["start-time"]: ["Start time must be before end time"],
+        ["end-time"]: ["End time must be after start time"]
+      },
       values: merged,
     }
   }
@@ -129,7 +132,10 @@ export async function streamScheduleFormSubmit(
       ...prevState,
       success: false,
       message: "Start time cannot be before end time",
-      errors: {["start-date"]: ["Start date must be before end date"], ["end-date"]: ["End date must be after start date"]},
+      errors: {
+        ["start-date"]: ["Start date must be before end date"],
+        ["end-date"]: ["End date must be after start date"]
+      },
       values: merged,
     }
   }
@@ -153,7 +159,9 @@ export async function streamScheduleFormSubmit(
       ...prevState,
       success: false,
       message: "Conflicting stream schedules",
-      errors: {conflicts: ["Cannot schedule for this time, there would be conflicting streams!"] },
+      errors: {
+        conflicts: ["Cannot schedule for this time, there would be conflicting streams!"]
+      },
       values: merged,
     }
   }
@@ -176,6 +184,8 @@ export async function streamScheduleFormSubmit(
 
     rrule: rrule,
     userId: userId,
+
+    password: validatedData.password,
   };
 
   const pendingSchedule = await createStreamSchedule(scheduleData);

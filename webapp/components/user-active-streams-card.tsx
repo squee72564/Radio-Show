@@ -3,6 +3,7 @@ import { findAllStreamsByStatusAndUser } from "@/lib/db/actions/streamscheduleAc
 import { $Enums } from "@prisma/client";
 import { Badge } from "./ui/badge";
 import StreamInfoCard from "./stream-info-card";
+import Link from "next/link";
 
 export default async function UserActiveStreamsCard({userId}: {userId: string}) {
   const activeStreams = await findAllStreamsByStatusAndUser(userId, $Enums.ScheduleStatus.APPROVED);
@@ -16,9 +17,11 @@ export default async function UserActiveStreamsCard({userId}: {userId: string}) 
         {activeStreams.length == 0 ? (
           <Badge variant={"outline"}>No Pending Streams</Badge>
         ) : (
-          <div className="space-y-2 overflow-y-auto max-h-10">
+          <div className="space-y-2 overflow-y-auto">
             {activeStreams.map((stream, idx) => (
-              <StreamInfoCard key={idx} stream={stream} />
+              <Link key={idx} href={`/user/stream/${stream.id}`}>
+                <StreamInfoCard stream={stream} />
+              </Link>
             ))}
           </div>
         )}

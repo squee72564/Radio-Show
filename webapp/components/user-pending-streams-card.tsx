@@ -16,7 +16,7 @@ export default async function UserPendingStreamsCard({userId}: {userId: string})
         {pendingStreams.length == 0 ? (
           <Badge variant={"outline"}>No Pending Streams</Badge>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-y-auto">
             {pendingStreams.map((stream, idx) => (
               <StreamInfoCard key={idx} stream={stream} />
             ))}

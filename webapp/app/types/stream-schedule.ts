@@ -13,6 +13,7 @@ export type StreamScheduleFormStateFieldErrorMap = Partial<{
   days: string[];
   description: string[];
   conflicts: string[];
+  password: string[];
 }>;
 
 export type StreamScheduleFormState = {

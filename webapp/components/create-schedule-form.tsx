@@ -47,6 +47,12 @@ function HoverCardData() {
       <div>
         <strong>Repeat Weekly On:</strong> Selected days of the week the stream recurs.
       </div>
+      <div>
+        <strong>Credential:</strong> This is a credential that will be used to authenticate when streaming.
+      </div>
+      <div>
+        <strong>Password:</strong> This is a password that will be used as a credential to stream.
+      </div>
     </>
   );
 }
@@ -134,12 +140,28 @@ export default function CreateScheduleForm({ user }: { user: User }) {
           <div className="flex gap-4">
             <div className="flex-1">
               <label htmlFor="start-date">Start Date</label>
-              <Input id="start-date" name="start-date" type="date" min={formattedTomorrow}  defaultValue={state.values?.["start-date"]}/>
+              <Input
+                id="start-date"
+                name="start-date"
+                type="date"
+                min={formattedTomorrow} 
+                defaultValue={
+                  state.values?.["start-date"]
+                }
+              />
               <ErrorMessage message={state.errors?.["start-date"]} />
             </div>
             <div className="flex-1">
               <label htmlFor="end-date">End Date</label>
-              <Input id="end-date" name="end-date" type="date"  defaultValue={state.values?.["end-date"]}/>
+              <Input
+                id="end-date"
+                name="end-date"
+                type="date" 
+                min={formattedTomorrow}
+                defaultValue={
+                  state.values?.["end-date"]
+                }
+              />
               <ErrorMessage message={state.errors?.["end-date"]} />
             </div>
           </div>
@@ -162,6 +184,12 @@ export default function CreateScheduleForm({ user }: { user: User }) {
               <ErrorMessage message={state.errors?.days} />
             </div>
             <ErrorMessage message={state.errors?.conflicts && ["This time slot conflicts with other schedules"]} />
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <label htmlFor="password">Stream Password</label>
+            <Input type="password" name="password" id="password" defaultValue={state.values?.password}/>
+            <ErrorMessage message={state.errors?.password} />
           </div>
         </CardContent>
         <CardFooter>

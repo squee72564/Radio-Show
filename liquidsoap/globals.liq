@@ -22,13 +22,15 @@ let radioshow.url = environment.get("SITE_URL", default="http://host.docker.inte
 
 let radioshow.temp_filename = "/app/files/test.mp3"
 
+let radioshow.secret_token = environment.get("SECRET_ARCHIVE_TOKEN", default="secretToken")
+
 # <-----
 # Global References
 # -----> #
 
-meta_stream_ref       = ref(null())   # Ref for livestream with .insert_metadata
+client_addr_ref       = ref("None")   # Keeps track of client
 
-client_addr_ref       = ref("None")   # Keeps track of client 
+meta_ref              = ref([])
 
 disconnect_called_ref = ref(false)    # Keeps track of if disconnect callback was called
 

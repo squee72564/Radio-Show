@@ -23,39 +23,31 @@ def radioshow.auth_callback(auth_info)
             authenticated,
             meta = {
               title,
-              user,
-              timelimit
+              timelimit,
+              userId,
+              streamScheduleId,
+              streamInstanceId
             }
           } : {
             authenticated : bool,
             meta: {
               title: string,
-              user: string,
-              timelimit: float
+              timelimit: float,
+              userId: string,
+              streamScheduleId: string,
+              streamInstanceId: string
             },
           }
         ) = null.get(auth_response)
 
         if authenticated then
-          if null.defined(meta_stream_ref()) then
-            null.get(meta_stream_ref()).insert_metadata(
-              new_track=true,
-              [
-                ("title", title),
-                ("artist", user),
-                ("liq_remaining", string.float(timelimit))
-              ]
-            )
-
-            timeout_ref := timelimit
-          else
-            log(
-              level=3,
-              label="radioshow.auth_callback",
-              "\t- meta_stream_ref not initialized"
-            )
-          end
-
+          meta_ref := [
+            ("userId", userId),
+            ("streamScheduleId", streamScheduleId),
+            ("streamInstanceId", streamInstanceId),
+            ("title", title),
+          ]
+          
           client_addr_ref := auth_info.address
           true
         else

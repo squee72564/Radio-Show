@@ -12,12 +12,6 @@ base_stream = input.harbor(
   on_disconnect=harbor_disconnect_callback,
 )
 
-# Wrap the stream to support metadata injection
-meta_wrapped_stream = insert_metadata(base_stream)
-
-# Save a reference to this stream to call insert_metadata in auth callback
-meta_stream_ref := meta_wrapped_stream
-
 # Set up output file
 output.file(
   %mp3(bitrate=320, stereo_mode="joint_stereo", internal_quality=0, id3v2=true),
@@ -27,20 +21,47 @@ output.file(
   end,
   on_close = fun(_) -> begin
     log(level=3, label="outfile.on_close", "Stopped Recording to #{radioshow.temp_filename}.")
-    # Again maybe do something with the file here - maybe run some process that
-    # will copy it to a safe place and then send to the object storage, then
-    # take care of deleting it?
+
     thread.run(
       delay=0.,
       fun () -> begin
-        file.copy(radioshow.temp_filename, "/app/files/archive.mp3")
-        log(level=3, label="outfile.on_close", "\t- Copied #{radioshow.temp_filename} file to /app/archive.mp3.")
+        try
+          userId = list.assoc("userId", meta_ref())
+          streamScheduleId = list.assoc("streamScheduleId", meta_ref())
+          streamInstanceId = list.assoc("streamInstanceId", meta_ref())
+
+          filePath = "/app/files/archive-#{userId}-#{streamScheduleId}-#{streamInstanceId}.mp3"
+
+          file.copy(radioshow.temp_filename, filePath)
+          log(level=3, label="outfile.on_close", "\t- Copied #{radioshow.temp_filename} file to #{filePath}.")
+
+          # Make the HTTP POST file upload call
+          let response = http.post.file(
+            file=filePath,
+            name="file",
+            filename="archive.mp3",
+            content_type="audio/mpeg",
+            headers=[("Authorization", "Bearer secretToken"),
+                    ("userId", userId),
+                    ("streamScheduleId", streamScheduleId),
+                    ("streamInstanceId", streamInstanceId)],
+            "#{radioshow.url}/api/archive-upload"
+          )
+
+          log(level=3, label="outfile.on_close", "\t- Upload status: #{response.status_code} #{response.status_message}")
+          log(level=3, label="outfile.on_close", "\t- Upload response body: #{response}")
+
+          meta_ref := []
+
+        catch err do
+          log(level=1, label="outfile.on_close", "Error in on_close thread: #{err}")
+        end
       end
     )
   end,
   fallible=true,
   radioshow.temp_filename,
-  meta_wrapped_stream
+  base_stream
 )
 
 # Output to Icecast Server
@@ -76,5 +97,5 @@ output.icecast(%mp3(bitrate=320),
       json.stringify("offline")
     ))
     end,
-  meta_wrapped_stream
+  base_stream
 )

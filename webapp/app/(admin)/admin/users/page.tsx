@@ -1,16 +1,17 @@
 "use server";
 
 import { Suspense } from "react";
+import { UserRoundCogIcon } from "lucide-react";
+import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { listUsersByRole } from "@/lib/db/actions/userActions";
 import { isUserAdmin } from "@/lib/utils";
 import { $Enums, User } from "@prisma/client";
-import { redirect } from "next/navigation";
+
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserRoundCogIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { UserManagementCard } from "@/components/user-mangement-card";
+import { UserManagementCard } from "@/app/(admin)/admin/users/user-mangement-card";
 
 export async function UserGroupTabContent({
   loader,

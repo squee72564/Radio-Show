@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default async function UpdateBioCard({user}: {user: User}) {

@@ -2,29 +2,24 @@
 
 import { useActionState } from "react";
 import { CircleHelpIcon } from "lucide-react";
-
-import { Button } from "./ui/button";
+import { redirect } from "next/navigation";
+import { streamScheduleFormSubmit } from "@/lib/db/actions/streamscheduleActions";
+import { StreamScheduleFormState, weekdays, Weekday } from "@/app/types/stream-schedule";
+import { User } from "@prisma/client";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle
-} from "./ui/card";
-import { Input } from "./ui/input";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-
-import { redirect } from "next/navigation";
-
-import { streamScheduleFormSubmit } from "@/lib/db/actions/streamscheduleActions";
-
-import { StreamScheduleFormState, weekdays, Weekday } from "@/app/types/stream-schedule";
-import { User } from "@prisma/client";
-
 
 function HoverCardData() {
   return (

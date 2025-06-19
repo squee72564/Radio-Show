@@ -1,5 +1,7 @@
+"use server";
+
 import Link from "next/link";
-import { Badge } from "./ui/badge";
+import { Badge } from "@/components/ui/badge";
 
 export default async function RecentArchives() {
   const archives: Array<string> = [];

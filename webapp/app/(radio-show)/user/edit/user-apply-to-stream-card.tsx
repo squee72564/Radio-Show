@@ -1,8 +1,10 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "./ui/button";
-import Link from "next/link";
+"use server";
 
-export default function ApplyToStream() {
+import Link from "next/link";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+
+export default function UserApplyToStreamCard() {
   return (
     <Card>
       <CardHeader>

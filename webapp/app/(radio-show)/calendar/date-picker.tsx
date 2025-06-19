@@ -3,8 +3,13 @@
 import { useState, useTransition, useEffect } from "react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, CalendarRange, Clock4 } from "lucide-react";
+import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { StreamInstance, StreamSchedule, User } from "@prisma/client";
 
 import { cn } from "@/lib/utils";
+import { getStreamInstancesByDateRange } from "@/lib/db/actions/streamscheduleActions";
+
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -22,11 +27,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getStreamInstancesByDateRange } from "@/lib/db/actions/streamscheduleActions";
-import { StreamInstance, StreamSchedule, User } from "@prisma/client";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function parseLocalDateString(dateStr: string): Date {
   const [year, month, day] = dateStr.split("-").map(Number);

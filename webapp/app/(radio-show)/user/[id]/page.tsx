@@ -2,16 +2,15 @@
 
 import { auth } from "@/auth";
 import { findUserById } from "@/lib/db/actions/userActions";
-
+import { findAllStreamsByStatusAndUser } from "@/lib/db/actions/streamscheduleActions";
+import { $Enums } from "@prisma/client";
+import { redirect } from "next/navigation";
+import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
-import { findAllStreamsByStatusAndUser } from "@/lib/db/actions/streamscheduleActions";
-import { $Enums } from "@prisma/client";
-import { redirect } from "next/navigation";
 import StreamInfoCard from "@/components/stream-info-card";
 
 export default async function UserProfilePage({

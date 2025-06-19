@@ -1,7 +1,9 @@
-import { getStreamCountByStatus } from "@/lib/db/actions/streamscheduleActions";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+"use server";
+
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { getStreamCountByStatus } from "@/lib/db/actions/streamscheduleActions";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default async function PendingSchedulesCard() {
   const pendingCount = await getStreamCountByStatus("PENDING");

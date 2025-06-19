@@ -1,12 +1,13 @@
 "use client"
 
-import { $Enums, StreamSchedule, User } from "@prisma/client";
-import { CalendarRange, Clock4, Repeat, UserIcon, PenIcon} from "lucide-react";
-import { RRule } from "rrule";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "./ui/card";
-import { Button } from "./ui/button";
 import { useState, useTransition } from "react";
+import { CalendarRange, Clock4, Repeat, UserIcon, PenIcon} from "lucide-react";
 import { setStreamStatus } from "@/lib/db/actions/streamscheduleActions";
+import { RRule } from "rrule";
+import { $Enums, StreamSchedule, User } from "@prisma/client";
+
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function ScheduleManagementCard({stream}: {stream: StreamSchedule & {user: User} }) {
   const startTime = stream.startTime.toISOString().slice(11, 16);

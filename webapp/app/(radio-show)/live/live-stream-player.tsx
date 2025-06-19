@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import { useStreamStatus } from '@/hooks/use-streamstatus';
 import { useAudioVisualizer } from "@/hooks/use-audiovisualizer";
@@ -7,7 +8,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 
 function WaveformVisualizer({
   audioRef,

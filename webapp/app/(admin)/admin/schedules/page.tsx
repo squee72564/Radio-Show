@@ -1,14 +1,18 @@
+"use server";
+
 import { Suspense } from "react";
-import { auth } from "@/auth";
-import { isUserAdmin } from "@/lib/utils";
-import { $Enums, StreamSchedule, User } from "@prisma/client";
+import { CalendarCogIcon } from "lucide-react";
+
 import { redirect } from "next/navigation";
+import { auth } from "@/auth";
+import { $Enums, StreamSchedule, User } from "@prisma/client";
+import { isUserAdmin } from "@/lib/utils";
+import { findAllStreamsByStatusWithUser } from "@/lib/db/actions/streamscheduleActions";
+
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CalendarCogIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { findAllStreamsByStatusWithUser } from "@/lib/db/actions/streamscheduleActions";
-import ScheduleManagementCard from "@/components/schedule-management-card";
+import ScheduleManagementCard from "@/app/(admin)/admin/schedules/schedule-management-card";
 
 export function UserGroupTabContent({
   loader,

@@ -1,6 +1,8 @@
-import LiveStreamPlayer from "@/components/live-stream-player";
+"use server";
+
 import type { Metadata } from "next";
 import { Card, CardContent } from "@/components/ui/card";
+import LiveStreamPlayer from "@/app/(radio-show)/live/live-stream-player";
 
 export const metadata: Metadata = {
   title: "Live",

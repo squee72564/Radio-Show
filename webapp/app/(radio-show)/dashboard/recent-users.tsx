@@ -1,8 +1,10 @@
-import { findRecentUsers } from "@/lib/db/actions/userActions";
+"use server";
+
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Badge } from "./ui/badge";
-import type { User } from "next-auth";
+import { findRecentUsers } from "@/lib/db/actions/userActions";
+import { User } from "@prisma/client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 export default async function RecentUsers() {
   const users = await findRecentUsers(5);

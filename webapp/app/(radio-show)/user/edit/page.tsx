@@ -2,13 +2,14 @@
 
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { User } from "@prisma/client"
-import UpdateBioCard from "@/components/update-bio-card"
-import ApplyToStream from "@/components/apply-to-stream"
-import UserPendingStreamsCard from "@/components/user-pending-streams-card"
-import UserActiveStreamsCard from "@/components/user-active-streams-card"
 import { Suspense } from "react"
-import UserStreamsSkeleton from "@/components/user-streams-skeleton"
+import { User } from "@prisma/client"
+
+import UpdateBioCard from "@/app/(radio-show)/user/edit/update-bio-card"
+import UserPendingStreamsCard from "@/app/(radio-show)/user/edit/user-pending-streams-card"
+import UserActiveStreamsCard from "@/app/(radio-show)/user/edit/user-active-streams-card"
+import UserStreamsSkeleton from "@/app/(radio-show)/user/edit/user-streams-skeleton"
+import UserApplyToStreamCard from "@/app/(radio-show)/user/edit/user-apply-to-stream-card"
 
 
 export default async function UserProfileEditPage() {
@@ -23,7 +24,7 @@ export default async function UserProfileEditPage() {
   return (
     <div className="w-full mx-auto p-6 space-y-6">
       <UpdateBioCard user={user} />
-      <ApplyToStream/>
+      <UserApplyToStreamCard/>
       <div className="flex flex-col w-full gap-6 sm:gap-2 sm:flex-row max-h-[395px]">
         <Suspense fallback={<UserStreamsSkeleton title={"Your Streams Pending Approval"}/>}>
           <UserPendingStreamsCard userId={user.id}/>

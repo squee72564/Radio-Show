@@ -1,14 +1,16 @@
-import type { Metadata } from "next";
+"use server";
 
-import RecentUsers from "@/components/recent-users";
-import RecentArchives from "@/components/recent-archives";
-import NextShow from "@/components/next-show";
+import type { Metadata } from "next";
 import { Suspense } from "react";
-import RecentUsersSkeleton from "@/components/recent-users-skeleton";
-import RecentArchivesSkeleton from "@/components/recent-archives-skeleton";
-import NextShowSkeleton from "@/components/next-show-skeleton";
 import { LayoutDashboard } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import RecentUsersSkeleton from "@/app/(radio-show)/dashboard/recent-users-skeleton";
+import RecentArchivesSkeleton from "@/app/(radio-show)/dashboard/recent-archives-skeleton";
+import NextShowSkeleton from "@/app/(radio-show)/dashboard/next-show-skeleton";
+import RecentUsers from "@/app/(radio-show)/dashboard/recent-users";
+import RecentArchives from "@/app/(radio-show)/dashboard/recent-archives";
+import NextShow from "@/app/(radio-show)/dashboard/next-show";
+
 
 export const metadata: Metadata = {
   title: "Dashboard",

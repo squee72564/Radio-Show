@@ -3,7 +3,7 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { User } from "@prisma/client"
-import CreateScheduleForm from "@/components/create-schedule-form"
+import CreateScheduleForm from "@/app/(radio-show)/user/apply/create-schedule-form"
 
 export default async function UserProfileEditPage() {
   const session = await auth()

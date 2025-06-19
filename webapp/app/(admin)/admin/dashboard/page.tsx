@@ -1,15 +1,19 @@
+"use server";
+
+import { Suspense } from "react";
+import { ShieldUserIcon } from "lucide-react";
+import { redirect } from "next/navigation";
+
+import { isUserAdmin } from "@/lib/utils";
+
 import { auth } from "@/auth";
 import { User } from "@prisma/client";
 
-import { Suspense } from "react";
-import SkeletonCard from "@/components/skeleton-card";
-import UserCountCard from "@/components/user-count-card";
-import ApprovedSchedulesCard from "@/components/approved-schedules-count-card";
-import PendingSchedulesCard from "@/components/pending-schedules-count-card";
-import { redirect } from "next/navigation";
-import { isUserAdmin } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
-import { ShieldUserIcon } from "lucide-react";
+import SkeletonCountCard from "@/app/(admin)/admin/dashboard/skeleton-card";
+import UserCountCard from "@/app/(admin)/admin/dashboard/user-count-card";
+import ApprovedSchedulesCountCard from "@/app/(admin)/admin/dashboard/approved-schedules-count-card";
+import PendingSchedulesCard from "@/app/(admin)/admin/dashboard/pending-schedules-count-card";
 
 export default async function AdminDashboard() {
   const session = await auth();
@@ -26,15 +30,15 @@ export default async function AdminDashboard() {
       </h1>
       <Separator />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Suspense fallback={<SkeletonCard title="Pending Schedules" />}>
+        <Suspense fallback={<SkeletonCountCard title="Pending Schedules" />}>
           <PendingSchedulesCard />
         </Suspense>
 
-        <Suspense fallback={<SkeletonCard title="Approved Schedules" />}>
-          <ApprovedSchedulesCard />
+        <Suspense fallback={<SkeletonCountCard title="Approved Schedules" />}>
+          <ApprovedSchedulesCountCard />
         </Suspense>
 
-        <Suspense fallback={<SkeletonCard title="Registered Users" />}>
+        <Suspense fallback={<SkeletonCountCard title="Registered Users" />}>
           <UserCountCard />
         </Suspense>
       </div>

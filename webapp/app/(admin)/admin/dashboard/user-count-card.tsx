@@ -1,5 +1,7 @@
+"use server";
+
 import { getUserCount } from "@/lib/db/actions/userActions";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function UserCountCard() {
   const totalUsers = await getUserCount();

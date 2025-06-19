@@ -1,9 +1,11 @@
+"use server";
+
+import { ArchiveIcon } from "lucide-react";
 import type { Metadata } from "next";
+import { findAllStreamArchivesWithUserAndSchedule } from "@/lib/db/services/streamscheduleService";
 
 import { Separator } from "@/components/ui/separator";
-import { ArchiveIcon } from "lucide-react";
-import ArchiveDataTable, { columns } from "@/components/archive-table";
-import { findAllStreamArchivesWithUserAndSchedule } from "@/lib/db/services/streamscheduleService";
+import ArchiveDataTable, { columns } from "@/app/(radio-show)/archive/archive-table";
 
 export const metadata: Metadata = {
   title: "Archive",

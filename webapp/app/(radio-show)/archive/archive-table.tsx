@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+import { ArrowUp, ArrowDown, Minus } from "lucide-react";
+
 import { StreamArchive, StreamSchedule, User } from "@prisma/client";
 
 import {
@@ -13,7 +16,6 @@ import {
   ColumnFiltersState,
   getFilteredRowModel,
 } from "@tanstack/react-table"
-
 import {
   Table,
   TableBody,
@@ -24,9 +26,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
-import { useState } from "react";
-import { ArrowUp, ArrowDown, Minus } from "lucide-react";
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 
 export const columns: ColumnDef<(StreamArchive & {
     user: Partial<User>,

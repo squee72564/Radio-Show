@@ -1,7 +1,9 @@
-import { getStreamCountByStatus } from "@/lib/db/actions/streamscheduleActions";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+"use server";
 
-export default async function ApprovedSchedulesCard() {
+import { getStreamCountByStatus } from "@/lib/db/actions/streamscheduleActions";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+export default async function ApprovedSchedulesCountCard() {
   const approvedCount = await getStreamCountByStatus("APPROVED");
 
   return (

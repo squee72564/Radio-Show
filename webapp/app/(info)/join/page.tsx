@@ -1,10 +1,13 @@
+"use server";
+
+import { Metadata } from "next"
+import Link from "next/link"
+import { auth, signIn } from "@/auth"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import Link from "next/link"
 import { NotebookPenIcon, RocketIcon, BookHeadphonesIcon } from "lucide-react"
-import { Metadata } from "next"
-import { auth, signIn } from "@/auth"
 
 export const metadata: Metadata = {
   title: "Sign Up To Stream",

@@ -1,8 +1,11 @@
+"use server";
+
+import { MailQuestionIcon, BugOffIcon } from "lucide-react"
+import { Metadata } from "next"
+
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { MailQuestionIcon, BugOffIcon } from "lucide-react"
-import { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Contact",

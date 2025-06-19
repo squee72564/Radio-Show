@@ -2,12 +2,13 @@
 
 import { useTransition } from "react";
 import { changeUserRole } from "@/lib/db/actions/userActions";
+import { isUserAdmin } from "@/lib/utils";
 import { $Enums, User } from "@prisma/client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { isUserAdmin } from "@/lib/utils";
 
 export function UserManagementCard({ user }: { user: User }) {
   const [isPending, startTransition] = useTransition();

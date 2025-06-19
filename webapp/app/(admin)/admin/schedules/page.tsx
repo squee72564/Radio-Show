@@ -61,17 +61,17 @@ export default async function AdminSchedulePage() {
 
   const scheduleTabs = [
     {
-      value: "pending",
+      value: $Enums.ScheduleStatus.PENDING,
       label: "Pending",
       loader: () => findAllStreamsByStatusWithUser($Enums.ScheduleStatus.PENDING),
     },
     {
-      value: "approved",
+      value: $Enums.ScheduleStatus.APPROVED,
       label: "Approved",
       loader: () => findAllStreamsByStatusWithUser($Enums.ScheduleStatus.APPROVED),
     },
     {
-      value: "rejected",
+      value: $Enums.ScheduleStatus.REJECTED,
       label: "Rejected",
       loader: () => findAllStreamsByStatusWithUser($Enums.ScheduleStatus.REJECTED),
     },
@@ -85,7 +85,7 @@ export default async function AdminSchedulePage() {
       </h1>
       <Separator />
 
-      <Tabs defaultValue="pending" className="space-y-6">
+      <Tabs defaultValue={$Enums.ScheduleStatus.PENDING} className="space-y-6">
         <TabsList className="flex space-x-2">
           {scheduleTabs.map(({ value, label }) => (
             <TabsTrigger key={value} value={value} className="capitalize">

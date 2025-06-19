@@ -30,6 +30,12 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
     });
   };
 
+  const handleRevoke= () => {
+    startTransition(async () => {
+      SetSubmissionState(await setStreamStatus(stream, $Enums.ScheduleStatus.PENDING))
+    });
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -65,12 +71,28 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
       </CardContent>
       {stream.status !== $Enums.ScheduleStatus.REJECTED &&
         <CardFooter className="flex sm:flex-row flex-col justify-center gap-5">
-          <Button variant={"outline"} onClick={handleApproval}>
-            {pending ? "Pending..." : "Approve"}
-          </Button>
-          <Button variant={"destructive"} onClick={handleRejection}>
-            {pending ? "Pending..." : "Reject"}
-          </Button>
+          { stream.status === $Enums.ScheduleStatus.PENDING ? (
+            <>
+              <Button variant={"outline"} onClick={handleApproval}>
+                {pending ? "Pending..." : "Approve"}
+              </Button>
+              <Button variant={"destructive"} onClick={handleRejection}>
+                {pending ? "Pending..." : "Reject"}
+              </Button>
+            </>
+          ): stream.status === $Enums.ScheduleStatus.APPROVED ? (
+            <>
+              <Button variant={"outline"} onClick={handleRevoke}>
+                {pending ? "Pending..." : "Revoke"}
+              </Button>
+            </>
+          ): (
+            <>
+              <Button variant={"outline"} onClick={handleRevoke}>
+                {pending ? "Pending..." : "Set Pending"}
+              </Button>
+            </>
+          )}
           {submissionstate.error && <p>Error {submissionstate.error}</p>}
         </CardFooter>
       }

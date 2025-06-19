@@ -10,7 +10,7 @@ export default async function RecentUsers() {
   const users = await findRecentUsers(5);
   
   return (
-    <section className="min-h-41 max-h-41">
+    <section className="min-h-41 max-h-41 w-full">
       <h2 className="text-lg font-medium mb-4">Recent Users</h2>
       <div className="space-y-3 overflow-auto">
         {users && users.length > 0 ? (

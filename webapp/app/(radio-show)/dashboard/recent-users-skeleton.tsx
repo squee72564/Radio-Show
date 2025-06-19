@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default async function RecentUsersSkeleton() {
   return (
-    <section>
+    <section className="w-full">
       <h2 className="text-lg font-medium mb-4">Recent Users</h2>
       <div className="space-y-3">
         {Array.from({ length: 2 }).map((_, i) => (

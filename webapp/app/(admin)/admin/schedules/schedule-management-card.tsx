@@ -6,7 +6,7 @@ import { setStreamStatus } from "@/lib/db/actions/streamscheduleActions";
 import { RRule } from "rrule";
 import { $Enums, StreamSchedule, User } from "@prisma/client";
 
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardAction } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export default function ScheduleManagementCard({stream}: {stream: StreamSchedule & {user: User} }) {
@@ -43,6 +43,30 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
         <CardTitle className="font-bold text-lg">
           {stream.title}
         </CardTitle>
+        <CardAction className="flex sm:flex-row flex-col justify-center gap-5">
+          { stream.status === $Enums.ScheduleStatus.PENDING ? (
+            <>
+              <Button variant={"outline"} onClick={handleApproval}>
+                {pending ? "Pending..." : "Approve"}
+              </Button>
+              <Button variant={"destructive"} onClick={handleRejection}>
+                {pending ? "Pending..." : "Reject"}
+              </Button>
+            </>
+          ): stream.status === $Enums.ScheduleStatus.APPROVED ? (
+            <>
+              <Button variant={"outline"} onClick={handleRevoke}>
+                {pending ? "Pending..." : "Revoke"}
+              </Button>
+            </>
+          ): (
+            <>
+              <Button variant={"outline"} onClick={handleRevoke}>
+                {pending ? "Pending..." : "Set Pending"}
+              </Button>
+            </>
+          )}
+        </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -72,28 +96,6 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
       </CardContent>
       {stream.status !== $Enums.ScheduleStatus.REJECTED &&
         <CardFooter className="flex sm:flex-row flex-col justify-center gap-5">
-          { stream.status === $Enums.ScheduleStatus.PENDING ? (
-            <>
-              <Button variant={"outline"} onClick={handleApproval}>
-                {pending ? "Pending..." : "Approve"}
-              </Button>
-              <Button variant={"destructive"} onClick={handleRejection}>
-                {pending ? "Pending..." : "Reject"}
-              </Button>
-            </>
-          ): stream.status === $Enums.ScheduleStatus.APPROVED ? (
-            <>
-              <Button variant={"outline"} onClick={handleRevoke}>
-                {pending ? "Pending..." : "Revoke"}
-              </Button>
-            </>
-          ): (
-            <>
-              <Button variant={"outline"} onClick={handleRevoke}>
-                {pending ? "Pending..." : "Set Pending"}
-              </Button>
-            </>
-          )}
           {submissionstate.error && <p>Error {submissionstate.error}</p>}
         </CardFooter>
       }

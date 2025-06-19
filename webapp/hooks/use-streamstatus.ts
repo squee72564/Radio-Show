@@ -1,47 +1,39 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useWebSocket } from '@/hooks/use-websocket';
+import useWebSocket from 'react-use-websocket';
 
-export function useStreamStatus(url: () => string) {
-  const socketRef = useWebSocket(url);
+export function useStreamStatus(getUrl: () => string) {
   const [status, setStatus] = useState<'live' | 'offline'>('offline');
 
+  const { lastMessage, readyState } = useWebSocket(getUrl(), {
+    shouldReconnect: () => true,
+    retryOnError: true,
+  });
+
   useEffect(() => {
-    const socket = socketRef.current;
-    if (!socket) return;
+    if (!lastMessage) return;
 
-    const handleMessage = async (event: MessageEvent) => {
-      console.log("WS message received:", event.data);
+    try {
+      const data =
+        typeof lastMessage.data === 'string'
+          ? lastMessage.data
+          : JSON.stringify(lastMessage.data); // Fallback if not string (shouldn't happen with react-use-websocket)
 
-      try {
-        const data = typeof event.data === 'string'
-          ? event.data
-          : await event.data.text();
-        const payload = JSON.parse(data);
-        if (payload.status === 'live' || payload.status === 'offline') {
-          setStatus(payload.status);
-        }
-      } catch {
-        setStatus('offline');
+      const payload = JSON.parse(data);
+      if (payload.status === 'live' || payload.status === 'offline') {
+        setStatus(payload.status);
       }
-    };
+    } catch {
+      setStatus('offline');
+    }
+  }, [lastMessage]);
 
-    const handleError = () => setStatus('offline');
-    const handleClose = (event: CloseEvent) => {
-      if (!event.wasClean) setStatus('offline');
-    };
-
-    socket.addEventListener('message', handleMessage);
-    socket.addEventListener('error', handleError);
-    socket.addEventListener('close', handleClose);
-
-    return () => {
-      socket.removeEventListener('message', handleMessage);
-      socket.removeEventListener('error', handleError);
-      socket.removeEventListener('close', handleClose);
-    };
-  }, [socketRef.current]);
+  useEffect(() => {
+    if (readyState === WebSocket.CLOSED || readyState === WebSocket.CLOSING) {
+      setStatus('offline');
+    }
+  }, [readyState]);
 
   return status;
 }

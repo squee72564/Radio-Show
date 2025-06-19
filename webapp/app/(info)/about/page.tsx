@@ -1,5 +1,3 @@
-"use server";
-
 import { HeadphonesIcon, Disc3Icon, RocketIcon, EarthIcon} from "lucide-react"
 import { Metadata } from "next"
 

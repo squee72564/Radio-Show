@@ -1,5 +1,3 @@
-"use server";
-
 import { ArchiveIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { findAllStreamArchivesWithUserAndSchedule } from "@/lib/db/services/streamscheduleService";

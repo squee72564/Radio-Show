@@ -160,8 +160,8 @@ export function DatePicker() {
                     </div>
                   </CardDescription>
                   <CardAction>
-                    <Link href={`/user/${streamInstance.userId}`}>
-                      <Avatar className="flex flex-col items-center">
+                    <Link className="flex flex-col items-center justify-center" href={`/user/${streamInstance.userId}`}>
+                      <Avatar className="flex flex-col items-center justify-center">
                         <AvatarImage className="w-10 h-10 rounded-xl" src={streamInstance.user.image || ""}/>
                         <AvatarFallback className="font-bold text-2xl rounded-xl">
                           {streamInstance.user.name?.charAt(0) ?? "?"}

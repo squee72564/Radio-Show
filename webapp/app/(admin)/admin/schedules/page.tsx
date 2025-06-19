@@ -14,7 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import ScheduleManagementCard from "@/app/(admin)/admin/schedules/schedule-management-card";
 
-export function UserGroupTabContent({
+function UserGroupTabContent({
   loader,
 }: {
   loader: () => Promise<(StreamSchedule & {user: User})[]>;

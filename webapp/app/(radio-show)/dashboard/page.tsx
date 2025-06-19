@@ -1,5 +1,3 @@
-"use server";
-
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { LayoutDashboard } from "lucide-react";
@@ -10,7 +8,6 @@ import NextShowSkeleton from "@/app/(radio-show)/dashboard/next-show-skeleton";
 import RecentUsers from "@/app/(radio-show)/dashboard/recent-users";
 import RecentArchives from "@/app/(radio-show)/dashboard/recent-archives";
 import NextShow from "@/app/(radio-show)/dashboard/next-show";
-
 
 export const metadata: Metadata = {
   title: "Dashboard",

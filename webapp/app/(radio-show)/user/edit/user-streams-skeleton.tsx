@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function UserStreamsSkeleton({title}: {title:string}) {
+export default async function UserStreamsSkeleton({title}: {title:string}) {
 
   return (
     <Card className="flex-1">

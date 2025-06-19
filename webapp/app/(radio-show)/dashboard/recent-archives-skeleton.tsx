@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function RecentArchivesSkeleton() {
+export default async function RecentArchivesSkeleton() {
   return (
     <section>
       <h2 className="text-lg font-medium mb-4">Recent Archives</h2>

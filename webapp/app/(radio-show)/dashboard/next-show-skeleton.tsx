@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function NextShowSkeleton() {
+export default async function NextShowSkeleton() {
     
   return (
     <section className="md:col-span-2 mt-4">

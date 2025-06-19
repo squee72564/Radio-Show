@@ -1,5 +1,3 @@
-"use server";
-
 import { MailQuestionIcon, BugOffIcon } from "lucide-react"
 import { Metadata } from "next"
 

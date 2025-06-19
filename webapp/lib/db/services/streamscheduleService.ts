@@ -16,17 +16,10 @@ export async function getStreamInstancesByDateRange(dateStart: Date, dateEnd: Da
   });
 }
 
-export async function approveStream(streamId: string) {
+export async function setStreamScheduleStatus(id: string, status: $Enums.ScheduleStatus) {
   return await prisma.streamSchedule.update({
-    where: {id: streamId},
-    data: {status: $Enums.ScheduleStatus.APPROVED}
-  });
-}
-
-export async function rejectStream(streamId: string) {
-  return await prisma.streamSchedule.update({
-    where: {id: streamId},
-    data: {status: $Enums.ScheduleStatus.REJECTED}
+    where: {id},
+    data: {status}
   });
 }
 

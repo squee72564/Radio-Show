@@ -3,7 +3,6 @@
 import * as streamScheduleService from "@/lib/db/services/streamscheduleService";
 import * as userService from "@/lib/db/services/userService";
 
-
 import { StreamScheduleFormState, Weekday } from "@/app/types/stream-schedule";
 import { streamScheduleSchema } from "@/validations/stream-schedule";
 import { generateStreamInstances } from "@/lib/utils";
@@ -42,7 +41,7 @@ export async function setStreamStatus(stream: StreamSchedule & {user: User}, sta
       }
     ));
 
-    await streamScheduleService.approveStream(stream.id);
+    await streamScheduleService.setStreamScheduleStatus(stream.id, status);
 
     if (stream.user.status === $Enums.Role.USER) {
       await userService.changeUserRole(stream.userId, $Enums.Role.STREAMER);
@@ -52,13 +51,15 @@ export async function setStreamStatus(stream: StreamSchedule & {user: User}, sta
 
   } else if (status == $Enums.ScheduleStatus.REJECTED) {
 
-    await streamScheduleService.rejectStream(stream.id);
+    await streamScheduleService.setStreamScheduleStatus(stream.id, status);
     await streamScheduleService.revokeStreamInstances(stream.id);
     return {success: true, message: "Stream Rejected", error: ""}
   }
 
-  return {success: false, message: "Stream set to pending", error: ""};
-  
+  await streamScheduleService.setStreamScheduleStatus(stream.id, status);
+  await streamScheduleService.revokeStreamInstances(stream.id);
+
+  return {success: true, message: "Stream set to pending", error: ""};
 }
 
 export async function findAllStreamsByStatus(status: $Enums.ScheduleStatus) {

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import { useStreamStatus } from '@/hooks/use-streamstatus';
-import { useAudioVisualizer } from "@/hooks/use-audiovisualizer";
+import { useAudioNodeGraph } from "@/hooks/use-audionodegraph";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
@@ -98,7 +98,7 @@ function CustomPlayer({ streamUrl, isStreamLive }: { streamUrl: string, isStream
     isInitialized,
     initAudioGraph,
     resumeIfSuspended,
-  } = useAudioVisualizer(audioRef);
+  } = useAudioNodeGraph(audioRef);
 
   const [isTimeDomain, setIsTimeDomain] = useState<boolean>(true);
   const [volume, setVolume] = useState<number>(100);

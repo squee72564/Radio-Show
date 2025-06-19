@@ -18,7 +18,7 @@ export function useStreamStatus(getUrl: () => string) {
       const data =
         typeof lastMessage.data === 'string'
           ? lastMessage.data
-          : JSON.stringify(lastMessage.data); // Fallback if not string (shouldn't happen with react-use-websocket)
+          : JSON.stringify(lastMessage.data);
 
       const payload = JSON.parse(data);
       if (payload.status === 'live' || payload.status === 'offline') {

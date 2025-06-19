@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export function useAudioVisualizer(audioRef: React.RefObject<HTMLAudioElement | null>) {
+export function useAudioNodeGraph(audioRef: React.RefObject<HTMLAudioElement | null>) {
   const audioCtxRef = useRef<AudioContext | null>(null);
   const sourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);

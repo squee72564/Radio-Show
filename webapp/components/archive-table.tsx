@@ -26,12 +26,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { useState } from "react";
 import { ArrowUp, ArrowDown, Minus } from "lucide-react";
-import { Card, CardContent, CardHeader } from "./ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 
 export const columns: ColumnDef<(StreamArchive & {
     user: Partial<User>,
-    streamSchedule: Partial<StreamSchedule>,
-    streamInstance : Partial<StreamInstance>
+    streamSchedule: Partial<StreamSchedule>
 })>[] = [
   {
     accessorFn: row => row.streamSchedule?.title,
@@ -181,6 +180,9 @@ export default function ArchiveDataTable<TData, TValue>({
           </TableBody>
         </Table>
       </CardContent>
+      <CardFooter className="mx-auto">
+        Page {table.getPageCount()}
+      </CardFooter>
     </Card>
   )
 }

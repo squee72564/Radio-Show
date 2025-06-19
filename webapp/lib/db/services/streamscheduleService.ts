@@ -138,3 +138,12 @@ export async function getStreamScheduleById(id: string) {
     where: {id: id}
   })
 }
+
+export async function findAllStreamArchivesWithUserAndSchedule() {
+  return prisma.streamArchive.findMany({
+    include : {
+      user: true,
+      streamSchedule: true
+    }
+  });
+}

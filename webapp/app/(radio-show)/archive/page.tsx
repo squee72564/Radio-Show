@@ -3,40 +3,15 @@ import type { Metadata } from "next";
 import { Separator } from "@/components/ui/separator";
 import { ArchiveIcon } from "lucide-react";
 import ArchiveDataTable, { columns } from "@/components/archive-table";
-import { StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
-
-let archive =   {
-  id: "testid",
-  userId: "userid",
-  streamScheduleId: "ssid",
-  streamInstanceId: "sid",
-  url: "www.test.com",
-  durationInSeconds: null,
-  fileSizeBytes: null,
-  format: null,
-  createdAt: new Date(),
-  user: {name: "username"},
-  streamInstance: {},
-  streamSchedule: {title: "test title"},
-};
-
-const data: (StreamArchive & {
-    user: Partial<User>,
-    streamSchedule: Partial<StreamSchedule>,
-    streamInstance : Partial<StreamInstance>
-})[] = [];
-
-for (let i = 0; i < 100; i++) {
-  const newDate = archive.createdAt.setDate(archive.createdAt.getDate() - 1);
-  const newTitle = archive.streamSchedule.title + i;
-  data.push({...archive, createdAt: new Date(newDate), streamSchedule: {title: newTitle}});
-}
+import { findAllStreamArchivesWithUserAndSchedule } from "@/lib/db/services/streamscheduleService";
 
 export const metadata: Metadata = {
   title: "Archive",
 };
 
 export default async function Archive() {
+  const data = await findAllStreamArchivesWithUserAndSchedule();
+
   return (
     <main className="min-h-screen min-h-screen w-full p-6 space-y-6">
       <h1 className="text-2xl font-bold flex items-center gap-2">

@@ -152,9 +152,9 @@ function CustomPlayer({ streamUrl, isStreamLive }: { streamUrl: string, isStream
   };
 
   return (
-    <div className="flex flex-col flex-1 items-center text-center w-full gap-4 bg-muted p-4 rounded-xl">
+    <div className="flex flex-col items-center justify-center text-center w-full gap-4 bg-muted p-4 rounded-xl">
       <div
-        className="flex flex-col flex-1 justify-center items-center w-full max-w-full aspect-[4/1] bg-primary/10 rounded-xl"
+        className="flex flex-col justify-center items-center w-full max-w-full aspect-[4/1] bg-primary/10 rounded-xl"
       >
         { !isStreamLive ? (
           <>

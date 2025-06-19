@@ -1,7 +1,10 @@
-import { DatePicker } from "@/app/(radio-show)/calendar/date-picker";
-import { Separator } from "@/components/ui/separator";
+import { Suspense } from "react";
 import { CalendarIcon } from "lucide-react";
 import type { Metadata } from "next";
+
+import { DatePicker } from "@/app/(radio-show)/calendar/date-picker";
+import { Separator } from "@/components/ui/separator";
+import DatePickerSkeleton from "./date-picker-skeleton";
 
 export const metadata: Metadata = {
   title: "Calendar",
@@ -16,7 +19,9 @@ export default function Calendar() {
       </h1>
       <Separator/>
 
-      <DatePicker />
+      <Suspense fallback={<DatePickerSkeleton />}>
+        <DatePicker />
+      </Suspense>
     </div>
   );
 }

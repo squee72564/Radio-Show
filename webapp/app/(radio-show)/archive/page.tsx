@@ -13,15 +13,12 @@ export default async function Archive() {
   const data = await findAllStreamArchivesWithUserAndSchedule();
 
   return (
-    <main className="min-h-screen min-h-screen w-full p-6 space-y-6">
+    <main className="flex flex-col min-h-screen w-full p-6 space-y-6">
       <h1 className="text-2xl font-bold flex items-center gap-2">
         <ArchiveIcon className="w-6 h-6" /> Archive
       </h1>
       <Separator />
-
-      <div className="w-full gap-5">
-        <ArchiveDataTable columns={columns} data={data} />
-      </div>
+      <ArchiveDataTable columns={columns} data={data} />
     </main>
   );
 };

@@ -109,7 +109,7 @@ export default function ArchiveDataTable<TData, TValue>({
   })
  
   return (
-    <Card className="rounded-sm border">
+    <Card className="flex flex-col flex-1 w-full rounded-sm border">
       <CardHeader className="flex items-center justify-center gap-5">
         <Input
           placeholder="Filter titles..."
@@ -136,7 +136,7 @@ export default function ArchiveDataTable<TData, TValue>({
           Next
         </Button>
       </CardHeader>
-      <CardContent className="border">
+      <CardContent className="border flex-1 min-h-90">
         <Table className="table-fixed w-full`">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -172,7 +172,7 @@ export default function ArchiveDataTable<TData, TValue>({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={columns.length} className="h-15 text-center">
                   No results.
                 </TableCell>
               </TableRow>

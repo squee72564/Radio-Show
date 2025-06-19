@@ -160,8 +160,8 @@ export default function CreateScheduleForm({ user }: { user: User }) {
               <ErrorMessage message={state.errors?.["end-date"]} />
             </div>
           </div>
-          <div>
-            <label className="block mb-2">Repeat Weekly On:</label>
+          <div className="flex w-full items-center gap-10 py-4">
+            <label className="block">Repeat Weekly On:</label>
             <div className="flex flex-wrap justify-center gap-10">
               {weekdays.map((day) => (
                 <div key={day} className="flex items-center gap-1">

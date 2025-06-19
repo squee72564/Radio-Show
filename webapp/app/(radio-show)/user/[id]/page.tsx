@@ -1,5 +1,6 @@
 "use server";
 
+import { Suspense } from "react";
 import { auth } from "@/auth";
 import { findUserById } from "@/lib/db/actions/userActions";
 import { findAllStreamsByStatusAndUser } from "@/lib/db/actions/streamscheduleActions";
@@ -11,7 +12,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import StreamInfoCard from "@/components/stream-info-card";
+import UserProfileStreamList from "./user-profile-stream-list";
+import UserProfileArchiveList from "./user-profile-archive-list";
 
 export default async function UserProfilePage({
   params
@@ -27,45 +29,39 @@ export default async function UserProfilePage({
   if (!userProfileInfo) {
     redirect("/dashboard");
   }
-
-  const shows = await findAllStreamsByStatusAndUser(userProfileInfo?.id, $Enums.ScheduleStatus.APPROVED);
-  
+    
   return (
-    <div className="w-full p-6 space-y-6">
-      <Card className="flex gap-6 p-6">
-        { 
-          <CardHeader className="flex flex-row w-full items-center justify-between">
-            <Badge className="px-5 py-3 rounded-2xl font-bold" variant={"outline"}>
-              {userProfileInfo.status}
-            </Badge>
-            {user && user.id === userProfileInfo?.id &&
-              <Link
-                href={`/user/edit`}
-              >
-                <Button variant="outline">
-                  Edit Profile
-                </Button>
-              </Link>
-            }
-          </CardHeader>
-        }
-        <div className="w-full">
-        <Avatar className="h-30 w-30 mx-auto">
-          <AvatarImage src={userProfileInfo.image || ""} />
-          <AvatarFallback className="font-bold text-2xl">{userProfileInfo.name?.charAt(0) ?? "?"}</AvatarFallback>
-        </Avatar>
-        </div>
-
-
-        <div className="flex flex-col justify-center items-center flex-1">
+    <div className="w-full p-5 space-y-2">
+      <Card className="flex gap-6 p-5">
+        <CardHeader className="flex flex-row w-full items-center justify-between">
+          <Badge className="px-5 py-3 rounded-2xl font-bold" variant={"outline"}>
+            {userProfileInfo.status}
+          </Badge>
+          {user && user.id === userProfileInfo?.id &&
+            <Link
+              href={`/user/edit`}
+            >
+              <Button variant="outline">
+                Edit Profile
+              </Button>
+            </Link>
+          }
+        </CardHeader>
+        <CardContent className="flex flex-col justify-center items-center">
+          <Avatar className="h-30 w-30 mx-auto mb-5">
+            <AvatarImage src={userProfileInfo.image || ""} />
+            <AvatarFallback className="font-bold text-2xl">{userProfileInfo.name?.charAt(0) ?? "?"}</AvatarFallback>
+          </Avatar>
           <h2 className="text-2xl font-bold">{userProfileInfo.name || userProfileInfo.email}</h2>
-        </div>
+
+        </CardContent>
       </Card>
 
-      <Tabs defaultValue="shows" className="w-full">
-        <TabsList className="grid grid-cols-2 w-full">
-          <TabsTrigger value="shows">Shows</TabsTrigger>
+      <Tabs defaultValue="bio" className="w-full">
+        <TabsList className="grid grid-cols-3 w-full">
           <TabsTrigger value="bio">Bio</TabsTrigger>
+          <TabsTrigger value="shows">Shows</TabsTrigger>
+          <TabsTrigger value="archive">Archive</TabsTrigger>
         </TabsList>
 
         <TabsContent value="bio">
@@ -81,43 +77,32 @@ export default async function UserProfilePage({
           </Card>
         </TabsContent>
 
-        <TabsContent value="shows" className="flex md:flex-row flex-col w-full">
-          <Card className="w-full md:w-1/2">
+        <TabsContent value="shows">
+          <Card className="w-full">
             <CardHeader>
-              <CardTitle>Past Archives</CardTitle>
+              <CardTitle>Active Streams</CardTitle>
             </CardHeader>
             <CardContent>
-              {shows.length === 0 ? (
-                <Badge variant="outline" className="text-center">No Past Archives</Badge>
-              ): (
-                <div className="space-y-2 overflow-auto max-h-50 p-2">
-                  {shows.map((stream, idx) => (
-                    // TODO: Replace with archive
-                    <StreamInfoCard key={idx} stream={stream} />
-                  ))}
-                </div>
-              )}
+              <Suspense fallback={<Badge variant="outline" className="text-center">Loading...</Badge>}>
+                <UserProfileStreamList userProfileInfo={userProfileInfo}/>
+              </Suspense>
             </CardContent>
           </Card>
-          <Card className="w-full md:w-1/2">
+        </TabsContent>
+
+        <TabsContent value="archive" className="flex md:flex-row flex-col w-full">
+          <Card className="w-full">
             <CardHeader>
-              <CardTitle>Streams</CardTitle>
+              <CardTitle>Archives</CardTitle>
             </CardHeader>
             <CardContent>
-              {shows.length === 0 ? (
-                <Badge variant="outline" className="text-center">No Active Streams</Badge>
-              ): (
-                <div className="space-y-2 overflow-auto max-h-50 p-2">
-                  {shows.map((stream, idx) => (
-                    <StreamInfoCard key={idx} stream={stream} />
-                  ))}
-                </div>
-              )}
+              <Suspense fallback={<Badge variant="outline" className="text-center">Loading...</Badge>}>
+                <UserProfileArchiveList userProfileInfo={userProfileInfo}/>
+              </Suspense>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
     </div>
-
   );
 }

@@ -140,3 +140,9 @@ export async function findAllStreamArchivesWithUserAndSchedule() {
     }
   });
 }
+
+export async function findArchivesByUserId(userId: string) {
+  return prisma.streamArchive.findMany({
+    where: {userId}
+  }); 
+}

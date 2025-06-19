@@ -83,7 +83,7 @@ function WaveformVisualizer({
   return (
     <canvas
       ref={canvasRef}
-      className="w-full max-w-full aspect-[4/1] bg-primary/50 rounded-xl"
+      className="w-full aspect-[4/1] bg-primary/50 rounded-xl"
     />
   );
 }
@@ -152,45 +152,43 @@ function CustomPlayer({ streamUrl, isStreamLive }: { streamUrl: string, isStream
   };
 
   return (
-    <div className="flex flex-col items-center text-center w-full gap-4 bg-muted p-4 rounded-xl">
+    <div className="flex flex-col flex-1 items-center text-center w-full gap-4 bg-muted p-4 rounded-xl">
       <div
-        className="flex flex-col justify-center items-center w-full max-w-full aspect-[4/1] bg-primary/10 rounded-xl"
+        className="flex flex-col flex-1 justify-center items-center w-full max-w-full aspect-[4/1] bg-primary/10 rounded-xl"
       >
-      { !isStreamLive ? (
-        <>
-          <p>{"乁( ⁰͡ Ĺ̯ ⁰͡ ) ㄏ"}</p>
-          <p>Offline.</p>
-        </>
-      ) : isLoading ? (
+        { !isStreamLive ? (
           <>
-            <p>{"( ͡~ ͜ʖ ͡°)"}</p>
-            <p>Loading...</p>
+            <p>{"乁( ⁰͡ Ĺ̯ ⁰͡ ) ㄏ"}</p>
+            <p>Offline.</p>
           </>
-      ) : !isPlaying ? (
-        <div
-          onClick={async () => {
-            const audio = audioRef.current;
-            if (!audio) return;
+        ) : isLoading ? (
+            <>
+              <p>{"( ͡~ ͜ʖ ͡°)"}</p>
+              <p>Loading...</p>
+            </>
+        ) : !isPlaying ? (
+          <div
+            onClick={async () => {
+              const audio = audioRef.current;
+              if (!audio) return;
 
-            if (!isInitialized) initAudioGraph();
-            await resumeIfSuspended();
+              if (!isInitialized) initAudioGraph();
+              await resumeIfSuspended();
 
-            try {
-              await audio.play();
-              setIsPlaying(true);
-            } catch (err) {
-              console.error("Playback failed:", err);
-            }
-          }}
-          className="flex flex-col justify-center w-full h-full hover:font-bold"
-        >
-          <>
+              try {
+                await audio.play();
+                setIsPlaying(true);
+              } catch (err) {
+                console.error("Playback failed:", err);
+              }
+            }}
+            className="flex flex-col justify-center w-full h-full hover:font-bold"
+          >
             <p>{"(♡´౪`♡)"}</p>
             <p>Click to Play!</p>
-          </>
-        </div>
-      ) : (
-        audioRef &&
+          </div>
+        ) : (
+          audioRef &&
           <WaveformVisualizer
             audioRef={audioRef}
             audioCtxRef={audioCtxRef}
@@ -198,7 +196,7 @@ function CustomPlayer({ streamUrl, isStreamLive }: { streamUrl: string, isStream
             analyserRef={analyserRef}
             isTimeDomain={isTimeDomain}
           />
-      )}
+        )}
       </div>
       <Button
         className="p-1 text-xs"
@@ -273,7 +271,7 @@ export default function LiveStreamPlayer() {
 
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col flex-1 gap-4 w-full">
       <CustomPlayer streamUrl={streamUrl} isStreamLive={isStreamLive}/>
 
       { !isStreamLive ? (

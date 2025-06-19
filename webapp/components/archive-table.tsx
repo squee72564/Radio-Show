@@ -1,6 +1,6 @@
 "use client";
 
-import { StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
+import { StreamArchive, StreamSchedule, User } from "@prisma/client";
 
 import {
   ColumnDef,

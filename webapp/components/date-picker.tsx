@@ -142,7 +142,6 @@ export function DatePicker() {
           schedule.map((streamInstance) => {
             const instanceStartDate = streamInstance.scheduledStart.toISOString().split("T")[0]
             const instanceStartTime = streamInstance.scheduledStart.toISOString().split("T")[1].slice(0,5)
-            const instanceEndDate = streamInstance.scheduledEnd.toISOString().split("T")[0]
             const instanceEndTime = streamInstance.scheduledEnd.toISOString().split("T")[1].slice(0,5)
             
             return (

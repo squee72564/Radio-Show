@@ -124,6 +124,22 @@ export async function streamScheduleFormSubmit(
     }
   }
 
+  const durationInHours = (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60);
+
+  if (durationInHours > 4.0 * 60.0 * 60.0) {
+    return {
+      ...prevState,
+      success: false,
+      message: "Total Stream time cannot exceed 4 hours",
+      errors: {
+        ["start-time"]: ["Total Stream time cannot exceed 4 hours"],
+        ["end-time"]: ["Total Stream time cannot exceed 4 hours"]
+      },
+      values: merged,
+
+    }
+  }
+
   const startDate = new Date(validatedData["start-date"]);
   const endDate = new Date(validatedData["end-date"]);
 

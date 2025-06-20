@@ -1,27 +1,23 @@
 "use server";
 
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { findFirstStreamInstanceAfterDate } from "@/lib/db/actions/streamscheduleActions";
+import StreamInstanceInfoCard from "@/components/streaminstance-info-card";
 
 export default async function NextShow() {
-  const nextScheduledShow: null = null;
+  await new Promise((resolve, reject) => setTimeout(resolve, 1000));
+  const nowUTC = new Date(new Date().getUTCDate());
+  const nextScheduledShow = await findFirstStreamInstanceAfterDate(nowUTC);
 
   return (
-    <section className="md:col-span-2 mt-4">
-      <Card className="shadow-sm border border-muted">
-        <CardHeader>
-          <CardTitle className="text-lg font-medium">Next Scheduled Show</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {nextScheduledShow ? (
-            <div className="text-sm">{nextScheduledShow}</div>
-          ) : (
-            <Badge variant="outline" className="text-muted-foreground">
-              No show scheduled
-            </Badge>
-          )}
-        </CardContent>
-      </Card>
+    <section className="md:col-span-2">
+      {nextScheduledShow ? (
+        <StreamInstanceInfoCard streamInstance={nextScheduledShow} />
+      ) : (
+        <Badge variant="outline" className="text-muted-foreground p-5 my-20">
+          No show scheduled
+        </Badge>
+      )}
     </section>
   );   
 }

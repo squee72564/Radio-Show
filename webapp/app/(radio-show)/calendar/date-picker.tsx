@@ -4,7 +4,6 @@ import { useState, useTransition, useEffect } from "react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, CalendarRange, Clock4 } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
-import Link from "next/link";
 import { StreamInstance, StreamSchedule, User } from "@prisma/client";
 
 import { cn } from "@/lib/utils";
@@ -18,16 +17,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import StreamInstanceInfoCard from "@/components/streaminstance-info-card";
 
 function parseLocalDateString(dateStr: string): Date {
   const [year, month, day] = dateStr.split("-").map(Number);
@@ -140,49 +130,9 @@ export function DatePicker() {
         {pending ? (
           <Badge variant="outline">Loading...</Badge>
         ) : schedule && schedule.length > 0 ? (
-          schedule.map((streamInstance) => {
-            const instanceStartDate = streamInstance.scheduledStart.toISOString().split("T")[0]
-            const instanceStartTime = streamInstance.scheduledStart.toISOString().split("T")[1].slice(0,5)
-            const instanceEndTime = streamInstance.scheduledEnd.toISOString().split("T")[1].slice(0,5)
-            
-            return (
-              <Card key={streamInstance.id} className="transition-transform hover:-translate-y-1 duration-300 w-full">
-                <CardHeader>
-                  <CardTitle className="mb-2">{streamInstance.streamSchedule.title}</CardTitle>
-                  <CardDescription className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <CalendarRange className="w-4 h-4" />
-                      <span>{instanceStartDate}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Clock4 className="w-4 h-4" />
-                      <span>{instanceStartTime} – {instanceEndTime}</span>
-                    </div>
-                  </CardDescription>
-                  <CardAction>
-                    <Link className="flex flex-col items-center justify-center" href={`/user/${streamInstance.userId}`}>
-                      <Avatar className="flex flex-col items-center justify-center">
-                        <AvatarImage className="w-10 h-10 rounded-xl" src={streamInstance.user.image || ""}/>
-                        <AvatarFallback className="font-bold text-2xl rounded-xl">
-                          {streamInstance.user.name?.charAt(0) ?? "?"}
-                        </AvatarFallback>
-                      </Avatar>
-                      {streamInstance.user.name}
-                    </Link>
-                  </CardAction>
-                </CardHeader>
-                <CardContent>
-                  <p className="truncate">{streamInstance.streamSchedule.description}</p>
-                </CardContent>
-                <CardFooter className="space-x-2">
-                  <span>Tags: </span>
-                  {streamInstance.streamSchedule.tags.map((tag, idx) => (
-                    <span key={idx}>{tag}</span>
-                  ))}
-                </CardFooter>
-              </Card>
-            )
-          })
+          schedule.map((streamInstance) => (
+            <StreamInstanceInfoCard streamInstance={streamInstance} />
+          ))
         ) : (
           <Badge variant="outline">No scheduled Streams</Badge>
         )}

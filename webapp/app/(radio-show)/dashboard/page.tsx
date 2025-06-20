@@ -4,10 +4,10 @@ import { LayoutDashboard } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import RecentUsersSkeleton from "@/app/(radio-show)/dashboard/recent-users-skeleton";
 import RecentArchivesSkeleton from "@/app/(radio-show)/dashboard/recent-archives-skeleton";
-import NextShowSkeleton from "@/app/(radio-show)/dashboard/next-show-skeleton";
 import RecentUsers from "@/app/(radio-show)/dashboard/recent-users";
 import RecentArchives from "@/app/(radio-show)/dashboard/recent-archives";
 import NextShow from "@/app/(radio-show)/dashboard/next-show";
+import { StreamInstanceInfoCardSkeleton } from "@/components/streaminstance-info-skeleton";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -22,7 +22,7 @@ export default async function Dashboard() {
       <Separator/>
 
       <div className="w-full flex-1 flex md:flex-col flex-row gap-10">
-        <div className="flex flex-row flex-1 w-full">
+        <div className="flex flex-row flex-1 w-full gap-10">
           <Suspense fallback={<RecentUsersSkeleton/>}>
             <RecentUsers/>
           </Suspense>
@@ -32,11 +32,10 @@ export default async function Dashboard() {
           </Suspense>
         </div>
 
-
-        <Suspense fallback={<NextShowSkeleton />}>
+        <h1 className="text-lg font-medium">Next Scheduled Show</h1>
+        <Suspense fallback={<StreamInstanceInfoCardSkeleton />}>
           <NextShow/>
         </Suspense>
-
       </div>
     </main>
   );

@@ -214,3 +214,7 @@ export async function streamScheduleFormSubmit(
     values: {}
   };
 };
+
+export async function findFirstStreamInstanceAfterDate(date: Date) {
+  return streamScheduleService.findFirstStreamInstanceAfterDate(date);
+}

@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { findRecentArchivesWithSchedule } from "@/lib/db/services/streamscheduleService";
 
 export default async function RecentArchives() {
-  const archives: Array<string> = [];
+  const archives = await findRecentArchivesWithSchedule(5);
 
   return (
     <section className="min-h-41 max-h-41 w-full">
@@ -14,7 +15,7 @@ export default async function RecentArchives() {
           {archives.map((archive, idx) => (
             <li key={idx}>
               <Link href="/" className="hover:underline text-primary">
-                {archive}
+                {archive.streamSchedule.title}
               </Link>
             </li>
           ))}

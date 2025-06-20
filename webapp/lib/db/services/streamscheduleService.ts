@@ -146,3 +146,44 @@ export async function findArchivesByUserId(userId: string) {
     where: {userId}
   }); 
 }
+
+export async function findRecentArchivesWithSchedule(count: number) {
+  return prisma.streamArchive.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
+    include: {
+      streamSchedule: true,
+    },
+    take: count,
+  });
+}
+
+export async function findFirstStreamInstanceAfterDate(date: Date) {
+  return prisma.streamInstance.findFirst({
+    where: {
+      OR: [
+        {
+          scheduledStart: {
+            lte: date
+          },
+          scheduledEnd: {
+            gte: date
+          }
+        },
+        {
+          scheduledStart: {
+            gt: date
+          }
+        }
+      ]
+    },
+    orderBy: {
+      scheduledStart: 'asc'
+    },
+    include: {
+      streamSchedule: true,
+      user: true
+    }
+  });
+}

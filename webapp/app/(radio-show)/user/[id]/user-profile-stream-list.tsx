@@ -11,7 +11,7 @@ export default async function UserProfileStreamList({userProfileInfo}: {userProf
   return (
     <>
       {shows.length === 0 ? (
-        <Badge variant="outline" className="text-center">No Past Archives</Badge>
+        <Badge variant="outline" className="text-center">No Active Streams</Badge>
       ): (
         <div className="space-y-2 overflow-auto max-h-50 p-2">
           {shows.map((stream, idx) => (

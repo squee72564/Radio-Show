@@ -15,11 +15,11 @@ export default async function UserActiveStreamsCard({userId}: {userId: string}) 
       <CardHeader>
         <CardTitle>Your Active Streams</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="overflow-y-auto">
         {activeStreams.length == 0 ? (
           <Badge variant={"outline"}>No Pending Streams</Badge>
         ) : (
-          <div className="space-y-2 overflow-y-auto">
+          <div className="flex flex-col gap-2">
             {activeStreams.map((stream, idx) => (
               <Link key={idx} href={`/user/stream/${stream.id}`}>
                 <StreamInfoCard stream={stream} />

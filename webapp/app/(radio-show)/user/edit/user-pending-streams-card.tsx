@@ -14,11 +14,11 @@ export default async function UserPendingStreamsCard({userId}: {userId: string})
       <CardHeader>
         <CardTitle>Your Streams Pending Approval</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="overflow-y-auto">
         {pendingStreams.length == 0 ? (
           <Badge variant={"outline"}>No Pending Streams</Badge>
         ) : (
-          <div className="space-y-2 overflow-y-auto">
+          <div className="flex flex-col gap-2">
             {pendingStreams.map((stream, idx) => (
               <StreamInfoCard key={idx} stream={stream} />
             ))}

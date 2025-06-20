@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { CalendarRange, Clock4, Repeat, UserIcon, PenIcon} from "lucide-react";
-import { setStreamStatus } from "@/lib/db/actions/streamscheduleActions";
+import { deleteStreamById, setStreamStatus } from "@/lib/db/actions/streamscheduleActions";
 import { RRule } from "rrule";
 import { $Enums, StreamSchedule, User } from "@prisma/client";
 
@@ -18,22 +18,37 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
 
   const [pending, startTransition] = useTransition()
   const [submissionstate, SetSubmissionState] = useState({success: false, message: "", error: ""});
+  const [disabled, setDisabled] = useState(false);
 
   const handleApproval = () => {
     startTransition(async () => {
-      SetSubmissionState(await setStreamStatus(stream, $Enums.ScheduleStatus.APPROVED))
+      const result = await setStreamStatus(stream, $Enums.ScheduleStatus.APPROVED);
+      SetSubmissionState(result);
+      if (result.success) setDisabled(true);
     });
   };
 
   const handleRejection = () => {
     startTransition(async () => {
-      SetSubmissionState(await setStreamStatus(stream, $Enums.ScheduleStatus.REJECTED))
+      const result = await setStreamStatus(stream, $Enums.ScheduleStatus.REJECTED);
+      SetSubmissionState(result);
+      if (result.success) setDisabled(true);
     });
   };
 
-  const handleRevoke= () => {
+  const handleRevoke = () => {
     startTransition(async () => {
-      SetSubmissionState(await setStreamStatus(stream, $Enums.ScheduleStatus.PENDING))
+      const result = await setStreamStatus(stream, $Enums.ScheduleStatus.PENDING)
+      SetSubmissionState(result);
+      if (result.success) setDisabled(true);
+    });
+  }
+
+  const handleDelete = () => {
+    startTransition(async () => {
+      await deleteStreamById(stream.id)
+      SetSubmissionState({success: true, message: `Stream deleted.`, error: ""})
+      setDisabled(true);
     });
   }
 
@@ -46,23 +61,23 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
         <CardAction className="flex sm:flex-row flex-col justify-center gap-5">
           { stream.status === $Enums.ScheduleStatus.PENDING ? (
             <>
-              <Button variant={"outline"} onClick={handleApproval}>
+              <Button variant={"outline"} onClick={handleApproval} disabled={pending || disabled}>
                 {pending ? "Pending..." : "Approve"}
               </Button>
-              <Button variant={"destructive"} onClick={handleRejection}>
+              <Button variant={"destructive"} onClick={handleRejection} disabled={pending || disabled}>
                 {pending ? "Pending..." : "Reject"}
               </Button>
             </>
           ): stream.status === $Enums.ScheduleStatus.APPROVED ? (
             <>
-              <Button variant={"outline"} onClick={handleRevoke}>
+              <Button variant={"destructive"} onClick={handleRevoke} disabled={pending || disabled}>
                 {pending ? "Pending..." : "Revoke"}
               </Button>
             </>
           ): (
             <>
-              <Button variant={"outline"} onClick={handleRevoke}>
-                {pending ? "Pending..." : "Set Pending"}
+              <Button variant={"outline"} onClick={handleDelete} disabled={pending || disabled}>
+                {pending ? "Pending..." : "Delete"}
               </Button>
             </>
           )}
@@ -93,12 +108,23 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
           <PenIcon className="w-4 h-4" />
           <span>Created At: {stream.submittedAt.toDateString()}</span>
         </div>
+        
+        { stream.reviewedAt && 
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <PenIcon className="w-4 h-4" />
+            <span>Approved At: {stream.reviewedAt?.toDateString()}</span>
+          </div>
+        }
+
       </CardContent>
-      {stream.status !== $Enums.ScheduleStatus.REJECTED &&
-        <CardFooter className="flex sm:flex-row flex-col justify-center gap-5">
-          {submissionstate.error && <p>Error {submissionstate.error}</p>}
-        </CardFooter>
-      }
+      <CardFooter className="flex flex-col items-center justify-center gap-2 text-sm">
+        {submissionstate.message && (
+          <p className="text-green-600">{submissionstate.message}</p>
+        )}
+        {submissionstate.error && (
+          <p className="text-red-600">Error: {submissionstate.error}</p>
+        )}
+      </CardFooter>
     </Card>
   );
 }

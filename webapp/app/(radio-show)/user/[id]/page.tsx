@@ -69,7 +69,7 @@ export default async function UserProfilePage({
             </CardHeader>
             <CardContent className="flex flex-col overflow-y-auto min-h-[200px] max-h-[calc(100vh-500px)] px-6">
               {userProfileInfo.bio ? (
-                userProfileInfo.bio.split('\n').map((paragraph, idx) => (
+                userProfileInfo.bio.trim().split('\n').map((paragraph, idx) => (
                   <p key={idx} className="text-md text-muted-foreground mb-4">
                     {paragraph}
                   </p>

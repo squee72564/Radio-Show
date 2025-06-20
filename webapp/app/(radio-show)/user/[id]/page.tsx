@@ -75,7 +75,7 @@ export default async function UserProfilePage({
                   </p>
                 ))
               ): (
-                <p>No About Set</p>
+                <p>No About Information</p>
               )}
             </CardContent>
           </Card>

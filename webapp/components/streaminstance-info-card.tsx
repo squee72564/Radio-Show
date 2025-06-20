@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Badge } from "./ui/badge";
 
 export default function StreamInstanceInfoCard({streamInstance}: {streamInstance: StreamInstance & {streamSchedule: StreamSchedule, user: User}}) {
   const instanceStartDate = streamInstance.scheduledStart.toISOString().split("T")[0]
@@ -49,10 +50,10 @@ export default function StreamInstanceInfoCard({streamInstance}: {streamInstance
       <CardContent>
         <p className="truncate">{streamInstance.streamSchedule.description}</p>
       </CardContent>
-      <CardFooter className="space-x-2">
+      <CardFooter className="flex flex-row gap-2 flex-wrap">
         <span>Tags: </span>
         {streamInstance.streamSchedule.tags.map((tag, idx) => (
-          <span key={idx}>{tag}</span>
+          <Badge variant={"outline"} key={idx}>{tag}</Badge>
         ))}
       </CardFooter>
     </Card>

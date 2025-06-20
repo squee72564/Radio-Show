@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { CircleHelpIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { streamScheduleFormSubmit } from "@/lib/db/actions/streamscheduleActions";
@@ -60,6 +60,9 @@ function ErrorMessage({ message }: { message?: string[] }) {
 }
 
 export default function CreateScheduleForm({ user }: { user: User }) {
+  const [showPassword, setShowPassword] = useState(false);
+
+  
   const formActionWithUser = async (
     prevState: StreamScheduleFormState,
     formData: FormData
@@ -81,7 +84,7 @@ export default function CreateScheduleForm({ user }: { user: User }) {
   console.log(formattedTomorrow)
 
   if (state.success) {
-    redirect(`/user/edit/${user.id}`)
+    redirect(`/user/edit`)
   }
 
   return (
@@ -183,7 +186,22 @@ export default function CreateScheduleForm({ user }: { user: User }) {
 
           <div className="flex flex-col gap-4">
             <label htmlFor="password">Stream Password</label>
-            <Input type="password" name="password" id="password" defaultValue={state.values?.password}/>
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                id="password"
+                defaultValue={state.values?.password}
+                className="pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground"
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
             <ErrorMessage message={state.errors?.password} />
           </div>
         </CardContent>

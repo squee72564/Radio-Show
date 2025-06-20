@@ -5,7 +5,6 @@ import { findFirstStreamInstanceAfterDate } from "@/lib/db/actions/streamschedul
 import StreamInstanceInfoCard from "@/components/streaminstance-info-card";
 
 export default async function NextShow() {
-  await new Promise((resolve, reject) => setTimeout(resolve, 1000));
   const nowUTC = new Date(new Date().getUTCDate());
   const nextScheduledShow = await findFirstStreamInstanceAfterDate(nowUTC);
 

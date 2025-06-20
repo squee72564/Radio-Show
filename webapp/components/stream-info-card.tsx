@@ -11,7 +11,7 @@ export default function StreamInfoCard({stream}: {stream: StreamSchedule}) {
   const recurrence = RRule.fromString(stream.rrule).toText();
 
   return (
-    <Card>
+    <Card className="shadow-md">
       <CardHeader>
         <CardTitle className="font-bold text-lg">
           {stream.title}

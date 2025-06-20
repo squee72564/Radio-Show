@@ -6,7 +6,7 @@ import { findUserById } from "@/lib/db/actions/userActions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -29,7 +29,7 @@ export default async function UserProfilePage({
   }
     
   return (
-    <div className="w-full p-5 space-y-2">
+    <div className="flex flex-col w-full max-h-screen p-5 gap-2">
       <Card className="flex gap-6 p-5">
         <CardHeader className="flex flex-row w-full items-center justify-between">
           <Badge className="px-5 py-3 rounded-2xl font-bold" variant={"outline"}>
@@ -55,46 +55,53 @@ export default async function UserProfilePage({
         </CardContent>
       </Card>
 
-      <Tabs defaultValue="bio" className="w-full">
+      <Tabs defaultValue="bio" className="w-full flex-1 flex flex-col min-h-[300px]">
         <TabsList className="grid grid-cols-3 w-full">
           <TabsTrigger value="bio">Bio</TabsTrigger>
           <TabsTrigger value="shows">Shows</TabsTrigger>
           <TabsTrigger value="archive">Archive</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="bio">
-          <Card>
+        <TabsContent value="bio" className="flex-1 flex flex-col min-h-[200px]">
+          <Card className="w-full flex-1 flex flex-col">
             <CardHeader>
               <CardTitle>About</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-md text-muted-foreground">
-                {userProfileInfo.bio}
-              </p>
+            <CardContent className="flex flex-col overflow-y-auto min-h-[200px] max-h-[calc(100vh-500px)] px-6">
+              {userProfileInfo.bio ? (
+                userProfileInfo.bio.split('\n').map((paragraph, idx) => (
+                  <p key={idx} className="text-md text-muted-foreground mb-4">
+                    {paragraph}
+                  </p>
+                ))
+              ): (
+                <p>No About Set</p>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="shows">
-          <Card className="w-full">
+        <TabsContent value="shows" className="flex-1 flex flex-col min-h-[200px]">
+          <Card className="w-full flex-1 flex flex-col">
             <CardHeader>
               <CardTitle>Active Streams</CardTitle>
             </CardHeader>
-            <CardContent>
-              <Suspense fallback={<Badge variant="outline" className="text-center">Loading...</Badge>}>
+            <CardContent className="overflow-y-auto  min-h-[200px] max-h-[calc(100vh-500px)] px-2">
+              <Suspense fallback={<Badge variant="outline" className="text-center mx-3 p-2">Loading...</Badge>}>
                 <UserProfileStreamList userProfileInfo={userProfileInfo}/>
               </Suspense>
             </CardContent>
           </Card>
+          <CardFooter className="hidden"/>
         </TabsContent>
 
-        <TabsContent value="archive" className="flex md:flex-row flex-col w-full">
-          <Card className="w-full">
+        <TabsContent value="archive" className="flex-1 flex flex-col min-h-[200px]">
+          <Card className="w-full flex-1 flex flex-col">
             <CardHeader>
               <CardTitle>Archives</CardTitle>
             </CardHeader>
-            <CardContent>
-              <Suspense fallback={<Badge variant="outline" className="text-center">Loading...</Badge>}>
+            <CardContent className="overflow-y-auto  min-h-[200px] max-h-[calc(100vh-500px)] px-2">
+              <Suspense fallback={<Badge variant="outline" className="text-center mx-3 p-2">Loading...</Badge>}>
                 <UserProfileArchiveList userProfileInfo={userProfileInfo}/>
               </Suspense>
             </CardContent>

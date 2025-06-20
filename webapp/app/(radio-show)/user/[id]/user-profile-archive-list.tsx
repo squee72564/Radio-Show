@@ -9,9 +9,9 @@ export default async function UserProfileArchiveList({userProfileInfo}: {userPro
   return (
     <>
       {archives.length === 0 ? (
-        <Badge variant="outline" className="text-center">No Past Archives</Badge>
+        <Badge variant="outline" className="text-center mx-3 p-2">No Past Archives</Badge>
       ): (
-        <div className="space-y-2 overflow-auto max-h-50 p-2">
+        <div className="space-y-2 p-2">
           {archives.map((archive, idx) => (
             <div key={idx}>
               Archive: {archive.id}

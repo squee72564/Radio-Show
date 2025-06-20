@@ -126,10 +126,9 @@ export function DatePicker() {
             Next Day
           </Button>
         </div>
-
       </div>
       
-      <div className="flex-1 space-y-4 w-full overflow-y-auto p-5">
+      <div className="flex-1 space-y-4 w-full overflow-y-auto p-5 max-h-[calc(100vh-180px)]">
         {pending ? (
           <Badge variant="outline">Loading...</Badge>
         ) : schedule && schedule.length > 0 ? (

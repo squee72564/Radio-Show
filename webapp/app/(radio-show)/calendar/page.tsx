@@ -19,7 +19,7 @@ export default function Calendar() {
       </h1>
       <Separator/>
 
-      <div className="flex flex-col flex-1 min-h-0">
+      <div className="flex flex-col flex-1">
         <Suspense fallback={<DatePickerSkeleton />}>
           <DatePicker />
         </Suspense>

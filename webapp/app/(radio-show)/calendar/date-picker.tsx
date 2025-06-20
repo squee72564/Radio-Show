@@ -75,7 +75,7 @@ export function DatePicker() {
   }
 
   return (
-    <>
+    <div className="flex flex-col flex-1">
       <div className="flex flex-col sm:flex-row relative mb-8 ml-5 gap-5 items-center justify-center">
         <Popover>
           <PopoverTrigger asChild>
@@ -98,7 +98,7 @@ export function DatePicker() {
                 setDate(selectedDate);
 
                 if (selectedDate) {
-                  const formatted = selectedDate.toISOString().split("T")[0]; // YYYY-MM-DD
+                  const formatted = selectedDate.toISOString().split("T")[0];
                   const params = new URLSearchParams(searchParams.toString());
                   params.set("date", formatted);
 
@@ -109,24 +109,27 @@ export function DatePicker() {
             />
           </PopoverContent>
         </Popover>
-        <Button
-          className="max-w-25"
-          variant="outline"
-          onClick={() => changeDay(-1)}
-        >
-          Prev Day
-        </Button>
+        <div className="flex flex-row gap-5">
+          <Button
+            className="max-w-25"
+            variant="outline"
+            onClick={() => changeDay(-1)}
+          >
+            Prev Day
+          </Button>
 
-        <Button
-          className="max-w-25"
-          variant="outline"
-          onClick={() => changeDay(1)}
-        >
-          Next Day
-        </Button>
+          <Button
+            className="max-w-25"
+            variant="outline"
+            onClick={() => changeDay(1)}
+          >
+            Next Day
+          </Button>
+        </div>
+
       </div>
-
-      <div className="space-y-4 w-full overflow-auto max-h-110 p-5">
+      
+      <div className="flex-1 space-y-4 w-full overflow-y-auto p-5">
         {pending ? (
           <Badge variant="outline">Loading...</Badge>
         ) : schedule && schedule.length > 0 ? (
@@ -137,6 +140,6 @@ export function DatePicker() {
           <Badge variant="outline">No scheduled Streams</Badge>
         )}
       </div>
-    </>
+    </div>
   );
 }

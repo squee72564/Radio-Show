@@ -13,6 +13,10 @@ export async function getStreamInstancesByDateRange(dateStart: Date, dateEnd: Da
   return streamScheduleService.getStreamInstancesByDateRange(dateStart, dateEnd);
 }
 
+export async function deleteStreamById(streamId: string) {
+  return await streamScheduleService.deleteStreamById(streamId);
+}
+
 export async function setStreamStatus(stream: StreamSchedule & {user: User}, status: $Enums.ScheduleStatus) {
   if (status == $Enums.ScheduleStatus.APPROVED) {
     
@@ -41,6 +45,8 @@ export async function setStreamStatus(stream: StreamSchedule & {user: User}, sta
       }
     ));
 
+    await streamScheduleService.setStreamScheduleReviewedAt(stream.id, new Date());
+
     await streamScheduleService.setStreamScheduleStatus(stream.id, status);
 
     if (stream.user.status === $Enums.Role.USER) {
@@ -52,11 +58,13 @@ export async function setStreamStatus(stream: StreamSchedule & {user: User}, sta
   } else if (status == $Enums.ScheduleStatus.REJECTED) {
 
     await streamScheduleService.setStreamScheduleStatus(stream.id, status);
+    await streamScheduleService.setStreamScheduleReviewedAt(stream.id, new Date());
     await streamScheduleService.revokeStreamInstances(stream.id);
     return {success: true, message: "Stream Rejected", error: ""}
   }
 
   await streamScheduleService.setStreamScheduleStatus(stream.id, status);
+  await streamScheduleService.setStreamScheduleReviewedAt(stream.id, new Date());
   await streamScheduleService.revokeStreamInstances(stream.id);
 
   return {success: true, message: "Stream set to pending", error: ""};

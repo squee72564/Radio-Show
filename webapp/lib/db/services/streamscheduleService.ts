@@ -1,6 +1,32 @@
 import { prisma } from "@/lib/db/prismaClient";
 import { $Enums, StreamSchedule } from "@prisma/client";
 
+export async function findStreamScheduleByIdAndPass(id: string, password: string) {
+  return await prisma.streamSchedule.findUnique({
+    where: {
+      id_password: {
+        id,
+        password
+      }
+    }
+  });
+}
+
+export async function deleteStreamById(id: string) {
+  return await prisma.streamSchedule.delete({
+    where: {id}
+  })
+}
+
+export async function setStreamScheduleReviewedAt(id: string, reviewedAt: Date) {
+  return prisma.streamSchedule.update({
+    where: {id},
+    data: {
+      reviewedAt
+    }
+  });
+}
+
 export async function getStreamInstancesByDateRange(dateStart: Date, dateEnd: Date) {
   return prisma.streamInstance.findMany({
     where: {

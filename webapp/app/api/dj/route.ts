@@ -1,28 +1,22 @@
 import { prisma } from "@/lib/db/prismaClient";
+import { findStreamScheduleByIdAndPass } from "@/lib/db/services/streamscheduleService";
 
 export async function POST(req: Request) {
   const bodyText = await req.text();
   const body: {password: string, user: string, address: string}
     = JSON.parse(bodyText);
 
-  const userId = body.user;
+  const streamScheduleId = body.user;
   const password = body.password;
 
-  if (!userId || !password) {
+  if (!streamScheduleId || !password) {
     return new Response(JSON.stringify({authenticated: false, message: "No user or pass"}), {
       status: 401,
       headers: { "Content-Type": "application/json" },
     });
   }
 
-  const streamschedule = await prisma.streamSchedule.findUnique({
-    where: {
-      userId_password: {
-        userId: userId,
-        password: password,
-      },
-    }
-  })
+  const streamschedule = await findStreamScheduleByIdAndPass(streamScheduleId, password);
 
   if (!streamschedule) {
     return new Response(JSON.stringify({authenticated: false, message: "Could not find stream schedule"}), {
@@ -33,7 +27,7 @@ export async function POST(req: Request) {
   
   const now = new Date();
 
-  const streamInstances = await prisma.streamInstance.findMany({
+  const streamInstances = await prisma.streamInstance.findFirst({
     where: {
       streamScheduleId: streamschedule.id,
       scheduledStart: { lte: now },
@@ -43,16 +37,16 @@ export async function POST(req: Request) {
 
   console.log(streamInstances);
 
-  if (!streamInstances || streamInstances.length === 0) {
+  if (!streamInstances) {
     return new Response(JSON.stringify({authenticated: false, message: "Could not find stream instance"}), {
       status: 401,
       headers: { "Content-Type": "application/json" },
     });
   }
 
-  const streamInstance = streamInstances[0];
+  const streamInstance = streamInstances;
 
-  const streamScheduleId = streamschedule.id;
+  const userId = streamschedule.userId;
   const streamInstanceId = streamInstance.id;
   const title = streamschedule.title;
   const timelimit = Math.max(

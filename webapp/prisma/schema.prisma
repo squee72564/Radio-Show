@@ -119,8 +119,7 @@ model StreamSchedule {
   StreamInstance StreamInstance[]
   streamArchives StreamArchive[]
 
-  @@index([userId, password])
-  @@unique([userId, password])
+  @@unique([id, password])
 }
 
 model StreamInstance {

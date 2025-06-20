@@ -112,7 +112,7 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
         { stream.reviewedAt && 
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <PenIcon className="w-4 h-4" />
-            <span>Approved At: {stream.reviewedAt?.toDateString()}</span>
+            <span>Reviewed At: {stream.reviewedAt?.toDateString()}</span>
           </div>
         }
 

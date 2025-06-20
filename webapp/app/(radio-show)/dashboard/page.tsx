@@ -21,7 +21,7 @@ export default async function Dashboard() {
       </h1>
       <Separator/>
 
-      <div className="w-full flex-1 flex md:flex-col flex-row gap-10">
+      <div className="w-full flex-1 flex flex-col gap-10">
         <div className="flex flex-row flex-1 w-full gap-10">
           <Suspense fallback={<RecentUsersSkeleton/>}>
             <RecentUsers/>

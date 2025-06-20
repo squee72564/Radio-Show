@@ -2,7 +2,7 @@
 
 import { useState, useTransition, useEffect } from "react";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, CalendarRange, Clock4 } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { StreamInstance, StreamSchedule, User } from "@prisma/client";
 
@@ -130,8 +130,8 @@ export function DatePicker() {
         {pending ? (
           <Badge variant="outline">Loading...</Badge>
         ) : schedule && schedule.length > 0 ? (
-          schedule.map((streamInstance) => (
-            <StreamInstanceInfoCard streamInstance={streamInstance} />
+          schedule.map((streamInstance, idx) => (
+            <StreamInstanceInfoCard key={idx} streamInstance={streamInstance} />
           ))
         ) : (
           <Badge variant="outline">No scheduled Streams</Badge>

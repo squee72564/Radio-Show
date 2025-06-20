@@ -31,8 +31,11 @@ export default function StreamInstanceInfoCard({streamInstance}: {streamInstance
             <span>{instanceStartTime} – {instanceEndTime}</span>
           </div>
         </CardDescription>
-        <CardAction>
-          <Link className="flex flex-col items-center justify-center" href={`/user/${streamInstance.userId}`}>
+        <CardAction className="space-y-2">
+          <Link
+            className="flex flex-col items-center justify-center hover:text-muted-foreground"
+            href={`/user/${streamInstance.userId}`}
+          >
             <Avatar className="flex flex-col items-center justify-center">
               <AvatarImage className="w-10 h-10 rounded-xl" src={streamInstance.user.image || ""}/>
               <AvatarFallback className="font-bold text-2xl rounded-xl">

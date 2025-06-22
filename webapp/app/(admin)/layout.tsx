@@ -8,15 +8,15 @@ export const metadata: Metadata = {
   description: "Admin Dashboard for Radio Show"
 };
 
-export default function RootLayout({
+export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <SidebarProvider>
-        <AppSidebar title={"Admin Dashboard"} sidebarItems={adminItems} />
-        {children}
+      <AppSidebar title={"Admin Dashboard"} sidebarItems={adminItems} />
+      {children}
     </SidebarProvider>
   );
 }

@@ -12,12 +12,11 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
+import { LocalDate } from "@/components/localdate";
+import { LocalTime } from "@/components/localtime";
 
 export default function StreamInstanceInfoCard({streamInstance}: {streamInstance: StreamInstance & {streamSchedule: StreamSchedule, user: User}}) {
-  const instanceStartDate = streamInstance.scheduledStart.toLocaleDateString()
-  const instanceStartTime = streamInstance.scheduledStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  const instanceEndTime = streamInstance.scheduledEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  
+    
   return (
     <Card className="w-full">
       <CardHeader>
@@ -25,11 +24,11 @@ export default function StreamInstanceInfoCard({streamInstance}: {streamInstance
         <CardDescription className="flex flex-col gap-2">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <CalendarRange className="w-4 h-4" />
-            <span>{instanceStartDate}</span>
+            <LocalDate date={streamInstance.scheduledStart}/>
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Clock4 className="w-4 h-4" />
-            <span>{instanceStartTime} – {instanceEndTime}</span>
+            <LocalTime date={streamInstance.scheduledStart} /> - <LocalTime date={streamInstance.scheduledEnd}/>
           </div>
         </CardDescription>
         <CardAction className="space-y-2">

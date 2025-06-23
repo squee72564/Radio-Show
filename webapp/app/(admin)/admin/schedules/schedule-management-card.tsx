@@ -8,12 +8,10 @@ import { $Enums, StreamSchedule, User } from "@prisma/client";
 
 import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardAction } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { LocalTime } from "@/components/localtime";
+import { LocalDate } from "@/components/localdate";
 
 export default function ScheduleManagementCard({stream}: {stream: StreamSchedule & {user: User} }) {
-  const startTime = stream.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  const endTime = stream.endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  const startDate = stream.startDate.toLocaleDateString();
-  const endDate = stream.endDate.toLocaleDateString();
   const recurrence = RRule.fromString(stream.rrule).toText();
 
   const [pending, startTransition] = useTransition()
@@ -86,12 +84,12 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
       <CardContent className="flex flex-col gap-2">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Clock4 className="w-4 h-4" />
-          <span>{startTime} – {endTime}</span>
+          <LocalTime date={stream.startTime}/> - <LocalTime date={stream.endTime}/>
         </div>
 
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <CalendarRange className="w-4 h-4" />
-          <span>{startDate} to {endDate}</span>
+          <LocalDate date={stream.startDate}/> to <LocalDate date={stream.endDate}/>
         </div>
 
         <div className="flex items-center gap-2 text-sm text-muted-foreground">

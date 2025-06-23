@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 import StreamInstanceInfoCard from "@/components/streaminstance-info-card";
+import { LocalDate } from "@/components/localdate";
 
 export function DatePicker() {
   const [schedule, setSchedule] = useState<(StreamInstance & {user: User, streamSchedule: StreamSchedule})[] | null>(null);
@@ -81,7 +82,7 @@ export function DatePicker() {
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? date.toLocaleDateString() : <span>Pick a date</span>}
+              {date ? <LocalDate date={date}/> : <span>Pick a date</span>}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto">

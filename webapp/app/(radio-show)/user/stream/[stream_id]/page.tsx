@@ -9,6 +9,8 @@ import { getStreamScheduleById } from "@/lib/db/services/streamscheduleService";
 import { RRule } from "rrule";
 import { CalendarRange, Clock4, Repeat } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { LocalTime } from "@/components/localtime";
+import { LocalDate } from "@/components/localdate";
 
 export default async function UserProfilePage({
   params
@@ -28,12 +30,6 @@ export default async function UserProfilePage({
   }
 
   const isStreamOwnerViewing = signedIn ? streamSchedule.userId === user.id : false;
-
-  
-  const startTime = streamSchedule.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  const endTime = streamSchedule.endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  const startDate = streamSchedule.startDate.toLocaleDateString();
-  const endDate = streamSchedule.endDate.toLocaleDateString();
   const recurrence = RRule.fromString(streamSchedule.rrule).toText();
 
   return (
@@ -45,11 +41,11 @@ export default async function UserProfilePage({
         <CardDescription className="flex flex-col gap-2 text-muted-foreground text-lg">
           <div className="flex items-center gap-2 ">
             <Clock4 className="w-4 h-4" />
-            <span>{startTime} – {endTime}</span>
+            <LocalTime date={streamSchedule.startTime} /> - <LocalTime date={streamSchedule.endTime} />
           </div>
           <div className="flex items-center gap-2">
             <CalendarRange className="w-4 h-4" />
-            <span>{startDate} to {endDate}</span>
+            <LocalDate date={streamSchedule.startDate} /> - <LocalDate date={streamSchedule.endDate} />
           </div>
 
           <div className="flex items-center gap-2">

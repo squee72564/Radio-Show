@@ -27,6 +27,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { LocalDate } from "@/components/localdate";
 
 export const columns: ColumnDef<(StreamArchive & {
     user: Partial<User>,
@@ -74,7 +75,7 @@ export const columns: ColumnDef<(StreamArchive & {
     },
     cell: ({row}) => {
       const date = row.getValue("createdAt") as Date
-      return <div className="truncate text-center">{date.toLocaleDateString()}</div>
+      return <div className="truncate text-center">{<LocalDate date={date} />}</div>
     }
   }
 ]

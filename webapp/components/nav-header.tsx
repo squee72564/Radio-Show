@@ -11,7 +11,7 @@ import { Button } from "./ui/button"
 
 export default function NavigationHeader() {
   return (
-    <header className="sticky top-0 z-40 w-full py-6">
+    <header className="sticky top-0 z-40 w-full pt-6">
       <div className="container flex items-center justify-around px-4">
         <Link href={"/"} className="hidden items-center gap-2 md:flex">
           <Music4Icon className="h-10 w-10"/>
@@ -29,7 +29,7 @@ export default function NavigationHeader() {
               ].map(({ title, href }) => (
                 <NavigationMenuItem key={href}>
                   <NavigationMenuLink asChild>
-                    <Button variant={"outline"}>
+                    <Button variant={"secondary"}>
                       <Link href={href} className="font-medium">
                           {title}
                       </Link>

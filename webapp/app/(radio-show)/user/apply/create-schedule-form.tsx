@@ -4,7 +4,7 @@ import { useActionState, useState } from "react";
 import { CircleHelpIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { streamScheduleFormSubmit } from "@/lib/db/actions/streamscheduleActions";
-import { StreamScheduleFormState, weekdays, Weekday } from "@/app/types/stream-schedule";
+import { StreamScheduleFormState, weekdays, Weekday } from "@/types/stream-schedule";
 import { User } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import {

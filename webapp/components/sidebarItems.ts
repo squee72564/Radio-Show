@@ -1,4 +1,4 @@
-import { SidebarItems } from "@/app/types/sidebar";
+import { SidebarItems } from "@/types/sidebar";
 import {
   Archive,
   Calendar,

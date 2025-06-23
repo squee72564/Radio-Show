@@ -12,7 +12,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { SignInOutNav } from "./signin-nav";
-import { SidebarItems } from "@/app/types/sidebar";
+import { SidebarItems } from "@/types/sidebar";
 
 export function AppSidebar({title, sidebarItems} : {title: string, sidebarItems: SidebarItems[]}) {
   

@@ -3,7 +3,7 @@
 import * as streamScheduleService from "@/lib/db/services/streamscheduleService";
 import * as userService from "@/lib/db/services/userService";
 
-import { StreamScheduleFormState, Weekday } from "@/app/types/stream-schedule";
+import { StreamScheduleFormState, Weekday } from "@/types/stream-schedule";
 import { streamScheduleSchema } from "@/validations/stream-schedule";
 import { dateToUTC, generateStreamInstances } from "@/lib/utils";
 

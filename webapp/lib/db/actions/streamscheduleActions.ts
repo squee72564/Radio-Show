@@ -5,7 +5,7 @@ import * as userService from "@/lib/db/services/userService";
 
 import { StreamScheduleFormState, Weekday } from "@/app/types/stream-schedule";
 import { streamScheduleSchema } from "@/validations/stream-schedule";
-import { generateStreamInstances } from "@/lib/utils";
+import { dateToUTC, generateStreamInstances } from "@/lib/utils";
 
 import { $Enums, StreamSchedule, User } from "@prisma/client";
 
@@ -18,6 +18,7 @@ export async function deleteStreamById(streamId: string) {
 }
 
 export async function setStreamStatus(stream: StreamSchedule & {user: User}, status: $Enums.ScheduleStatus) {
+  const nowUTC = dateToUTC(new Date());
   if (status == $Enums.ScheduleStatus.APPROVED) {
     
     const proposedInstances = await generateStreamInstances({
@@ -45,7 +46,7 @@ export async function setStreamStatus(stream: StreamSchedule & {user: User}, sta
       }
     ));
 
-    await streamScheduleService.setStreamScheduleReviewedAt(stream.id, new Date());
+    await streamScheduleService.setStreamScheduleReviewedAt(stream.id, nowUTC);
 
     await streamScheduleService.setStreamScheduleStatus(stream.id, status);
 
@@ -58,13 +59,13 @@ export async function setStreamStatus(stream: StreamSchedule & {user: User}, sta
   } else if (status == $Enums.ScheduleStatus.REJECTED) {
 
     await streamScheduleService.setStreamScheduleStatus(stream.id, status);
-    await streamScheduleService.setStreamScheduleReviewedAt(stream.id, new Date());
+    await streamScheduleService.setStreamScheduleReviewedAt(stream.id, nowUTC);
     await streamScheduleService.revokeStreamInstances(stream.id);
     return {success: true, message: "Stream Rejected", error: ""}
   }
 
   await streamScheduleService.setStreamScheduleStatus(stream.id, status);
-  await streamScheduleService.setStreamScheduleReviewedAt(stream.id, new Date());
+  await streamScheduleService.setStreamScheduleReviewedAt(stream.id, nowUTC);
   await streamScheduleService.revokeStreamInstances(stream.id);
 
   return {success: true, message: "Stream set to pending", error: ""};
@@ -149,8 +150,8 @@ export async function streamScheduleFormSubmit(
     }
   }
 
-  const startDate = new Date(validatedData["start-date"]);
-  const endDate = new Date(validatedData["end-date"]);
+  const startDate = dateToUTC(new Date(validatedData["start-date"]));
+  const endDate = dateToUTC(new Date(validatedData["end-date"]));
 
   if (startDate >= endDate) {
     return {
@@ -194,7 +195,7 @@ export async function streamScheduleFormSubmit(
   // Create Stream Schedule Here
   const scheduleData: Omit<StreamSchedule, "id"> = {
     status: $Enums.ScheduleStatus.PENDING,
-    submittedAt: new Date(),
+    submittedAt: dateToUTC(new Date()),
     
     title: validatedData.title,
     description: validatedData.description,

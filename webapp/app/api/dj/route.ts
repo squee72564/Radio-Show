@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db/prismaClient";
 import { findStreamScheduleByIdAndPass } from "@/lib/db/services/streamscheduleService";
+import { dateToUTC } from "@/lib/utils";
 
 export async function POST(req: Request) {
   const bodyText = await req.text();
@@ -25,7 +26,7 @@ export async function POST(req: Request) {
     });
   }
   
-  const now = new Date();
+  const now = dateToUTC(new Date());
 
   const streamInstances = await prisma.streamInstance.findFirst({
     where: {

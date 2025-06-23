@@ -1,4 +1,5 @@
 import { uploadStreamFile } from "@/lib/nodeUtils";
+import { dateToUTC } from "@/lib/utils";
 import { parseBuffer } from "music-metadata";
 
 export const dynamic = "force-dynamic";
@@ -61,7 +62,7 @@ export async function POST(req: Request) {
       durationInSeconds: durationInSeconds,
       fileSizeBytes: buffer.length,
       format: file.type || undefined,
-      createdAt: new Date(),
+      createdAt: dateToUTC(new Date()),
     };
 
     console.log(data);

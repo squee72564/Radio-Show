@@ -35,6 +35,9 @@ export async function getStreamInstancesByDateRange(dateStart: Date, dateEnd: Da
         lte: dateEnd,
       },
     },
+    orderBy: {
+      scheduledStart: 'asc',
+    },
     include: {
       user: true,
       streamSchedule: true,

@@ -79,7 +79,7 @@ export default function CreateScheduleForm({ user }: { user: User }) {
 
   const tomorrowDate = new Date();
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-  const formattedTomorrow = tomorrowDate.toISOString().slice(0, 10);
+  const formattedTomorrow = tomorrowDate.toLocaleDateString();
 
   console.log(formattedTomorrow)
 

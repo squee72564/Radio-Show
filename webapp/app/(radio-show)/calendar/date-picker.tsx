@@ -20,8 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import StreamInstanceInfoCard from "@/components/streaminstance-info-card";
 
 function parseLocalDateString(dateStr: string): Date {
-  const [year, month, day] = dateStr.split("-").map(Number);
-  return new Date(year, month - 1, day);
+  return new Date(dateStr);
 }
 
 export function DatePicker() {
@@ -68,7 +67,7 @@ export function DatePicker() {
     newDate.setDate(newDate.getDate() + offset);
     setDate(newDate);
 
-    const formatted = newDate.toISOString().split("T")[0];
+    const formatted = newDate.toLocaleDateString();
     const params = new URLSearchParams(searchParams.toString());
     params.set("date", formatted);
     router.replace(`?${params.toString()}`);
@@ -87,7 +86,7 @@ export function DatePicker() {
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP") : <span>Pick a date</span>}
+              {date ? date.toLocaleDateString() : <span>Pick a date</span>}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto">
@@ -95,10 +94,9 @@ export function DatePicker() {
               mode="single"
               selected={date}
               onSelect={(selectedDate) => {
-                setDate(selectedDate);
-
                 if (selectedDate) {
-                  const formatted = selectedDate.toISOString().split("T")[0];
+                  setDate(selectedDate);
+                  const formatted = selectedDate.toLocaleDateString();
                   const params = new URLSearchParams(searchParams.toString());
                   params.set("date", formatted);
 

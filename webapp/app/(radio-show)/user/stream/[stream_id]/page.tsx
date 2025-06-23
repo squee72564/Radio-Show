@@ -30,10 +30,10 @@ export default async function UserProfilePage({
   const isStreamOwnerViewing = signedIn ? streamSchedule.userId === user.id : false;
 
   
-  const startTime = streamSchedule.startTime.toISOString().slice(11, 16);
-  const endTime = streamSchedule.endTime.toISOString().slice(11, 16);
-  const startDate = streamSchedule.startDate.toDateString();
-  const endDate = streamSchedule.endDate.toDateString();
+  const startTime = streamSchedule.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const endTime = streamSchedule.endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const startDate = streamSchedule.startDate.toLocaleDateString();
+  const endDate = streamSchedule.endDate.toLocaleDateString();
   const recurrence = RRule.fromString(streamSchedule.rrule).toText();
 
   return (

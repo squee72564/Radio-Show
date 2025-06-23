@@ -10,10 +10,10 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardAction } from
 import { Button } from "@/components/ui/button";
 
 export default function ScheduleManagementCard({stream}: {stream: StreamSchedule & {user: User} }) {
-  const startTime = stream.startTime.toISOString().slice(11, 16);
-  const endTime = stream.endTime.toISOString().slice(11, 16);
-  const startDate = stream.startDate.toDateString();
-  const endDate = stream.endDate.toDateString();
+  const startTime = stream.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const endTime = stream.endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const startDate = stream.startDate.toLocaleDateString();
+  const endDate = stream.endDate.toLocaleDateString();
   const recurrence = RRule.fromString(stream.rrule).toText();
 
   const [pending, startTransition] = useTransition()

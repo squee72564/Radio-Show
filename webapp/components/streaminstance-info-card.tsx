@@ -14,9 +14,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 
 export default function StreamInstanceInfoCard({streamInstance}: {streamInstance: StreamInstance & {streamSchedule: StreamSchedule, user: User}}) {
-  const instanceStartDate = streamInstance.scheduledStart.toISOString().split("T")[0]
-  const instanceStartTime = streamInstance.scheduledStart.toISOString().split("T")[1].slice(0,5)
-  const instanceEndTime = streamInstance.scheduledEnd.toISOString().split("T")[1].slice(0,5)
+  const instanceStartDate = streamInstance.scheduledStart.toLocaleDateString()
+  const instanceStartTime = streamInstance.scheduledStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  const instanceEndTime = streamInstance.scheduledEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   
   return (
     <Card className="w-full">

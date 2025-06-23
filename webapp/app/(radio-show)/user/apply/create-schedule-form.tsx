@@ -79,9 +79,12 @@ export default function CreateScheduleForm({ user }: { user: User }) {
 
   const tomorrowDate = new Date();
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-  const formattedTomorrow = tomorrowDate.toLocaleDateString();
 
-  console.log(formattedTomorrow)
+  const year = tomorrowDate.getFullYear();
+  const month = String(tomorrowDate.getMonth() + 1).padStart(2, '0');
+  const day = String(tomorrowDate.getDate()).padStart(2, '0');
+
+  const formattedTomorrow = `${year}-${month}-${day}`;
 
   if (state.success) {
     redirect(`/user/edit`)

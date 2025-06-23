@@ -118,10 +118,18 @@ export async function streamScheduleFormSubmit(
 
   const validatedData = result.data;
 
-  const startTime = new Date(`1970-01-01T${validatedData["start-time"]}:00Z`);
-  const endTime = new Date(`1970-01-01T${validatedData["end-time"]}:00Z`);
+  const [startHour, startMinute] = validatedData["start-time"].split(":").map(Number);
+  const [endHour, endMinute] = validatedData["end-time"].split(":").map(Number);
 
-  if (startTime >= endTime) {
+  const startTimeLocal = new Date(1970, 0, 1, startHour, startMinute);
+  const endTimeLocal = new Date(1970, 0, 1, endHour, endMinute);
+
+  const startTime = dateToUTC(startTimeLocal);
+  const endTime = dateToUTC(endTimeLocal);
+
+  console.log(validatedData["start-time"], validatedData["end-time"])
+
+  if (startTimeLocal >= endTimeLocal) {
     return {
       ...prevState,
       success: false,
@@ -134,7 +142,7 @@ export async function streamScheduleFormSubmit(
     }
   }
 
-  const durationInHours = (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60);
+  const durationInHours = (endTimeLocal.getTime() - startTimeLocal.getTime()) / (1000 * 60 * 60);
 
   if (durationInHours > 4.0 * 60.0 * 60.0) {
     return {
@@ -150,8 +158,11 @@ export async function streamScheduleFormSubmit(
     }
   }
 
-  const startDate = dateToUTC(new Date(validatedData["start-date"]));
-  const endDate = dateToUTC(new Date(validatedData["end-date"]));
+  const [startYear, startMonth, startDay] = validatedData["start-date"].split("-").map(Number);
+  const [endYear, endMonth, endDay] = validatedData["end-date"].split("-").map(Number);
+
+  const startDate = dateToUTC(new Date(startYear, startMonth - 1, startDay));
+  const endDate = dateToUTC(new Date(endYear, endMonth - 1, endDay));
 
   if (startDate >= endDate) {
     return {
@@ -176,6 +187,18 @@ export async function streamScheduleFormSubmit(
     rrule,
   });
 
+  if (!proposedInstances || proposedInstances.length == 0) {
+    return {
+      ...prevState,
+      success: false,
+      message: "Start time cannot be before end time",
+      errors: {
+        conflicts: ["The date range and weekly repeat values results in 0 scheduled events."],
+      },
+      values: merged,
+    }
+  }
+
   const conflicts = await streamScheduleService.isStreamInstancesConflicting(proposedInstances)
 
   if (conflicts) {
@@ -186,13 +209,12 @@ export async function streamScheduleFormSubmit(
       success: false,
       message: "Conflicting stream schedules",
       errors: {
-        conflicts: ["Cannot schedule for this time, there would be conflicting streams!"]
+        conflicts: ["Cannot schedule as it would conflict with other approved streams."]
       },
       values: merged,
     }
   }
 
-  // Create Stream Schedule Here
   const scheduleData: Omit<StreamSchedule, "id"> = {
     status: $Enums.ScheduleStatus.PENDING,
     submittedAt: dateToUTC(new Date()),

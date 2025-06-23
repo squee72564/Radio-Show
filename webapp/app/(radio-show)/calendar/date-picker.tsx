@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useTransition, useEffect } from "react";
-import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { StreamInstance, StreamSchedule, User } from "@prisma/client";
@@ -19,10 +18,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import StreamInstanceInfoCard from "@/components/streaminstance-info-card";
 
-function parseLocalDateString(dateStr: string): Date {
-  return new Date(dateStr);
-}
-
 export function DatePicker() {
   const [schedule, setSchedule] = useState<(StreamInstance & {user: User, streamSchedule: StreamSchedule})[] | null>(null);
   const [pending, startTransition] = useTransition();
@@ -31,7 +26,7 @@ export function DatePicker() {
   const initialDateParam = searchParams.get("date");
 
   const [date, setDate] = useState<Date | undefined>(() => {
-    return initialDateParam ? parseLocalDateString(initialDateParam) : new Date();
+    return initialDateParam ? new Date(initialDateParam) : new Date();
   });
 
   useEffect(() => {

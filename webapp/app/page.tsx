@@ -9,14 +9,14 @@ export default function Home() {
   return (
     <div className="max-h-screen w-full">
       <NavigationHeader/>
-      <main className="flex flex-col items-center justify-center px-6">
-        <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <main className="flex flex-col items-center justify-center px-6 mt-10">
+        <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <Image
             src="/radio-show.jpg"
             alt="Radio Show"
             width={640}
             height={640}
-            className="rounded-3xl shadow-xl max-w-full transform hover:scale-105 transition-transform duration-500 ease-in-out"
+            className="rounded-3xl shadow-xl max-w-sm transform hover:scale-105 transition-transform duration-500 ease-in-out"
           />
 
           <Card className="backdrop-blur-md shadow-md">

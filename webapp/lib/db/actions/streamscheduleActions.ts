@@ -22,10 +22,9 @@ export async function setStreamStatus(stream: StreamSchedule & {user: User}, sta
   if (status == $Enums.ScheduleStatus.APPROVED) {
     
     const proposedInstances = await generateStreamInstances({
-      startTime: stream.startTime,
-      endTime: stream.endTime,
-      startDate: stream.startDate,
-      endDate: stream.endDate,
+      dtstart: stream.startDate,
+      until: stream.endDate,
+      durationMs: Math.abs(stream.endTime.getTime() - stream.startTime.getTime()),
       rrule: stream.rrule
     });
 
@@ -118,16 +117,22 @@ export async function streamScheduleFormSubmit(
 
   const validatedData = result.data;
 
+  const [startYear, startMonth, startDay] = validatedData["start-date"].split("-").map(Number);
+  const [endYear, endMonth, endDay] = validatedData["end-date"].split("-").map(Number);
   const [startHour, startMinute] = validatedData["start-time"].split(":").map(Number);
   const [endHour, endMinute] = validatedData["end-time"].split(":").map(Number);
+
+  const startDateTimeLocal = new Date(startYear, startMonth - 1, startDay, startHour, startMinute);
+  const endDateTimeLocal = new Date(endYear, endMonth - 1, endDay, endHour, endMinute);
+
+  const startDate = new Date(startDateTimeLocal.getTime());
+  const endDate = new Date(endDateTimeLocal.getTime());
 
   const startTimeLocal = new Date(1970, 0, 1, startHour, startMinute);
   const endTimeLocal = new Date(1970, 0, 1, endHour, endMinute);
 
-  const startTime = dateToUTC(startTimeLocal);
-  const endTime = dateToUTC(endTimeLocal);
-
-  console.log(validatedData["start-time"], validatedData["end-time"])
+  const startTime = new Date(startTimeLocal.getTime())
+  const endTime = new Date(endTimeLocal.getTime())
 
   if (startTimeLocal >= endTimeLocal) {
     return {
@@ -142,9 +147,9 @@ export async function streamScheduleFormSubmit(
     }
   }
 
-  const durationInHours = (endTimeLocal.getTime() - startTimeLocal.getTime()) / (1000 * 60 * 60);
+  const durationMs = (endTimeLocal.getTime() - startTimeLocal.getTime());
 
-  if (durationInHours > 4.0 * 60.0 * 60.0) {
+  if (durationMs > 4.0 * 3.6e+6) {
     return {
       ...prevState,
       success: false,
@@ -157,12 +162,6 @@ export async function streamScheduleFormSubmit(
 
     }
   }
-
-  const [startYear, startMonth, startDay] = validatedData["start-date"].split("-").map(Number);
-  const [endYear, endMonth, endDay] = validatedData["end-date"].split("-").map(Number);
-
-  const startDate = dateToUTC(new Date(startYear, startMonth - 1, startDay));
-  const endDate = dateToUTC(new Date(endYear, endMonth - 1, endDay));
 
   if (startDate >= endDate) {
     return {
@@ -180,10 +179,9 @@ export async function streamScheduleFormSubmit(
   const rrule = `FREQ=WEEKLY;BYDAY=${validatedData.days.join(",")};INTERVAL=1`;
 
   const proposedInstances = await generateStreamInstances({
-    startTime,
-    endTime,
-    startDate,
-    endDate,
+    dtstart: startDate,
+    until: endDate,
+    durationMs,
     rrule,
   });
 
@@ -202,8 +200,6 @@ export async function streamScheduleFormSubmit(
   const conflicts = await streamScheduleService.isStreamInstancesConflicting(proposedInstances)
 
   if (conflicts) {
-    console.log(proposedInstances);
-    console.log(conflicts);
     return {
       ...prevState,
       success: false,

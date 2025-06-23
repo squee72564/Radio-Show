@@ -24,44 +24,22 @@ export function isUserOwner(status: $Enums.Role) {
 }
 
 export async function generateStreamInstances({
-  startTime,
-  endTime,
-  startDate,
-  endDate,
+  dtstart,
+  until,
+  durationMs,
   rrule
 } : {
-  startTime: Date,
-  endTime: Date,
-  startDate: Date,
-  endDate: Date,
+  dtstart: Date,
+  until: Date,
+  durationMs: number,
   rrule: string
 }) {
-  const dtstart = new Date(
-    Date.UTC(
-      startDate.getUTCFullYear(),
-      startDate.getUTCMonth(),
-      startDate.getUTCDate(),
-      startTime.getUTCHours(),
-      startTime.getUTCMinutes()
-    )
-  );
-
-  const until = new Date(
-    Date.UTC(
-      endDate.getUTCFullYear(),
-      endDate.getUTCMonth(),
-      endDate.getUTCDate(),
-      endTime.getUTCHours(),
-      endTime.getUTCMinutes()
-    )
-  );
 
   const rule = rrulestr(rrule, {
     dtstart,
   }) as RRule;
 
   const occurrences = rule.between(dtstart, until, true);
-  const durationMs = endTime.getTime() - startTime.getTime()
 
   return occurrences.map((scheduledStart) => {
     const scheduledEnd = new Date(scheduledStart.getTime() + durationMs);
@@ -74,13 +52,5 @@ export async function generateStreamInstances({
 }
 
 export function dateToUTC(date: Date): Date {
-  return new Date(Date.UTC(
-    date.getUTCFullYear(),
-    date.getUTCMonth(),
-    date.getUTCDate(),
-    date.getUTCHours(),
-    date.getUTCMinutes(),
-    date.getUTCSeconds(),
-    date.getUTCMilliseconds()
-  ));
+  return new Date(date.getTime());
 }

@@ -36,8 +36,6 @@ export async function POST(req: Request) {
     },
   });
 
-  console.log(streamInstances);
-
   if (!streamInstances) {
     return new Response(JSON.stringify({authenticated: false, message: "Could not find stream instance"}), {
       status: 401,

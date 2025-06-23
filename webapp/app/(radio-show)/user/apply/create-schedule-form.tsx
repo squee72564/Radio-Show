@@ -184,8 +184,9 @@ export default function CreateScheduleForm({ user }: { user: User }) {
               ))}
               <ErrorMessage message={state.errors?.days} />
             </div>
-            <ErrorMessage message={state.errors?.conflicts && ["This time slot conflicts with other schedules"]} />
+           
           </div>
+          <ErrorMessage message={state.errors?.conflicts && state.errors.conflicts} />
 
           <div className="flex flex-col gap-4">
             <label htmlFor="password">Stream Password</label>

@@ -7,10 +7,10 @@ import NavigationHeader from "@/components/nav-header"
 
 export default function Home() {
   return (
-    <div className="min-h-screen w-full">
+    <div className="max-h-screen w-full">
       <NavigationHeader/>
-      <main className="flex flex-col items-center justify-center px-6 py-12">
-        <div className="mt-12 w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <main className="flex flex-col items-center justify-center px-6">
+        <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <Image
             src="/radio-show.jpg"
             alt="Radio Show"

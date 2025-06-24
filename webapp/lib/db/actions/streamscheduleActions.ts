@@ -217,7 +217,19 @@ export async function streamScheduleFormSubmit(
     
     title: validatedData.title,
     description: validatedData.description,
-    tags: validatedData.tags.trim().split(",").filter((tag) => tag.trim() !== ""),
+    tags: [...new Set(
+      validatedData.tags
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag !== '')
+        .map(tag =>
+          tag
+            .toLowerCase()
+            .replace(/([^\s\-\/]+)/g, word =>
+              word.charAt(0).toUpperCase() + word.slice(1)
+            )
+        )
+    )],
 
     startTime: startTime,
     endTime: endTime,

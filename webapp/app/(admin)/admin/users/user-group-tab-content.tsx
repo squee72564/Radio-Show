@@ -8,8 +8,10 @@ import { listUsersByRole } from "@/lib/db/actions/userActions";
 
 export default function UserGroupTabContent({
   status,
+  isOwnerViewing
 }: {
   status: $Enums.Role;
+  isOwnerViewing: boolean
 }) {
   const [users, setUsers] = useState<User[] | null>(null);
 
@@ -39,7 +41,7 @@ export default function UserGroupTabContent({
           No {status.toLowerCase()}s found
         </Badge>
       ) : (
-        users.map((user) => <UserManagementCard key={user.id} user={user} />)
+        users.map((user) => <UserManagementCard key={user.id} user={user} isOwnerViewing={isOwnerViewing}/>)
       )}
     </div>
   );

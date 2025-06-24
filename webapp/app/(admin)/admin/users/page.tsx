@@ -4,7 +4,7 @@ import { UserRoundCogIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { isUserAdmin } from "@/lib/utils";
-import { User } from "@prisma/client";
+import { $Enums, User } from "@prisma/client";
 
 import { Separator } from "@/components/ui/separator";
 import AdminUserTabs from "./admin-user-tabs";
@@ -24,7 +24,7 @@ export default async function AdminUsersPage() {
       </h1>
       <Separator />
 
-      <AdminUserTabs />
+      <AdminUserTabs isOwnerViewing={user.status === $Enums.Role.OWNER}/>
     </div>
   );
 }

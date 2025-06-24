@@ -11,7 +11,7 @@ const userTabs = [
   { value: $Enums.Role.USER, label: "Users" },
 ];
 
-export default function AdminUserTabs() {
+export default function AdminUserTabs({isOwnerViewing} : {isOwnerViewing: boolean}) {
   const [activeTab, setActiveTab] = useState<$Enums.Role>(
     $Enums.Role.ADMIN
   );
@@ -32,7 +32,7 @@ export default function AdminUserTabs() {
 
       {userTabs.map(({ value }) => (
         <TabsContent key={value} value={value} className="space-y-4">
-          {activeTab === value && <UserGroupTabContent status={value} />}
+          {activeTab === value && <UserGroupTabContent status={value} isOwnerViewing={isOwnerViewing} />}
         </TabsContent>
       ))}
     </Tabs>

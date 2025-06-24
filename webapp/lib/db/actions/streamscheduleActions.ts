@@ -7,7 +7,7 @@ import { StreamScheduleFormState, Weekday } from "@/types/stream-schedule";
 import { streamScheduleSchema } from "@/validations/stream-schedule";
 import { dateToUTC, generateStreamInstances } from "@/lib/utils";
 
-import { $Enums, StreamSchedule, User } from "@prisma/client";
+import { $Enums, StreamArchive, StreamSchedule, User } from "@prisma/client";
 
 export async function getStreamInstancesByDateRange(dateStart: Date, dateEnd: Date) {
   return streamScheduleService.getStreamInstancesByDateRange(dateStart, dateEnd);
@@ -244,4 +244,8 @@ export async function streamScheduleFormSubmit(
 
 export async function findFirstStreamInstanceAfterDate(date: Date) {
   return streamScheduleService.findFirstStreamInstanceAfterDate(date);
+}
+
+export async function createStreamArchive(data: Omit<StreamArchive, "id">) {
+  return streamScheduleService.createStreamArchive(data);
 }

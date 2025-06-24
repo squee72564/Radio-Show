@@ -1,3 +1,5 @@
+import { createStreamArchive } from "@/lib/db/actions/streamscheduleActions";
+import { prisma } from "@/lib/db/prismaClient";
 import { uploadStreamFile } from "@/lib/nodeUtils";
 import { dateToUTC } from "@/lib/utils";
 import { parseBuffer } from "music-metadata";
@@ -59,19 +61,15 @@ export async function POST(req: Request) {
       streamScheduleId: scheduleId,
       streamInstanceId: instanceId,
       url: uploaded.location,
-      durationInSeconds: durationInSeconds,
+      durationInSeconds: durationInSeconds || null,
       fileSizeBytes: buffer.length,
-      format: file.type || undefined,
+      format: file.type || null,
       createdAt: dateToUTC(new Date()),
     };
 
-    console.log(data);
+    const archive = await createStreamArchive(data);
 
-    // await prisma.streamArchive.create({
-    //   data
-    // });
-
-    return new Response(JSON.stringify({ success: true, url: uploaded.location }), {
+    return new Response(JSON.stringify({ success: true, url: archive.url }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db/prismaClient";
-import { $Enums, StreamSchedule } from "@prisma/client";
+import { $Enums, StreamArchive, StreamSchedule } from "@prisma/client";
 
 export async function findStreamScheduleByIdAndPass(id: string, password: string) {
   return await prisma.streamSchedule.findUnique({
@@ -214,5 +214,11 @@ export async function findFirstStreamInstanceAfterDate(date: Date) {
       streamSchedule: true,
       user: true
     }
+  });
+}
+
+export async function createStreamArchive(data: Omit<StreamArchive, "id">) {
+  return await prisma.streamArchive.create({
+    data
   });
 }

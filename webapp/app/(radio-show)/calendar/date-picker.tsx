@@ -4,6 +4,7 @@ import { useState, useTransition, useEffect } from "react";
 import { CalendarIcon } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { StreamInstance, StreamSchedule, User } from "@prisma/client";
+import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 import { getStreamInstancesByDateRange } from "@/lib/db/actions/streamscheduleActions";
@@ -127,8 +128,20 @@ export function DatePicker() {
           <Badge variant="outline">Loading...</Badge>
         ) : schedule && schedule.length > 0 ? (
           schedule.map((streamInstance, idx) => (
-            <StreamInstanceInfoCard key={idx} streamInstance={streamInstance} />
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.4,
+                delay: idx * 0.12,
+                ease: "easeOut"
+              }}
+            >
+              <StreamInstanceInfoCard streamInstance={streamInstance} />
+            </motion.div>
           ))
+
         ) : (
           <Badge variant="outline">No scheduled Streams</Badge>
         )}

@@ -15,6 +15,7 @@ import {
 
 import { type LucideIcon } from "lucide-react"
 import { ModeToggle } from "@/components/theme-toggle";
+import { Button } from "./ui/button";
 
 export function SettingsSheet({
   Icon,
@@ -44,7 +45,16 @@ export function SettingsSheet({
               <span>Change Theme </span>
               <ModeToggle/>
             </div>
-          <SheetFooter>
+          <SheetFooter className="mx-auto pb-5">
+            <a
+              href="/api/user-info" // Update this to your actual route
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button>
+                Download My Data
+              </Button>
+            </a>
           </SheetFooter>
         </SheetContent>
       </Sheet>

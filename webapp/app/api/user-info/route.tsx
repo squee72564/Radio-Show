@@ -8,7 +8,7 @@ export async function GET() {
   const user = session?.user as User | undefined;
 
   if (!user || !user.id) {
-    return new NextResponse("Unauthorized", { status: 401 });
+    return new NextResponse("Unauthorized: Please sign in", { status: 401 });
   }
 
   const userInfo = await findUserById(user.id, {

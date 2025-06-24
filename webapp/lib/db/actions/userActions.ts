@@ -1,7 +1,8 @@
 'use server';
 
 import * as userService from "@/lib/db/services/userService";
-import { $Enums } from "@prisma/client";
+import { $Enums, User } from "@prisma/client";
+import { UserRelations } from "@/types/prisma-relations";
 
 export async function listUsers() {
   return userService.findAllUsers();
@@ -16,12 +17,18 @@ export async function deleteUsers() {
   return userService.deleteAllUsers();
 }
 
-export async function findUserById(id: string) {
-  return userService.findUserById(id);
+export async function findUserById(
+  id: string,
+  options?: { include?: { [K in keyof UserRelations]?: true } }
+): Promise<(User & Partial<UserRelations>) | null> {
+  return userService.findUserById(id, options);
 }
 
-export async function findUserByEmail(email: string) {
-  return userService.findUserByEmail(email);
+export async function findUserByEmail(
+  email: string,
+  options?: { include?: { [K in keyof UserRelations]?: true } }
+): Promise<(User & Partial<UserRelations>) | null> {
+  return userService.findUserByEmail(email, options);
 }
 
 export async function findRecentUsers(count: number) {

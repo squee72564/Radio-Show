@@ -1,16 +1,29 @@
 import { prisma } from "@/lib/db/prismaClient";
-import { $Enums } from "@prisma/client";
+import { $Enums, User } from "@prisma/client";
+import { UserRelations } from "@/types/prisma-relations";
 
 export async function deleteAllUsers() {
   return prisma.user.deleteMany();
 }
 
-export async function findUserById(id: string) {
-  return prisma.user.findUnique({ where: { id } });
+export async function findUserById(
+  id: string,
+  options?: { include?: { [K in keyof UserRelations]?: true } }
+): Promise<(User & Partial<UserRelations>) | null> {
+  return await prisma.user.findUnique({
+    where: { id },
+    ...(options ?? {}),
+  });
 }
 
-export async function findUserByEmail(email: string) {
-  return prisma.user.findUnique({ where: { email } });
+export async function findUserByEmail(
+  email: string,
+  options?: { include?: { [K in keyof UserRelations]?: true } }
+): Promise<(User & Partial<UserRelations>) | null> {
+  return await prisma.user.findUnique({
+    where: { email },
+    ...(options ?? {}),
+  });
 }
 
 export async function findAllUsers() {

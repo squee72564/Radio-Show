@@ -70,11 +70,11 @@ export const appItems: SidebarItems[] = [
         title: "About",
         url: "/about",
       },
-            {
+      {
         title: "Want to DJ?",
         url: "/join",
       },
-            {
+      {
         title: "Contact",
         url: "/contact",
       },

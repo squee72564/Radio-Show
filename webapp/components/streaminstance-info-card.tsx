@@ -18,7 +18,7 @@ import { LocalTime } from "@/components/localtime";
 export default function StreamInstanceInfoCard({streamInstance}: {streamInstance: StreamInstance & {streamSchedule: StreamSchedule, user: User}}) {
     
   return (
-    <Card className="w-full">
+    <Card>
       <CardHeader>
         <CardTitle className="mb-2">{streamInstance.streamSchedule.title}</CardTitle>
         <CardDescription className="flex flex-col gap-2">

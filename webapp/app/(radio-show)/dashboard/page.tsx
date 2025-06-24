@@ -15,13 +15,13 @@ export const metadata: Metadata = {
 
 export default async function Dashboard() {
   return (
-    <main className="flex flex-col min-h-screen w-full gap-6 p-6">
+    <main className="flex flex-col min-w-0 gap-6 p-6">
       <h1 className="text-2xl font-bold flex items-center gap-2">
         <LayoutDashboard className="w-6 h-6" /> Dashboard
       </h1>
       <Separator/>
 
-      <div className="w-full flex-1 flex flex-col gap-10">
+      <div className="flex-1 flex flex-col gap-10">
         <div className="flex flex-row flex-1 w-full gap-10">
           <Suspense fallback={<RecentUsersSkeleton/>}>
             <RecentUsers/>

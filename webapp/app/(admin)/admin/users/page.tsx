@@ -18,7 +18,7 @@ export default async function AdminUsersPage() {
   }
 
   return (
-    <div className="p-6 space-y-6 w-full">
+    <div className="flex flex-col p-6 gap-6 min-w-0">
       <h1 className="text-2xl font-bold flex items-center gap-2">
         <UserRoundCogIcon className="w-6 h-6" /> Admin: User Management
       </h1>

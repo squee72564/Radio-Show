@@ -20,9 +20,9 @@ export default function AdminUserTabs({isOwnerViewing} : {isOwnerViewing: boolea
     <Tabs
       value={activeTab}
       onValueChange={(value) => setActiveTab(value as $Enums.Role)}
-      className="space-y-6"
+      className="flex flex-col gap-6"
     >
-      <TabsList className="flex space-x-2">
+      <TabsList className="flex gap-2">
         {userTabs.map(({ value, label }) => (
           <TabsTrigger key={value} value={value} className="capitalize">
             {label}
@@ -31,7 +31,7 @@ export default function AdminUserTabs({isOwnerViewing} : {isOwnerViewing: boolea
       </TabsList>
 
       {userTabs.map(({ value }) => (
-        <TabsContent key={value} value={value} className="space-y-4">
+        <TabsContent key={value} value={value}>
           {activeTab === value && <UserGroupTabContent status={value} isOwnerViewing={isOwnerViewing} />}
         </TabsContent>
       ))}

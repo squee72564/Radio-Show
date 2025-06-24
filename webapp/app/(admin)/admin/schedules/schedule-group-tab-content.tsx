@@ -23,7 +23,7 @@ export default function ScheduleGroupTabContent({
   }, [status]);
 
   return (
-    <div className="space-y-2">
+    <div className="flex flex-col gap-4">
       {!schedules ? (
         <Badge variant={"outline"}>Loading...</Badge>
       ) : schedules.length === 0 ? (

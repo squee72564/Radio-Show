@@ -6,7 +6,7 @@ import { deleteStreamById, setStreamStatus } from "@/lib/db/actions/streamschedu
 import { RRule } from "rrule";
 import { $Enums, StreamSchedule, User } from "@prisma/client";
 
-import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardAction } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardAction, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LocalTime } from "@/components/localtime";
 import { LocalDate } from "@/components/localdate";
@@ -80,40 +80,42 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
             </>
           )}
         </CardAction>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-2">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Clock4 className="w-4 h-4" />
-          <LocalTime date={stream.startTime}/> - <LocalTime date={stream.endTime}/>
-        </div>
+        <CardDescription className="flex flex-col gap-2">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Clock4 className="w-4 h-4" />
+            <LocalTime date={stream.startTime}/> - <LocalTime date={stream.endTime}/>
+          </div>
 
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <CalendarRange className="w-4 h-4" />
-          <LocalDate date={stream.startDate}/> to <LocalDate date={stream.endDate}/>
-        </div>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <CalendarRange className="w-4 h-4" />
+            <LocalDate date={stream.startDate}/> to <LocalDate date={stream.endDate}/>
+          </div>
 
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Repeat className="w-4 h-4" />
-          <span>{recurrence}</span>
-        </div>
-        
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <UserIcon className="w-4 h-4" />
-          <span>User: {stream.user.name}</span>
-        </div>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Repeat className="w-4 h-4" />
+            <span>{recurrence}</span>
+          </div>
+          
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <UserIcon className="w-4 h-4" />
+            <span>User: {stream.user.name}</span>
+          </div>
 
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <PenIcon className="w-4 h-4" />
-          Created At: <LocalDate date={stream.submittedAt}/>
-        </div>
-        
-        { stream.reviewedAt && 
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <PenIcon className="w-4 h-4" />
-            Reviewed At:  <LocalDate date={stream.reviewedAt}/>
+            Created At: <LocalDate date={stream.submittedAt}/>
           </div>
-        }
-
+          
+          { stream.reviewedAt && 
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <PenIcon className="w-4 h-4" />
+              Reviewed At:  <LocalDate date={stream.reviewedAt}/>
+            </div>
+          }
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="min-w-0 truncate">
+          {stream.description}
       </CardContent>
       <CardFooter className="flex flex-col items-center justify-center gap-2 text-sm">
         {submissionstate.message && (

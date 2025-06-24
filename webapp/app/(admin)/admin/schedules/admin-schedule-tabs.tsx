@@ -20,9 +20,9 @@ export default function AdminScheduleTabs() {
     <Tabs
       value={activeTab}
       onValueChange={(value) => setActiveTab(value as $Enums.ScheduleStatus)}
-      className="space-y-6"
+      className="flex flex-col gap-6"
     >
-      <TabsList className="flex space-x-2">
+      <TabsList className="flex gap-2">
         {scheduleTabs.map(({ value, label }) => (
           <TabsTrigger key={value} value={value} className="capitalize">
             {label}
@@ -31,7 +31,7 @@ export default function AdminScheduleTabs() {
       </TabsList>
 
       {scheduleTabs.map(({ value }) => (
-        <TabsContent key={value} value={value} className="space-y-4">
+        <TabsContent key={value} value={value}>
           {activeTab === value && <UserGroupTabContent status={value} />}
         </TabsContent>
       ))}

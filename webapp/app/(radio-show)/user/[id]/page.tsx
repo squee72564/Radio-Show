@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import UserProfileStreamList from "./user-profile-stream-list";
 import UserProfileArchiveList from "./user-profile-archive-list";
+import { User } from "@prisma/client";
 
 export default async function UserProfilePage({
   params
@@ -20,7 +21,7 @@ export default async function UserProfilePage({
 }) {
   const { id }: { id: string } = await params;
 
-  const userProfileInfo = await findUserById(id);
+  const userProfileInfo = await findUserById(id) as User;
   const session = await auth();
   const user = session?.user;
 

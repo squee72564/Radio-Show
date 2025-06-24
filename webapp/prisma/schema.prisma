@@ -105,7 +105,7 @@ model StreamSchedule {
   // Stream Metadata
   title       String
   description String   @default("No Description")
-  tags        String[] @default(["Muzak"])
+  tags        String[]
 
   startTime      DateTime        @db.Timetz(0)
   endTime        DateTime        @db.Timetz(0)

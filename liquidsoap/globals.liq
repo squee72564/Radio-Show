@@ -36,4 +36,4 @@ disconnect_called_ref = ref(false)    # Keeps track of if disconnect callback wa
 
 live_stream_active    = ref(false)    # Keep track of if we are recording
 
-timeout_ref           = ref(1.0 * 60.0 * 60.0)
+timeout_ref           = ref(30.)

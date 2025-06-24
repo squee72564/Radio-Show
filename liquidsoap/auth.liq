@@ -45,8 +45,10 @@ def radioshow.auth_callback(auth_info)
             ("userId", userId),
             ("streamScheduleId", streamScheduleId),
             ("streamInstanceId", streamInstanceId),
-            ("title", title),
+            ("title", title)
           ]
+
+          timeout_ref := timelimit
           
           client_addr_ref := auth_info.address
           true

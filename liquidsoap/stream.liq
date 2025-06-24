@@ -90,7 +90,7 @@ output.icecast(%mp3(bitrate=320),
       label="icecast.on_stop",
       "Icecast output has stopped."
     )
-    # Poll websocket here?
+
     ignore(radioshow.post(
       timeout=5.0,
       "stream_status",

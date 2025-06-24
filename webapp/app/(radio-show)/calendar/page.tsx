@@ -13,13 +13,13 @@ export const metadata: Metadata = {
 
 export default function Calendar() {
   return (
-    <div className="flex flex-col min-w-0 p-6 gap-6">
+    <div className="flex flex-col min-w-0 p-6 gap-6 w-full">
       <h1 className="text-2xl font-bold flex items-center gap-2">
         <CalendarIcon className="w-6 h-6" /> Calendar
       </h1>
       <Separator/>
 
-      <div className="flex flex-col flex-1 min-w-0">
+      <div className="flex flex-col flex-1">
         <Suspense fallback={<DatePickerSkeleton />}>
           <DatePicker />
         </Suspense>

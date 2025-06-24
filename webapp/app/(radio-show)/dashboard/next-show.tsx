@@ -11,7 +11,7 @@ export default async function NextShow() {
   const nextScheduledShow = await findFirstStreamInstanceAfterDate(nowUTC);
 
   return (
-    <section className="md:col-span-2">
+    <section>
       {nextScheduledShow ? (
         <StreamInstanceInfoCard streamInstance={nextScheduledShow} />
       ) : (

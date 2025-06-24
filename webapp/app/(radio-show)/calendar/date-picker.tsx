@@ -122,12 +122,14 @@ export function DatePicker() {
         </div>
       </div>
       
-      <div className="flex-1 space-y-4 w-full overflow-y-auto p-5 max-h-[calc(100vh-180px)]">
+      <div className="flex flex-col flex-1 space-y-4 overflow-y-auto p-5 max-h-[calc(100vh-180px)]">
         {pending ? (
           <Badge variant="outline">Loading...</Badge>
         ) : schedule && schedule.length > 0 ? (
           schedule.map((streamInstance, idx) => (
+          <div key={idx} className="w-full max-w-5xl flex-1 self-center">
             <StreamInstanceInfoCard key={idx} streamInstance={streamInstance} />
+          </div>
           ))
         ) : (
           <Badge variant="outline">No scheduled Streams</Badge>

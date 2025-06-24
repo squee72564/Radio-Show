@@ -217,7 +217,7 @@ export async function streamScheduleFormSubmit(
     
     title: validatedData.title,
     description: validatedData.description,
-    tags: validatedData.tags.split(","),
+    tags: validatedData.tags.trim().split(",").filter((tag) => tag.trim() !== ""),
 
     startTime: startTime,
     endTime: endTime,

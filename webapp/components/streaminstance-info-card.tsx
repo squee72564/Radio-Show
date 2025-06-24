@@ -73,7 +73,7 @@ export default function StreamInstanceInfoCard({streamInstance}: {streamInstance
             {hiddenTags.length > 0 && (
               <HoverCard openDelay={200} closeDelay={200}>
                 <HoverCardTrigger asChild>
-                  <Badge variant="outline" className="cursor-pointer">
+                  <Badge variant="secondary" className="cursor-pointer">
                     +{hiddenTags.length} more
                   </Badge>
                 </HoverCardTrigger>

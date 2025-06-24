@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-export function UserManagementCard({ user }: { user: User }) {
+export default function UserManagementCard({ user }: { user: User }) {
   const [isPending, startTransition] = useTransition();
 
   const handleMakeAdmin = () => {

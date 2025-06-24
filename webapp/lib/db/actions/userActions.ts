@@ -7,8 +7,9 @@ export async function listUsers() {
   return userService.findAllUsers();
 }
 
-export async function listUsersByRole(role: $Enums.Role) {
-  return userService.findUsersByRole(role);
+export async function listUsersByRole(roleOrRoles: $Enums.Role | $Enums.Role[]) {
+  const roles = Array.isArray(roleOrRoles) ? roleOrRoles : [roleOrRoles];
+  return userService.findUsersByRole(roles);
 }
 
 export async function deleteUsers() {

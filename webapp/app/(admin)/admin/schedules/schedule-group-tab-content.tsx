@@ -6,7 +6,7 @@ import { findAllStreamsByStatusWithUser } from "@/lib/db/actions/streamscheduleA
 import { Badge } from "@/components/ui/badge";
 import ScheduleManagementCard from "./schedule-management-card";
 
-export default function UserGroupTabContent({
+export default function ScheduleGroupTabContent({
   status,
 }: {
   status: $Enums.ScheduleStatus;
@@ -14,7 +14,12 @@ export default function UserGroupTabContent({
   const [schedules, setSchedules] = useState<(StreamSchedule & { user: User })[] | null>(null);
 
   useEffect(() => {
-    findAllStreamsByStatusWithUser(status).then(setSchedules);
+    const fetchSchedules = async () => {
+      const schedules = await findAllStreamsByStatusWithUser(status);
+      setSchedules(schedules);
+    };
+
+    fetchSchedules();
   }, [status]);
 
   return (

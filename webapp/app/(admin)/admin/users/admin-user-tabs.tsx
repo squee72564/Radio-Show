@@ -2,35 +2,35 @@
 
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import UserGroupTabContent from "./schedule-group-tab-content";
+import UserGroupTabContent from "./user-group-tab-content";
 import { $Enums } from "@prisma/client";
 
-const scheduleTabs = [
-  { value: $Enums.ScheduleStatus.PENDING, label: "Pending" },
-  { value: $Enums.ScheduleStatus.APPROVED, label: "Approved" },
-  { value: $Enums.ScheduleStatus.REJECTED, label: "Rejected" },
+const userTabs = [
+  { value: $Enums.Role.ADMIN, label: "Admins" },
+  { value: $Enums.Role.STREAMER, label: "Streamers" },
+  { value: $Enums.Role.USER, label: "Users" },
 ];
 
-export default function AdminScheduleTabs() {
-  const [activeTab, setActiveTab] = useState<$Enums.ScheduleStatus>(
-    $Enums.ScheduleStatus.PENDING
+export default function AdminUserTabs() {
+  const [activeTab, setActiveTab] = useState<$Enums.Role>(
+    $Enums.Role.ADMIN
   );
 
   return (
     <Tabs
       value={activeTab}
-      onValueChange={(value) => setActiveTab(value as $Enums.ScheduleStatus)}
+      onValueChange={(value) => setActiveTab(value as $Enums.Role)}
       className="space-y-6"
     >
       <TabsList className="flex space-x-2">
-        {scheduleTabs.map(({ value, label }) => (
+        {userTabs.map(({ value, label }) => (
           <TabsTrigger key={value} value={value} className="capitalize">
             {label}
           </TabsTrigger>
         ))}
       </TabsList>
 
-      {scheduleTabs.map(({ value }) => (
+      {userTabs.map(({ value }) => (
         <TabsContent key={value} value={value} className="space-y-4">
           {activeTab === value && <UserGroupTabContent status={value} />}
         </TabsContent>

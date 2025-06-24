@@ -17,8 +17,16 @@ export async function findAllUsers() {
   return prisma.user.findMany();
 }
 
-export async function findUsersByRole(role: $Enums.Role) {
-  return prisma.user.findMany({where: {status: role}});
+export async function findUsersByRole(
+  roles: $Enums.Role[]
+) {
+  return prisma.user.findMany({
+    where: {
+      status: {
+        in: roles,
+      },
+    },
+  });
 }
 
 export async function findRecentUsers(count: number) {

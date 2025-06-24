@@ -17,21 +17,20 @@ export default function UserGroupTabContent({
     findAllStreamsByStatusWithUser(status).then(setSchedules);
   }, [status]);
 
-  if (!schedules) {
-    return (
-      <Badge variant={"outline"}>Loading...</Badge>
-    );
-  }
-
-  if (schedules.length === 0) {
-    return <p className="text-sm text-muted-foreground">No schedules found.</p>;
-  }
-
   return (
     <div className="space-y-2">
-      {schedules.map((schedule) => (
-        <ScheduleManagementCard key={schedule.id} stream={schedule} />
-      ))}
+      {!schedules ? (
+        <Badge variant={"outline"}>Loading...</Badge>
+      ) : schedules.length === 0 ? (
+        <Badge
+          variant={"outline"}
+          className="text-sm text-muted-foreground"
+        >
+          No {status.toLowerCase()} schedules found
+        </Badge>
+      ) : (
+        schedules.map((schedule) => <ScheduleManagementCard key={schedule.id} stream={schedule} />)
+      )}
     </div>
   );
 }

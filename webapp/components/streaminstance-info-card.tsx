@@ -51,11 +51,15 @@ export default function StreamInstanceInfoCard({streamInstance}: {streamInstance
       </CardContent>
       <CardFooter className="flex flex-row gap-2 flex-wrap">
         <span>Tags: </span>
-        {streamInstance.streamSchedule.tags
+        {streamInstance.streamSchedule.tags.length === 0  ? (
+          <Badge variant="outline" >N/A</Badge>
+        ): (
+          streamInstance.streamSchedule.tags
           .filter(tag => tag.trim() !== "")
           .map((tag, idx) => (
             <Badge variant="outline" key={idx}>{tag.trim()}</Badge>
-        ))}
+          ))
+        )}
       </CardFooter>
     </Card>
   )

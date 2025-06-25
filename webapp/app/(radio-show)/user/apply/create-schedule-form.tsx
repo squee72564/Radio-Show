@@ -1,10 +1,10 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { CircleHelpIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { streamScheduleFormSubmit } from "@/lib/db/actions/streamscheduleActions";
-import { StreamScheduleFormState, weekdays, Weekday } from "@/types/stream-schedule";
+import { StreamScheduleFormState, weekdays, Weekday, StreamScheduleFormValues } from "@/types/stream-schedule";
 import { User } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +20,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
+import { streamScheduleSchema } from "@/validations/stream-schedule";
 
 function HoverCardData() {
   return (
@@ -61,13 +62,45 @@ function ErrorMessage({ message }: { message?: string[] }) {
 
 export default function CreateScheduleForm({ user }: { user: User }) {
   const [showPassword, setShowPassword] = useState(false);
-
   
   const formActionWithUser = async (
     prevState: StreamScheduleFormState,
     formData: FormData
   ) => {
-    return streamScheduleFormSubmit(user.id, prevState, formData);
+    const days = formData.getAll("days") as [Weekday, ...(Weekday)[]];
+    const raw = Object.fromEntries(formData.entries());
+    const clean = Object.fromEntries(
+      Object.entries(raw).filter(([key]) => !key.startsWith("$ACTION_") && !key.startsWith("$"))
+    );
+
+    const merged = { ...clean, days } as Partial<StreamScheduleFormValues>;
+
+    const result = streamScheduleSchema.safeParse(merged);
+
+    if (!result.success) {
+      return {
+        ...prevState,
+        success: false,
+        message: "Error validating schedule",
+        errors: { ...result.error.flatten().fieldErrors, conflicts: undefined },
+        values: merged,
+      };
+    }
+
+    const validatedData = result.data;
+
+    const [startYear, startMonth, startDay] = validatedData["start-date"].split("-").map(Number);
+    const [endYear, endMonth, endDay] = validatedData["end-date"].split("-").map(Number);
+    const [startHour, startMinute] = validatedData["start-time"].split(":").map(Number);
+    const [endHour, endMinute] = validatedData["end-time"].split(":").map(Number);
+
+    const localStart = new Date(startYear, startMonth - 1, startDay, startHour, startMinute);
+    const localEnd = new Date(endYear, endMonth - 1, endDay, endHour, endMinute);
+
+    formData.append("UTC-start", localStart.toISOString());
+    formData.append("UTC-end", localEnd.toISOString());
+
+    return streamScheduleFormSubmit(user.id, merged, validatedData, prevState, formData);
   };
 
   const [state, formAction] = useActionState(formActionWithUser, {
@@ -76,7 +109,7 @@ export default function CreateScheduleForm({ user }: { user: User }) {
     errors: {},
     values: {}
   });
-
+  
   const tomorrowDate = new Date();
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
 
@@ -207,6 +240,7 @@ export default function CreateScheduleForm({ user }: { user: User }) {
               </button>
             </div>
             <ErrorMessage message={state.errors?.password} />
+
           </div>
         </CardContent>
         <CardFooter>

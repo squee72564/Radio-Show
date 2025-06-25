@@ -3,8 +3,7 @@
 import * as streamScheduleService from "@/lib/db/services/streamscheduleService";
 import * as userService from "@/lib/db/services/userService";
 
-import { StreamScheduleFormState, Weekday } from "@/types/stream-schedule";
-import { streamScheduleSchema } from "@/validations/stream-schedule";
+import { StreamScheduleFormState, StreamScheduleFormValues, Weekday } from "@/types/stream-schedule";
 import { dateToUTC, generateStreamInstances } from "@/lib/utils";
 
 import { $Enums, StreamArchive, StreamSchedule, User } from "@prisma/client";
@@ -20,10 +19,10 @@ export async function deleteStreamById(streamId: string) {
 export async function setStreamStatus(stream: StreamSchedule & {user: User}, status: $Enums.ScheduleStatus) {
   const nowUTC = dateToUTC(new Date());
   if (status == $Enums.ScheduleStatus.APPROVED) {
-    
+
     const proposedInstances = await generateStreamInstances({
-      dtstart: stream.startDate,
-      until: stream.endDate,
+      dtstart: new Date(stream.startDate.getTime()),
+      until: new Date(stream.endDate.getTime()),
       durationMs: Math.abs(stream.endTime.getTime() - stream.startTime.getTime()),
       rrule: stream.rrule
     });
@@ -92,49 +91,26 @@ export async function createStreamSchedule(data: Omit<StreamSchedule, "id">) {
 
 export async function streamScheduleFormSubmit(
   userId: string,
+  merged: Partial<StreamScheduleFormValues>,
+  validatedData: StreamScheduleFormValues,
   prevState: StreamScheduleFormState,
   formData: FormData
 ): Promise<StreamScheduleFormState> {
 
-  const days = formData.getAll("days") as [Weekday, ...(Weekday)[]];
-  const raw = Object.fromEntries(formData.entries());
-  const clean = Object.fromEntries(
-    Object.entries(raw).filter(([key]) => !key.startsWith("$ACTION_") && !key.startsWith("$"))
-  );
+  const startISOString = formData.get("UTC-start") as string;
+  const endISOString = formData.get("UTC-end") as string;
 
-  const merged = { ...clean, days };
-  const result = streamScheduleSchema.safeParse(merged);
+  const startDate = new Date(startISOString);
+  const endDate = new Date(endISOString);
 
-  if (!result.success) {
-    return {
-      ...prevState,
-      success: false,
-      message: "Error validating schedule",
-      errors: result.error.flatten().fieldErrors,
-      values: merged,
-    };
-  }
+  const startTime = new Date(`1997-08-12T${startDate.toISOString().split("T")[1]}`);
+  const endTime = new Date(`1997-08-12T${endDate.toISOString().split("T")[1]}`);
+  const durationMs = (endTime.getTime() - startTime.getTime());
 
-  const validatedData = result.data;
+  const rrule = `FREQ=WEEKLY;BYDAY=${validatedData.days.join(",")};INTERVAL=1`;
 
-  const [startYear, startMonth, startDay] = validatedData["start-date"].split("-").map(Number);
-  const [endYear, endMonth, endDay] = validatedData["end-date"].split("-").map(Number);
-  const [startHour, startMinute] = validatedData["start-time"].split(":").map(Number);
-  const [endHour, endMinute] = validatedData["end-time"].split(":").map(Number);
 
-  const startDateTimeLocal = new Date(startYear, startMonth - 1, startDay, startHour, startMinute);
-  const endDateTimeLocal = new Date(endYear, endMonth - 1, endDay, endHour, endMinute);
-
-  const startDate = new Date(startDateTimeLocal.getTime());
-  const endDate = new Date(endDateTimeLocal.getTime());
-
-  const startTimeLocal = new Date(1970, 0, 1, startHour, startMinute);
-  const endTimeLocal = new Date(1970, 0, 1, endHour, endMinute);
-
-  const startTime = new Date(startTimeLocal.getTime())
-  const endTime = new Date(endTimeLocal.getTime())
-
-  if (startTimeLocal >= endTimeLocal) {
+  if (!(endTime > startTime)) {
     return {
       ...prevState,
       success: false,
@@ -146,8 +122,6 @@ export async function streamScheduleFormSubmit(
       values: merged,
     }
   }
-
-  const durationMs = (endTimeLocal.getTime() - startTimeLocal.getTime());
 
   if (durationMs > 4.0 * 3.6e+6) {
     return {
@@ -163,7 +137,7 @@ export async function streamScheduleFormSubmit(
     }
   }
 
-  if (startDate >= endDate) {
+  if (!(endDate > startDate)) {
     return {
       ...prevState,
       success: false,
@@ -176,8 +150,6 @@ export async function streamScheduleFormSubmit(
     }
   }
 
-  const rrule = `FREQ=WEEKLY;BYDAY=${validatedData.days.join(",")};INTERVAL=1`;
-
   const proposedInstances = await generateStreamInstances({
     dtstart: startDate,
     until: endDate,
@@ -189,7 +161,7 @@ export async function streamScheduleFormSubmit(
     return {
       ...prevState,
       success: false,
-      message: "Start time cannot be before end time",
+      message: "Error checking instances of stream",
       errors: {
         conflicts: ["The date range and weekly repeat values results in 0 scheduled events."],
       },
@@ -236,6 +208,7 @@ export async function streamScheduleFormSubmit(
 
     startDate: startDate,
     endDate: endDate,
+
     reviewedAt: null,
 
     rrule: rrule,
@@ -243,6 +216,7 @@ export async function streamScheduleFormSubmit(
 
     password: validatedData.password,
   };
+
 
   const pendingSchedule = await createStreamSchedule(scheduleData);
 

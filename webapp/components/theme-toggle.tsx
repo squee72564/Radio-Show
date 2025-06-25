@@ -11,30 +11,56 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useEffect, useState } from "react"
+
+
+const themes = [
+  { name: "Slate", value: "light"},
+  { name: "Slate Dark", value: "dark" },
+  { name: "Neutral", value: "neutral"},
+  { name: "Neutral Dark", value: "neutral-dark" },
+  { name: "Bubblegum", value: "bubblegum"},
+  { name: "Bubblegum Dark", value: "bubblegum-dark" },
+  { name: "Catppuccin", value: "catppuccin"},
+  { name: "Catppuccin Dark", value: "catppuccin-dark" },
+  { name: "Doom64", value: "doom64"},
+  { name: "Doom64 Dark", value: "doom64-dark" },
+  { name: "Kodama Grove", value: "kodamagrove"},
+  { name: "Kodama Grove Dark", value: "kodamagrove-dark" },
+  { name: "Pastel Dreams", value: "pasteldreams"},
+  { name: "Pastel Dreams Dark", value: "pasteldreams-dark" },
+
+];
 
 export function ModeToggle() {
-  const { setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme()
 
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+  
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
-          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <span>Theme: {themes.find((themeData) => themeData.value === theme)?.name || "undefined"}</span>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="icon">
+            {(theme && theme.includes("dark")) ? (
+              <Moon className="h-[1.2rem] w-[1.2rem]" />
+            ): (
+              <Sun className="h-[1.2rem] w-[1.2rem]" />
+            )}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {themes.map((theme, idx) => (
+            <DropdownMenuItem key={idx} onClick={() => setTheme(theme.value)}>
+              {theme.name}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   )
 }

@@ -42,7 +42,6 @@ export function SettingsSheet({
             </SheetDescription>
           </SheetHeader>
             <div className="flex flex-row  justify-center items-center gap-10 w-full">
-              <span>Change Theme </span>
               <ModeToggle/>
             </div>
           <SheetFooter className="mx-auto pb-5">

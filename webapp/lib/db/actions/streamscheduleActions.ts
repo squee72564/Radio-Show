@@ -3,7 +3,7 @@
 import * as streamScheduleService from "@/lib/db/services/streamscheduleService";
 import * as userService from "@/lib/db/services/userService";
 
-import { StreamScheduleFormState, StreamScheduleFormValues, Weekday } from "@/types/stream-schedule";
+import { StreamScheduleFormState, StreamScheduleFormValues } from "@/types/stream-schedule";
 import { dateToUTC, generateStreamInstances } from "@/lib/utils";
 
 import { $Enums, StreamArchive, StreamSchedule, User } from "@prisma/client";

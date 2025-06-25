@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 type LocalDateProps = {
-  date: Date | string;
+  date: Date;
   locale?: string;
   options?: Intl.DateTimeFormatOptions;
 };
@@ -16,8 +16,7 @@ export function LocalDate({
   const [formatted, setFormatted] = useState('');
 
   useEffect(() => {
-    const d = typeof date === 'string' ? new Date(date) : date;
-    setFormatted(d.toLocaleDateString(locale, options));
+    setFormatted(date.toLocaleDateString(locale, options));
   }, [date, locale, options]);
 
   return <>{formatted}</>;

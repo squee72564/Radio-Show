@@ -107,8 +107,8 @@ model StreamSchedule {
   description String   @default("No Description")
   tags        String[]
 
-  startTime      DateTime        @db.Timetz(0)
-  endTime        DateTime        @db.Timetz(0)
+  startTime      DateTime
+  endTime        DateTime
   startDate      DateTime
   endDate        DateTime
   rrule          String

@@ -17,12 +17,8 @@ import { useEffect, useState } from "react"
 const themes = [
   { name: "Slate", value: "light"},
   { name: "Slate Dark", value: "dark" },
-  { name: "Neutral", value: "neutral"},
-  { name: "Neutral Dark", value: "neutral-dark" },
   { name: "Bubblegum", value: "bubblegum"},
   { name: "Bubblegum Dark", value: "bubblegum-dark" },
-  { name: "Catppuccin", value: "catppuccin"},
-  { name: "Catppuccin Dark", value: "catppuccin-dark" },
   { name: "Doom64", value: "doom64"},
   { name: "Doom64 Dark", value: "doom64-dark" },
   { name: "Kodama Grove", value: "kodamagrove"},

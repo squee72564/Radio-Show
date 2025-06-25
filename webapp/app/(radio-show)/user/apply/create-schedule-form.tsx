@@ -97,8 +97,14 @@ export default function CreateScheduleForm({ user }: { user: User }) {
     const localStart = new Date(startYear, startMonth - 1, startDay, startHour, startMinute);
     const localEnd = new Date(endYear, endMonth - 1, endDay, endHour, endMinute);
 
+    const localStartTime = new Date(1997, 8 - 1, 12, startHour, startMinute);
+    const localEndTime = new Date(1997, 8 - 1, 12, endHour, endMinute);
+
     formData.append("UTC-start", localStart.toISOString());
     formData.append("UTC-end", localEnd.toISOString());
+
+    formData.append("UTC-start-time", localStartTime.toISOString());
+    formData.append("UTC-end-time", localEndTime.toISOString());
 
     return streamScheduleFormSubmit(user.id, merged, validatedData, prevState, formData);
   };

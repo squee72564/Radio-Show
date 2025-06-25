@@ -100,15 +100,17 @@ export async function streamScheduleFormSubmit(
   const startISOString = formData.get("UTC-start") as string;
   const endISOString = formData.get("UTC-end") as string;
 
+  const startTimeISOString = formData.get("UTC-start-time") as string;
+  const endTimeISOString = formData.get("UTC-end-time") as string;
+
   const startDate = new Date(startISOString);
   const endDate = new Date(endISOString);
 
-  const startTime = new Date(`1997-08-12T${startDate.toISOString().split("T")[1]}`);
-  const endTime = new Date(`1997-08-12T${endDate.toISOString().split("T")[1]}`);
+  const startTime = new Date(startTimeISOString);
+  const endTime   = new Date(endTimeISOString);
   const durationMs = (endTime.getTime() - startTime.getTime());
 
   const rrule = `FREQ=WEEKLY;BYDAY=${validatedData.days.join(",")};INTERVAL=1`;
-
 
   if (!(endTime > startTime)) {
     return {

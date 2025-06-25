@@ -65,11 +65,10 @@ export default function StreamInstanceInfoCard({streamInstance}: {streamInstance
         ) : (
           <>
             {visibleTags.map((tag, idx) => (
-              <Badge variant="outline" key={idx}>
-                {tag.trim()}
+              <Badge variant="outline" key={idx} className="max-w-50">
+                <span className="truncate">{tag.trim()}</span>
               </Badge>
             ))}
-
             {hiddenTags.length > 0 && (
               <HoverCard openDelay={200} closeDelay={200}>
                 <HoverCardTrigger asChild>
@@ -81,8 +80,8 @@ export default function StreamInstanceInfoCard({streamInstance}: {streamInstance
                 <HoverCardContent className="max-w-64 max-h-56 overflow-auto p-4">
                   <div className="flex flex-wrap flex-1 gap-1 justify-between">
                     {hiddenTags.map((tag, idx) => (
-                      <Badge variant="outline" key={idx}>
-                        {tag.trim()}
+                      <Badge variant="outline" key={idx} className="max-w-50">
+                        <span className="truncate">{tag.trim()}</span>
                       </Badge>
                     ))}
                   </div>

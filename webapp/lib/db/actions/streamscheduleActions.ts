@@ -12,6 +12,10 @@ export async function getStreamInstancesByDateRange(dateStart: Date, dateEnd: Da
   return streamScheduleService.getStreamInstancesByDateRange(dateStart, dateEnd);
 }
 
+export async function getCurrentStreamInstance() {
+  return streamScheduleService.getCurrentStreamInstance();
+}
+
 export async function deleteStreamById(streamId: string) {
   return await streamScheduleService.deleteStreamById(streamId);
 }

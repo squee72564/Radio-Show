@@ -279,10 +279,9 @@ export default function LiveStreamPlayer() {
           <AlertTitle>Stream appears to be offline</AlertTitle>
           <AlertDescription className="text-base">
             <p className="text-center">
-              The live stream connection may be down.
-              <br />
-              Check back later or visit the <Link className="text-blue-700/80" href="/archive">archives</Link>.
+              The live stream connection may be down or no stream is scheduled for now.
             </p>
+            <p className="ml-10">Check back later or visit the <Link className="text-blue-700/80" href="/archive">archives</Link>.</p>
           </AlertDescription>
         </Alert>
       

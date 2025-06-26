@@ -27,6 +27,30 @@ export async function setStreamScheduleReviewedAt(id: string, reviewedAt: Date) 
   });
 }
 
+export async function getCurrentStreamInstance() {
+  const now = new Date();
+  return prisma.streamInstance.findFirst({
+    where: {
+      AND: [
+        {
+          scheduledStart: {
+            lte: now
+          }
+        },
+        {
+          scheduledEnd: {
+            gte: now
+          }
+        }
+      ]
+    },
+    include: {
+      streamSchedule: true
+    }
+  });
+}
+
+
 export async function getStreamInstancesByDateRange(dateStart: Date, dateEnd: Date) {
   return prisma.streamInstance.findMany({
     where: {

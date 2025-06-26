@@ -20,6 +20,13 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
+import { AlertCircleIcon, CheckCircle2Icon, PopcornIcon } from "lucide-react"
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
+
 import { streamScheduleSchema } from "@/validations/stream-schedule";
 
 function HoverCardData() {
@@ -130,11 +137,23 @@ export default function CreateScheduleForm({ user }: { user: User }) {
   const formattedTomorrow = `${year}-${month}-${day}`;
 
   if (state.success) {
-    redirect(`/user/edit`)
+    return (
+      <div className="flex flex-col w-full min-h-screen gap-10 justify-center items-center">
+        <Alert className="max-w-4xl">
+          <CheckCircle2Icon />
+          <AlertTitle>{state.message}</AlertTitle>
+          <AlertDescription>
+            Your schedule is now pending and will only be activated once approved by an admin.
+          </AlertDescription>
+        </Alert>
+        <Button onClick={() => redirect(`/user/edit`)}>Understood</Button>
+      </div>
+    )
   }
 
   return (
-    <form 
+    <form
+      className="py-5"
       action={formAction}
     >
       <Card>

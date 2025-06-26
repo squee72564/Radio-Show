@@ -13,8 +13,9 @@ import {
   getPaginationRowModel,
   SortingState,
   getSortedRowModel,
-  ColumnFiltersState,
   getFilteredRowModel,
+  FilterFn,
+  Row,
 } from "@tanstack/react-table"
 import {
   Table,
@@ -29,26 +30,55 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { LocalDate } from "@/components/localdate";
 
-export const columns: ColumnDef<(StreamArchive & {
-    user: Partial<User>,
-    streamSchedule: Partial<StreamSchedule>
-})>[] = [
+type ArchiveRowData = StreamArchive & {
+  user: User;
+  streamSchedule: StreamSchedule;
+};
+
+const makeGlobalFilterFn = <T extends object>(searchableColumns: string[]): FilterFn<T> =>
+  (row, _columnId, filterValue) => {
+    return searchableColumns.some((id) => {
+      const value = row.getValue(id) as string | string[] | undefined;
+
+      if (!value) return false;
+
+      if (Array.isArray(value)) {
+        return value.join(",").toLowerCase().includes(filterValue.toLowerCase());
+      }
+
+      return String(value).toLowerCase().includes(filterValue.toLowerCase());
+    });
+  };
+
+export const columns: ColumnDef<ArchiveRowData>[] = [
   {
-    accessorFn: row => row.streamSchedule?.title,
-    accessorKey: "title",
+    accessorFn: row => row.streamSchedule.title,
+    id: "title",
     header: () => <div className="text-center">Title</div>,
+    enableGlobalFilter: true,
     cell: ({row}) => {
       const title = row.getValue("title") as string
       return <div className="truncate text-center">{title ?? "Untitled"}</div>
     }
   },
   {
-    accessorFn: row => row.user?.name,
-    accessorKey: "username",
+    accessorFn: row => row.user.name,
+    id: "username",
     header: () => <div className="text-center">User</div>,
+    enableGlobalFilter: true,
     cell: ({row}) => {
       const userName = row.getValue("username") as string
-      return <div className="truncate text-center">{userName ?? "Unknown"}</div>
+      return <div className="truncate text-center">{userName ?? "No Name Set"}</div>
+    }
+  },
+  {
+    accessorFn: row => row.streamSchedule.tags,
+    id: "tags",
+    header: () => <div className="text-center">Tags</div>,
+    enableGlobalFilter: true,
+    cell: ({row}) => {
+      const tags = row.getValue("tags") as string[]
+      return <div className="overflow-auto text-center">{(tags.map((tag)=>tag)).join(",")}</div>
     }
   },
   {
@@ -80,32 +110,31 @@ export const columns: ColumnDef<(StreamArchive & {
   }
 ]
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+interface DataTableProps<ArchiveRowData, TValue> {
+  columns: ColumnDef<ArchiveRowData, TValue>[]
+  data: ArchiveRowData[]
 }
  
-export default function ArchiveDataTable<TData, TValue>({
+export default function ArchiveDataTable<TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<ArchiveRowData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
-    []
-  )
+  const [globalFilter, setGlobalFilter] = useState("");
 
-  const table = useReactTable({
+  const table = useReactTable<ArchiveRowData>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: makeGlobalFilterFn<ArchiveRowData>(["title", "username", "tags"]),
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
-      columnFilters,
+      globalFilter,
     },
   })
  
@@ -113,11 +142,9 @@ export default function ArchiveDataTable<TData, TValue>({
     <Card className="flex flex-col flex-1 w-full rounded-sm border">
       <CardHeader className="flex items-center justify-center gap-5">
         <Input
-          placeholder="Filter titles..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
+          placeholder="Filter Archives..."
+          value={globalFilter ?? ""}
+          onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
         />
         <Button

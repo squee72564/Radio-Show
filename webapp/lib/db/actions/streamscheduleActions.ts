@@ -224,7 +224,7 @@ export async function streamScheduleFormSubmit(
 
   return {
     success: true,
-    message: `Broadcast application created successfully for ${pendingSchedule.title}.`,
+    message: `Success! Your schedule for ${pendingSchedule.title} has been submitted for approval.`,
     errors: {},
     values: {}
   };

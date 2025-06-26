@@ -1,6 +1,5 @@
 import { createStreamArchive } from "@/lib/db/actions/streamscheduleActions";
 import { uploadStreamFile } from "@/lib/nodeUtils";
-import { dateToUTC } from "@/lib/utils";
 import { parseBuffer } from "music-metadata";
 
 export const dynamic = "force-dynamic";
@@ -63,7 +62,7 @@ export async function POST(req: Request) {
       durationInSeconds: durationInSeconds || null,
       fileSizeBytes: buffer.length,
       format: file.type || null,
-      createdAt: dateToUTC(new Date()),
+      createdAt: new Date(),
     };
 
     const archive = await createStreamArchive(data);

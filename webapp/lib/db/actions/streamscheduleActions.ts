@@ -4,7 +4,7 @@ import * as streamScheduleService from "@/lib/db/services/streamscheduleService"
 import * as userService from "@/lib/db/services/userService";
 
 import { StreamScheduleFormState, StreamScheduleFormValues } from "@/types/stream-schedule";
-import { dateToUTC, generateStreamInstances } from "@/lib/utils";
+import { generateStreamInstances } from "@/lib/utils";
 
 import { $Enums, StreamArchive, StreamSchedule, User } from "@prisma/client";
 
@@ -21,7 +21,7 @@ export async function deleteStreamById(streamId: string) {
 }
 
 export async function setStreamStatus(stream: StreamSchedule & {user: User}, status: $Enums.ScheduleStatus) {
-  const nowUTC = dateToUTC(new Date());
+  const nowUTC = new Date();
   if (status == $Enums.ScheduleStatus.APPROVED) {
 
     const proposedInstances = await generateStreamInstances({
@@ -191,7 +191,7 @@ export async function streamScheduleFormSubmit(
 
   const scheduleData: Omit<StreamSchedule, "id"> = {
     status: $Enums.ScheduleStatus.PENDING,
-    submittedAt: dateToUTC(new Date()),
+    submittedAt: new Date(),
     
     title: validatedData.title,
     description: validatedData.description,

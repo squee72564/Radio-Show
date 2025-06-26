@@ -3,10 +3,9 @@
 import { Badge } from "@/components/ui/badge";
 import { findFirstStreamInstanceAfterDate } from "@/lib/db/actions/streamscheduleActions";
 import StreamInstanceInfoCard from "@/components/streaminstance-info-card";
-import { dateToUTC } from "@/lib/utils";
 
 export default async function NextShow() {
-  const nowUTC = dateToUTC(new Date());
+  const nowUTC = new Date();
 
   const nextScheduledShow = await findFirstStreamInstanceAfterDate(nowUTC);
 

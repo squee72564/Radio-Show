@@ -50,7 +50,3 @@ export async function generateStreamInstances({
     };
   })
 }
-
-export function dateToUTC(date: Date): Date {
-  return new Date(date.getTime());
-}

@@ -100,6 +100,10 @@ export default function CreateScheduleForm({ user }: { user: User }) {
     const localStartTime = new Date(1997, 8 - 1, 12, startHour, startMinute);
     const localEndTime = new Date(1997, 8 - 1, 12, endHour, endMinute);
 
+    if (endHour < startHour || (endHour === startHour && endMinute <= startMinute)) {
+      localEndTime.setDate(localEndTime.getDate() + 1);
+    }
+
     formData.append("UTC-start", localStart.toISOString());
     formData.append("UTC-end", localEnd.toISOString());
 

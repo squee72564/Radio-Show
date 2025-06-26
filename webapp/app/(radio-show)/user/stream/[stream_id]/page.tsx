@@ -9,8 +9,8 @@ import { getStreamScheduleById } from "@/lib/db/services/streamscheduleService";
 import { RRule } from "rrule";
 import { CalendarRange, Clock4, Repeat } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { LocalTime } from "@/components/localtime";
-import { LocalDate } from "@/components/localdate";
+import LocalTime from "@/components/localtime";
+import LocalDate from "@/components/localdate";
 
 export default async function UserProfilePage({
   params

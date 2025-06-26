@@ -28,7 +28,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { LocalDate } from "@/components/localdate";
+import LocalDate from "@/components/localdate";
 
 type ArchiveRowData = StreamArchive & {
   user: User;

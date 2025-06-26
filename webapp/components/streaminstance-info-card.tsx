@@ -17,8 +17,8 @@ import {
 } from "@/components/ui/hover-card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
-import { LocalDate } from "@/components/localdate";
-import { LocalTime } from "@/components/localtime";
+import LocalTime from "@/components/localtime";
+import LocalDate  from "@/components/localdate";
 
 export default function StreamInstanceInfoCard({streamInstance}: {streamInstance: StreamInstance & {streamSchedule: StreamSchedule, user: User}}) {
   const MAX_VISIBLE_TAGS = 15;

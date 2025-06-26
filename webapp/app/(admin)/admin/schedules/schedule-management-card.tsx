@@ -8,8 +8,8 @@ import { $Enums, StreamSchedule, User } from "@prisma/client";
 
 import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardAction, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { LocalTime } from "@/components/localtime";
-import { LocalDate } from "@/components/localdate";
+import LocalTime from "@/components/localtime";
+import LocalDate from "@/components/localdate";
 
 export default function ScheduleManagementCard({stream}: {stream: StreamSchedule & {user: User} }) {
   const recurrence = RRule.fromString(stream.rrule).toText();

@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 import StreamInstanceInfoCard from "@/components/streaminstance-info-card";
-import { LocalDate } from "@/components/localdate";
+import LocalDate from "@/components/localdate";
 
 export function DatePicker() {
   const [schedule, setSchedule] = useState<(StreamInstance & {user: User, streamSchedule: StreamSchedule})[] | null>(null);

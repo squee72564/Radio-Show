@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { LocalDate } from "@/components/localdate";
+import LocalDate from "@/components/localdate";
 
 export default function UserManagementCard({ user, isOwnerViewing }: { user: User, isOwnerViewing: boolean }) {
   const [isPending, startTransition] = useTransition();

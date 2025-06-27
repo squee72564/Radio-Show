@@ -12,7 +12,9 @@ export const metadata: Metadata = {
 
 export default async function Live() {
 
-  const currentStream = await getCurrentStreamInstance() as (StreamInstance & {streamSchedule: StreamSchedule}) | null;
+  const currentStream = await getCurrentStreamInstance({
+    include: { streamSchedule: true}
+  }) as (StreamInstance & {streamSchedule: StreamSchedule}) | null;
 
   return (
     <div className="flex flex-col min-h-screen w-full p-6 gap-6">

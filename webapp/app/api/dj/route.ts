@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db/prismaClient";
-import { findStreamScheduleByIdAndPass } from "@/lib/db/services/streamscheduleService";
+import { findStreamScheduleByIdAndPass } from "@/lib/db/actions/streamscheduleActions"
+import { StreamSchedule } from "@prisma/client";
 
 export async function POST(req: Request) {
   try {
@@ -20,7 +21,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const streamschedule = await findStreamScheduleByIdAndPass(streamScheduleId, password);
+    const streamschedule = await findStreamScheduleByIdAndPass(streamScheduleId, password) as StreamSchedule | null;
 
     if (!streamschedule) {
       return new Response(JSON.stringify({authenticated: false, message: "Could not find stream schedule"}), {

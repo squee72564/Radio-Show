@@ -5,6 +5,8 @@ import { auth } from "@/auth";
 import { findUserById } from "@/lib/db/actions/userActions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { User } from "@prisma/client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,7 +14,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import UserProfileStreamList from "./user-profile-stream-list";
 import UserProfileArchiveList from "./user-profile-archive-list";
-import { User } from "@prisma/client";
 
 export default async function UserProfilePage({
   params
@@ -21,7 +22,7 @@ export default async function UserProfilePage({
 }) {
   const { id }: { id: string } = await params;
 
-  const userProfileInfo = await findUserById(id) as User;
+  const userProfileInfo = await findUserById(id) as User | null;
   const session = await auth();
   const user = session?.user;
 
@@ -30,7 +31,7 @@ export default async function UserProfilePage({
   }
     
   return (
-    <div className="flex flex-col w-full max-h-screen p-5 gap-2">
+    <div className="flex flex-col w-full min-w-0 max-h-screen p-5 gap-2">
       <Card className="flex gap-6 p-5">
         <CardHeader className="flex flex-row w-full items-center justify-between">
           <Badge className="px-5 py-3 rounded-2xl font-bold" variant={"outline"}>
@@ -87,7 +88,7 @@ export default async function UserProfilePage({
             <CardHeader>
               <CardTitle>Active Streams</CardTitle>
             </CardHeader>
-            <CardContent className="overflow-y-auto  min-h-[200px] max-h-[calc(100vh-500px)] px-2">
+            <CardContent className="overflow-y-auto min-h-[200px] max-h-[calc(100vh-500px)] px-2">
               <Suspense fallback={<Badge variant="outline" className="text-center mx-3 p-2">Loading...</Badge>}>
                 <UserProfileStreamList userProfileInfo={userProfileInfo}/>
               </Suspense>
@@ -97,11 +98,11 @@ export default async function UserProfilePage({
         </TabsContent>
 
         <TabsContent value="archive" className="flex-1 flex flex-col min-h-[200px]">
-          <Card className="w-full flex-1 flex flex-col">
+          <Card className="flex flex-col">
             <CardHeader>
               <CardTitle>Archives</CardTitle>
             </CardHeader>
-            <CardContent className="overflow-y-auto  min-h-[200px] max-h-[calc(100vh-500px)] px-2">
+            <CardContent className="overflow-y-auto min-h-[200px] max-h-[calc(100vh-500px)] px-2">
               <Suspense fallback={<Badge variant="outline" className="text-center mx-3 p-2">Loading...</Badge>}>
                 <UserProfileArchiveList userProfileInfo={userProfileInfo}/>
               </Suspense>

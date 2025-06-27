@@ -1,10 +1,17 @@
 import { findArchivesByUserId } from "@/lib/db/services/streamscheduleService";
-import { User } from "@prisma/client";
+import { StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
+import StreamArchiveInfoCard from "@/components/streamarchive-info-card";
 
 
 export default async function UserProfileArchiveList({userProfileInfo}: {userProfileInfo: User}) {
-  const archives = await findArchivesByUserId(userProfileInfo.id);
+  const archives = await findArchivesByUserId(userProfileInfo.id,{
+    include: {
+      streamInstance: true,
+      streamSchedule: true,
+      user: true,
+    }
+  }) as (StreamArchive & {streamInstance: StreamInstance, streamSchedule: StreamSchedule, user: User})[];
   
   return (
     <>
@@ -13,9 +20,7 @@ export default async function UserProfileArchiveList({userProfileInfo}: {userPro
       ): (
         <div className="space-y-2 p-2">
           {archives.map((archive, idx) => (
-            <div key={idx}>
-              Archive: {archive.id}
-            </div>
+            <StreamArchiveInfoCard key={idx} streamArchive={archive}/>
           ))}
         </div>
       )}

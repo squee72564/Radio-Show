@@ -41,7 +41,18 @@ export function DatePicker() {
       const endOfDay = new Date(date);
       endOfDay.setHours(23, 59, 59, 999);
       startTransition(async () => {
-        setSchedule(await getStreamInstancesByDateRange(startOfDay, endOfDay));
+        setSchedule(
+          await getStreamInstancesByDateRange(
+            startOfDay,
+            endOfDay,
+            {
+              include: {
+                user: true,
+                streamSchedule: true,
+              }
+            }
+          ) as (StreamInstance & {user: User, streamSchedule: StreamSchedule})[]
+        );
       });
     }, 150);
 

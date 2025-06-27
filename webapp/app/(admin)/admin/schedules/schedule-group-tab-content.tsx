@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { StreamSchedule, User, $Enums } from "@prisma/client";
-import { findAllStreamsByStatusWithUser } from "@/lib/db/actions/streamscheduleActions";
+import { findAllStreamsByStatus } from "@/lib/db/actions/streamscheduleActions";
 import { Badge } from "@/components/ui/badge";
 import ScheduleManagementCard from "./schedule-management-card";
 
@@ -15,7 +15,11 @@ export default function ScheduleGroupTabContent({
 
   useEffect(() => {
     const fetchSchedules = async () => {
-      const schedules = await findAllStreamsByStatusWithUser(status);
+      const schedules = await findAllStreamsByStatus(status,{
+        include: {
+          user: true
+        }
+      }) as (StreamSchedule & { user: User })[];
       setSchedules(schedules);
     };
 

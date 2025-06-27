@@ -43,8 +43,14 @@ function WaveformVisualizer({
       animationFrameId = requestAnimationFrame(draw);
 
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-      canvasCtx.lineWidth = 2;
-      canvasCtx.strokeStyle = "#181363";
+      canvasCtx.lineWidth = 1;
+      
+      const styles = getComputedStyle(canvas);
+      const chart1 = styles.getPropertyValue("--chart-5").trim() || "#181363";
+      const chart2 = styles.getPropertyValue("--chart-2").trim() || "#181363";
+
+      canvasCtx.strokeStyle = chart1;
+      canvasCtx.fillStyle = chart2;
 
       if (isTimeDomain) {
         analyser.getByteTimeDomainData(dataArray);

@@ -3,7 +3,7 @@ import { Music } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
 import LiveStreamPlayer from "@/app/(radio-show)/live/live-stream-player";
-import { getCurrentStreamInstance, getStreamInstancesByDateRange } from "@/lib/db/actions/streamscheduleActions";
+import { getCurrentStreamInstance } from "@/lib/db/actions/streamscheduleActions";
 import { StreamInstance, StreamSchedule } from "@prisma/client";
 
 export const metadata: Metadata = {

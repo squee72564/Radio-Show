@@ -15,7 +15,6 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   FilterFn,
-  Row,
 } from "@tanstack/react-table"
 import {
   Table,

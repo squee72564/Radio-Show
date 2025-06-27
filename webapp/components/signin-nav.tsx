@@ -26,6 +26,7 @@ import { MoreVerticalIcon, UserCircleIcon, LogIn, LogOut, CrownIcon } from "luci
 import { User } from "@prisma/client";
 import Link from "next/link"
 import { JSX } from "react";
+import UserAvatar from "./user-avatar";
 
 const signInFnAsync = async () => {
   "use server";
@@ -41,16 +42,15 @@ const UserInfo = ({user}: {user: User | undefined}): JSX.Element => {
   const signedIn = user !== undefined;
   return (
     <>
-      <Avatar className="h-8 w-8 rounded-lg">
         {signedIn ? (
-          <>
-            <AvatarImage src={user.image || ""} alt={user.name || ""} />
-            <AvatarFallback className="rounded-lg">{user.name?.charAt(0) ?? "?"}</AvatarFallback>
-          </>
+          <UserAvatar user={user}/>
         ) : (
-          <AvatarFallback className="rounded-lg">{"?"}</AvatarFallback>
-        )} 
-      </Avatar>
+          <Avatar>
+            <AvatarImage src={undefined} alt={"anon"} />
+            <AvatarFallback>{"?"}</AvatarFallback>
+          </Avatar>
+        )}
+      
       <div className="grid flex-1 text-left text-sm leading-tight">
         <span className="truncate font-medium">{signedIn ? user.name : "Anonymous"}</span>
         {signedIn && <span className="truncate text-xs text-muted-foreground">

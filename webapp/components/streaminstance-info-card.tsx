@@ -15,11 +15,11 @@ import {
   HoverCardTrigger,
   HoverCardContent,
 } from "@/components/ui/hover-card";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import LocalTime from "@/components/localtime";
 import LocalDate  from "@/components/localdate";
 import LiveTag from "./live-tag";
+import UserAvatar from "./user-avatar";
 
 export default function StreamInstanceInfoCard({streamInstance}: {streamInstance: StreamInstance & {streamSchedule: StreamSchedule, user: User}}) {
   const MAX_VISIBLE_TAGS = 15;
@@ -49,12 +49,7 @@ export default function StreamInstanceInfoCard({streamInstance}: {streamInstance
             className="flex flex-col items-center justify-center hover:text-muted-foreground"
             href={`/user/${streamInstance.userId}`}
           >
-            <Avatar className="flex flex-col items-center justify-center">
-              <AvatarImage className="w-10 h-10 rounded-xl" src={streamInstance.user.image || ""}/>
-              <AvatarFallback className="font-bold text-2xl rounded-xl">
-                {streamInstance.user.name?.charAt(0) ?? "?"}
-              </AvatarFallback>
-            </Avatar>
+            <UserAvatar user={streamInstance.user} className="flex flex-col items-center justify-center"/>
             {streamInstance.user.name}
           </Link>
         </CardAction>

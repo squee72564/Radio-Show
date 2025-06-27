@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { findRecentUsers } from "@/lib/db/actions/userActions";
 import { User } from "@prisma/client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import UserAvatar from "@/components/user-avatar";
 
 export default async function RecentUsers() {
   const users = await findRecentUsers(5);
@@ -20,10 +20,7 @@ export default async function RecentUsers() {
               href={`/user/${user.id}`}
               className="flex items-center gap-4 p-2 rounded-md hover:bg-muted transition-colors"
             >
-              <Avatar className="h-9 w-9">
-                <AvatarImage src={user.image || ""} alt={user.name || ""} />
-                <AvatarFallback>{user.name?.charAt(0) ?? "?"}</AvatarFallback>
-              </Avatar>
+              <UserAvatar user={user} className="h-9 w-9"/>
               <span className="text-sm font-medium">{user.name}</span>
             </Link>
           ))

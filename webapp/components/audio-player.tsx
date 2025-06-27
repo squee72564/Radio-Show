@@ -8,11 +8,7 @@ import { Slider } from "./ui/slider";
 import { Skeleton } from "./ui/skeleton";
 import { LoaderIcon, PauseIcon, PlayIcon } from "lucide-react";
 
-function formatTime(sec: number) {
-  const minutes = Math.floor(sec / 60);
-  const seconds = Math.floor(sec % 60);
-  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-}
+import { formatTime } from "@/lib/utils";
 
 function WaveformVisualizer({
   audioRef,

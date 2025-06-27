@@ -125,7 +125,7 @@ export function DatePicker() {
         </div>
       </div>
       
-      <div className="flex flex-col space-y-4 overflow-y-auto p-5 max-h-[calc(100vh-200px)]">
+      <div className="flex flex-col space-y-4 overflow-y-auto p-5 min-h-80 max-h-[calc(100vh-200px)]">
         {pending ? (
           <Badge variant="outline">Loading...</Badge>
         ) : schedule && schedule.length > 0 ? (

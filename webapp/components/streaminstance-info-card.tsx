@@ -19,6 +19,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import LocalTime from "@/components/localtime";
 import LocalDate  from "@/components/localdate";
+import LiveTag from "./live-tag";
 
 export default function StreamInstanceInfoCard({streamInstance}: {streamInstance: StreamInstance & {streamSchedule: StreamSchedule, user: User}}) {
   const MAX_VISIBLE_TAGS = 15;
@@ -26,10 +27,14 @@ export default function StreamInstanceInfoCard({streamInstance}: {streamInstance
   const visibleTags = tags.slice(0, MAX_VISIBLE_TAGS);
   const hiddenTags = tags.slice(MAX_VISIBLE_TAGS);
 
+  const now = new Date();
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="mb-2">{streamInstance.streamSchedule.title}</CardTitle>
+        <CardTitle className="mb-2">
+          {streamInstance.streamSchedule.title}
+        </CardTitle>
         <CardDescription className="flex flex-col gap-2">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <CalendarRange className="w-4 h-4" />
@@ -38,6 +43,7 @@ export default function StreamInstanceInfoCard({streamInstance}: {streamInstance
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Clock4 className="w-4 h-4" />
             <LocalTime date={streamInstance.scheduledStart} /> - <LocalTime date={streamInstance.scheduledEnd}/>
+            <LiveTag liveStart={streamInstance.scheduledStart} liveEnd={streamInstance.scheduledEnd} />
           </div>
         </CardDescription>
         <CardAction className="space-y-2">

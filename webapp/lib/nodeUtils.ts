@@ -1,8 +1,18 @@
 import fs from "fs";
 import path from "path";
-//import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const STORAGE_BACKEND = process.env.STORAGE_BACKEND;
+
+export type UploadResult =
+  | {
+      type: "success";
+      location: string;
+    }
+  | {
+      type: "error";
+      message: string;
+    };
 
 export async function uploadStreamFile({
   fileBuffer,
@@ -10,43 +20,67 @@ export async function uploadStreamFile({
 }: {
   fileBuffer: Buffer;
   filename: string;
-}) {
+}): Promise<UploadResult> {
+
   if (STORAGE_BACKEND === "local") {
     const uploadPath = "public/uploads";
     const fullPath = path.join(uploadPath, filename);
 
-    // Ensure folder exists
-    fs.mkdirSync(uploadPath, { recursive: true });
-
-    // Write to disk
-    fs.writeFileSync(fullPath, fileBuffer);
-
-    return { location: path.join("uploads", filename) };
+    try {
+      fs.mkdirSync(uploadPath, { recursive: true });
+      fs.writeFileSync(fullPath, fileBuffer);
+      return { type: "success", location: path.join("uploads", filename) };
+    } catch (err) {
+      return { type: "error", message: `Local upload failed: ${String(err)}` };
+    }
   }
 
-  // if (STORAGE_BACKEND === "s3") {
-  //   const s3 = new S3Client({
-  //     region: process.env.S3_REGION,
-  //     endpoint: process.env.S3_ENDPOINT, // optional for AWS
-  //     credentials: {
-  //       accessKeyId: process.env.S3_ACCESS_KEY!,
-  //       secretAccessKey: process.env.S3_SECRET_KEY!,
-  //     },
-  //   });
+  if (STORAGE_BACKEND === "s3") {
+    const {
+      S3_ENDPOINT,
+      S3_BUCKET_NAME,
+      S3_ROOT_USER,
+      S3_ROOT_PASSWORD,
+      S3_REGION,
+    } = process.env;
 
-  //   await s3.send(
-  //     new PutObjectCommand({
-  //       Bucket: process.env.S3_BUCKET_NAME!,
-  //       Key: filename,
-  //       Body: fileBuffer,
-  //       ContentType: "audio/mpeg",
-  //     })
-  //   );
+    if (!S3_ENDPOINT || !S3_BUCKET_NAME || !S3_ROOT_USER || !S3_ROOT_PASSWORD || !S3_REGION) {
+      return {
+        type: "error",
+        message: "Missing required S3 environment variables",
+      };
+    }
 
-  //   const fileUrl = `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET_NAME}/${filename}`;
-  //   console.log("Uploaded to S3:", fileUrl);
-  //   return { location: fileUrl };
-  // }
+    const s3 = new S3Client({
+      endpoint: S3_ENDPOINT,
+      credentials: {
+        accessKeyId: S3_ROOT_USER,
+        secretAccessKey: S3_ROOT_PASSWORD,
+      },
+      forcePathStyle: true,
+      region: S3_REGION,
+    });
 
-  throw new Error("Unsupported storage backend");
+    try {
+      await s3.send(
+        new PutObjectCommand({
+          Bucket: S3_BUCKET_NAME,
+          Key: filename,
+          Body: fileBuffer,
+          ContentType: "audio/mpeg",
+        })
+      );
+
+      const fileUrl = `${S3_ENDPOINT}/${path.posix.join(
+        S3_BUCKET_NAME,
+        filename
+      )}`;
+
+      return { type: "success", location: fileUrl };
+    } catch (err) {
+      return { type: "error", message: `S3 upload failed: ${String(err)}` };
+    }
+  }
+
+  return { type: "error", message: "Unsupported storage backend" };
 }

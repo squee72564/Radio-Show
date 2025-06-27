@@ -28,6 +28,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import LocalDate from "@/components/localdate";
+import { useRouter } from "next/navigation";
 
 type ArchiveRowData = StreamArchive & {
   user: User;
@@ -120,6 +121,7 @@ export default function ArchiveDataTable<TValue>({
 }: DataTableProps<ArchiveRowData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = useState("");
+  const router = useRouter()
 
   const table = useReactTable<ArchiveRowData>({
     data,
@@ -189,6 +191,11 @@ export default function ArchiveDataTable<TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  onClick={() => {
+                    const archiveId = row.original.id;
+                    router.push(`/archive/${archiveId}`);
+                  }}
+                  className="cursor-pointer hover:bg-secondary border border-transparent hover:rounded-lg transition-all"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

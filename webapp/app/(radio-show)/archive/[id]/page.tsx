@@ -1,8 +1,10 @@
-import { Separator } from "@/components/ui/separator";
 import { ArchiveIcon } from "lucide-react";
-import { CustomPlayer } from "@/components/audio-player";
-import { getStreamArchiveById } from "@/lib/db/actions/streamscheduleActions";
+import { StreamArchive, StreamSchedule } from "@prisma/client";
+import { getStreamArchiveByIdWithSchedule } from "@/lib/db/actions/streamscheduleActions";
 import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
+import { CustomPlayer } from "@/components/audio-player";
 
 export default async function ArchivePlayer({
   params
@@ -11,7 +13,7 @@ export default async function ArchivePlayer({
 }) {
   const { id }: { id: string } = await params;
 
-  const streamArchive = await getStreamArchiveById(id);
+  const streamArchive = await getStreamArchiveByIdWithSchedule(id) as StreamArchive & {streamSchedule: StreamSchedule};
 
   return (
     <main className="flex flex-col min-h-screen w-full p-6 gap-6">
@@ -24,7 +26,17 @@ export default async function ArchivePlayer({
           No stream archive found.
         </Badge>
       ): (
-        <CustomPlayer streamUrl={streamArchive.url} isStreamLive={true} showControls={false}/>
+        <div className="flex flex-col flex-1 gap-4 w-full">
+          <CustomPlayer streamUrl={streamArchive.url.replace(/^public\//, "/")} isStreamLive={true} showControls={true}/>
+          <Alert variant="default" className="w-full">
+            <AlertTitle>{streamArchive.streamSchedule.title}</AlertTitle>
+            <AlertDescription className="text-base">
+              <p className="">
+                {streamArchive.streamSchedule.description}
+              </p>
+            </AlertDescription>
+          </Alert>
+        </div>
       )}
     </main>
   );

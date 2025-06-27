@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useStreamStatus } from '@/hooks/use-streamstatus';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CustomPlayer } from "@/components/audio-player";

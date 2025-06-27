@@ -42,7 +42,7 @@ export default function UserManagementCard({ user, isOwnerViewing }: { user: Use
         <CardDescription className="flex flex-col gap-2">
           <p className="font-medium truncate">{user.name}</p>
           <p className="text-sm text-muted-foreground truncate">{user.email}</p>
-          <p>Created at: <LocalDate date={user.createdAt} /></p>
+          <div className="flex flex-row gap-2"><p>Created at:</p> <LocalDate date={user.createdAt} /></div>
           {user.emailVerified ? (
             <Badge variant={"outline"}>Email Verified: <LocalDate date={user.emailVerified} /></Badge>
           ): (

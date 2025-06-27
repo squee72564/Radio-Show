@@ -36,7 +36,7 @@ export default async function ArchivePlayer({
         </Badge>
       ): (
         <div className="flex flex-col flex-1 gap-4 w-full">
-          <CustomPlayer streamUrl={streamArchive.url.replace(/^public\//, "/")} isStreamLive={true} showControls={true}/>
+          <CustomPlayer streamUrl={`/${streamArchive.url.replace(/^public\//, "")}`} isStreamLive={true} showControls={true}/>
           <Alert variant="default" className="w-full">
             <AlertTitle>{streamArchive.streamSchedule?.title} - {streamArchive.user?.name}</AlertTitle>
             <AlertDescription className="text-base">

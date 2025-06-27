@@ -27,8 +27,6 @@ export default function StreamInstanceInfoCard({streamInstance}: {streamInstance
   const visibleTags = tags.slice(0, MAX_VISIBLE_TAGS);
   const hiddenTags = tags.slice(MAX_VISIBLE_TAGS);
 
-  const now = new Date();
-
   return (
     <Card>
       <CardHeader>

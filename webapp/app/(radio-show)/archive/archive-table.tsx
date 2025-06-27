@@ -195,7 +195,7 @@ export default function ArchiveDataTable<TValue>({
                     const archiveId = row.original.id;
                     router.push(`/archive/${archiveId}`);
                   }}
-                  className="cursor-pointer hover:bg-secondary border border-transparent hover:rounded-lg transition-all"
+                  className="cursor-pointer hover:bg-secondary transition-all"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

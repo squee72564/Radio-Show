@@ -12,7 +12,7 @@ export default function Home() {
       <main className="flex flex-col flex-1 items-center justify-center w-full">
         <div className="flex flex-col md:flex-row w-full max-w-5xl gap-8 items-center px-6">
           <Image
-            src="/radio-show.jpg"
+            src="/radio-show.jpeg"
             alt="MugenBeat"
             width={640}
             height={640}

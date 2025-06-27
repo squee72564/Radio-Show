@@ -20,8 +20,8 @@ export async function uploadStreamFile({
 
     // Write to disk
     fs.writeFileSync(fullPath, fileBuffer);
-    console.log("Saved locally at", fullPath);
-    return { location: fullPath };
+
+    return { location: path.join("uploads", filename) };
   }
 
   // if (STORAGE_BACKEND === "s3") {

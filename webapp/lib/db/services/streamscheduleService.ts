@@ -215,14 +215,15 @@ export async function findArchivesByUserId(
   }); 
 }
 
-export async function findRecentArchivesWithSchedule(count: number) {
+export async function findRecentArchives(
+  count: number,
+  options?: {include: {[K in keyof StreamArchiveRelations]?: true}}
+): Promise<(StreamArchive & Partial<StreamArchiveRelations>)[]> {
   return prisma.streamArchive.findMany({
     orderBy: {
       createdAt: 'desc',
     },
-    include: {
-      streamSchedule: true,
-    },
+    ...(options ?? {}),
     take: count,
   });
 }

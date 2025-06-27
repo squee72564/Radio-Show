@@ -21,7 +21,7 @@ export default function LocalTime({
   }, [date, locale, options]);
 
   if (!formatted) {
-    return <Skeleton className="w-8 h-5" />;
+    return <Skeleton className="w-14 h-5" />;
   }
   
   return <>{formatted}</>;

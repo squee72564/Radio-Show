@@ -21,7 +21,7 @@ export default function LocalDate({
   }, [date, locale, options]);
 
   if (!formatted) {
-    return <Skeleton className="w-30 h-5" />;
+    return <Skeleton className="w-22 h-5" />;
   }
   return <>{formatted}</>;
 }

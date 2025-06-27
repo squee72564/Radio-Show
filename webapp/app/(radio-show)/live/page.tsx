@@ -7,7 +7,8 @@ import { getCurrentStreamInstance } from "@/lib/db/actions/streamscheduleActions
 import { StreamInstance, StreamSchedule } from "@prisma/client";
 
 export const metadata: Metadata = {
-  title: "Live",
+  title: "MugenBeat - Live",
+  description: "Live broadcast page for MugenBeat"
 };
 
 export default async function Live() {

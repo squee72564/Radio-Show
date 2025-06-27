@@ -174,7 +174,7 @@
     <mount type="normal">
         <mount-name>/live</mount-name>
         <genre>Muzak</genre>
-        <stream-description>This is the icecast mount for Radio Show.</stream-description>
+        <stream-description>This is the icecast mount for MugenBeat.</stream-description>
     </mount>
 
     <!-- Normal mounts -->

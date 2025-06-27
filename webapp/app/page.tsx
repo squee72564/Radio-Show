@@ -7,13 +7,13 @@ import NavigationHeader from "@/components/nav-header"
 
 export default function Home() {
   return (
-    <div className="max-h-screen w-full">
+    <div className="flex flex-col min-h-screen max-h-screen w-full gap-10">
       <NavigationHeader/>
-      <main className="flex flex-col items-center justify-center px-6 mt-10">
-        <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <main className="flex flex-col flex-1 items-center justify-center w-full">
+        <div className="flex flex-col md:flex-row w-full max-w-5xl gap-8 items-center px-6">
           <Image
             src="/radio-show.jpg"
-            alt="Radio Show"
+            alt="MugenBeat"
             width={640}
             height={640}
             className="rounded-3xl shadow-xl max-w-sm transform hover:scale-105 transition-transform duration-500 ease-in-out"
@@ -22,14 +22,14 @@ export default function Home() {
           <Card className="backdrop-blur-md shadow-md">
             <CardContent className="p-8 flex flex-col items-center text-center gap-6">
               <p className="text-lg font-medium">
-                Radio Show is a free internet radio platform for everyone.
+                {"MugenBeat is a free, global internet radio platform designed for music lovers and DJs alike. Stream live shows from DJs around the world, explore an extensive archive of past broadcasts, or easily schedule and host your own live show — all with zero barriers."}
               </p>
               <p className="text-md">
-                Listen to live music, browse archives, or host your own show.
+                {"\"Boundless beats for every soul.\""}
               </p>
 
               <Button asChild variant={"default"}>
-                <Link href="/dashboard">Click here to enter</Link>
+                <Link href="/dashboard">Get Started</Link>
               </Button>
             </CardContent>
           </Card>

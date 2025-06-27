@@ -7,16 +7,16 @@ import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = {
-  title: "About",
-  description: "About page for Radio Show",
+  title: "MugenBeat - About",
+  description: "About page for MugenBeat",
 };
 
 export default function AboutPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
-      <h1 className="text-4xl font-bold mb-4">About Radio Show</h1>
+      <h1 className="text-4xl font-bold mb-4">About MugenBeat</h1>
       <p className="text-muted-foreground text-lg">
-        Radio Show is a free, open internet radio platform built for DJs, listeners, and music lovers.
+        MugenBeat is a free, open internet radio platform built for DJs, listeners, and music lovers.
       </p>
       <p className="text-muted-foreground text-lg mb-8">
         Broadcast live, discover fresh sets, and access archives — all in one modern space.
@@ -94,7 +94,7 @@ export default function AboutPage() {
         </CardHeader>
         <CardContent className="pt-6">
           <p className="text-muted-foreground">
-            {"Radio Show is built for the people — by the people. It's open-source and community-driven. No ads, no corporate agendas, just pure music."}
+            {"MugenBeat is built for the people — by the people. It's open-source and community-driven. No ads, no corporate agendas, just pure music."}
           </p>
           <a href="https://github.com/squee72564/Radio-Show" target="_blank" rel="noopener noreferrer">
             <Button className="mt-4" variant="outline">

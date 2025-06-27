@@ -7,7 +7,8 @@ import { Separator } from "@/components/ui/separator";
 import DatePickerSkeleton from "./date-picker-skeleton";
 
 export const metadata: Metadata = {
-  title: "Calendar",
+  title: "MugenBeat - Calendar",
+  description: "Calendar schedule for streams"
 };
 
 

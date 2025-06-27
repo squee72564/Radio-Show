@@ -4,8 +4,8 @@ import { adminItems } from "@/components/sidebarItems";
 import { AppSidebar } from "@/components/sidebar";
 
 export const metadata: Metadata = {
-  title: "Admin Dashboard",
-  description: "Admin Dashboard for Radio Show"
+  title: "MugenBeat - Admin",
+  description: "Admin Dashboard for MugenBeat"
 };
 
 export default function AdminLayout({

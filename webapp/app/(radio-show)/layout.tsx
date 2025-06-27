@@ -4,7 +4,7 @@ import { AppSidebar } from "@/components/sidebar";
 import { appItems } from "@/components/sidebarItems";
 
 export const metadata: Metadata = {
-  title: "Dashboard",
+  title: "MugenBeat - Dashboard",
 };
 
 export default function RootLayout({
@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <SidebarProvider>
-        <AppSidebar title={"Radio Show"} sidebarItems={appItems}/>
+        <AppSidebar title={"MugenBeat"} sidebarItems={appItems}/>
         {children}
     </SidebarProvider>
   );

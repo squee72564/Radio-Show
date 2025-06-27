@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 export const metadata: Metadata = {
-  title: "Contact",
-  description: "Contact page for Radio Show",
+  title: "MugenBeat - Contact",
+  description: "Contact page for MugenBeat",
 };
 
 export default function Contact() {

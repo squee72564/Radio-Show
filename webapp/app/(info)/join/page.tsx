@@ -8,8 +8,8 @@ import { Separator } from "@/components/ui/separator"
 import { NotebookPenIcon, RocketIcon, BookHeadphonesIcon } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Sign Up To Stream",
-  description: "Join Information page for Radio Show",
+  title: "MugenBeat - DJ",
+  description: "Join Information page for MugenBeat",
 };
 
 
@@ -25,7 +25,7 @@ export default async function DJSignupPage() {
         Want to stream your music live to the world?
       </p>
       <p className="text-muted-foreground text-lg">
-        Radio Show is a free, community-driven platform for DJs of all styles and skill levels. 
+        MugenBeat is a free, community-driven platform for DJs of all styles and skill levels. 
       </p>
       <p className="text-muted-foreground text-lg mb-8">
         Signing up is easy — and streaming is even easier.

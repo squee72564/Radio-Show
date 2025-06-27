@@ -10,7 +10,8 @@ import NextShow from "@/app/(radio-show)/dashboard/next-show";
 import { StreamInstanceInfoCardSkeleton } from "@/components/streaminstance-info-skeleton";
 
 export const metadata: Metadata = {
-  title: "Dashboard",
+  title: "MugenBeat - Dashboard",
+  description: "Main Dashboard for MugenBeat"
 };
 
 export default async function Dashboard() {

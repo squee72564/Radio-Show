@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Radio Show",
-  description: "Radio Show description",
+  title: "MugenBeat",
+  description: "MugenBeat description",
 };
 
 export default function RootLayout({

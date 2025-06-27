@@ -6,7 +6,8 @@ import { Separator } from "@/components/ui/separator";
 import ArchiveDataTable, { columns } from "@/app/(radio-show)/archive/archive-table";
 
 export const metadata: Metadata = {
-  title: "Archive",
+  title: "MugenBeat - Archive",
+  description: "Archive page of past live streams"
 };
 
 export default async function Archive() {

@@ -6,22 +6,44 @@ import * as userService from "@/lib/db/services/userService";
 import { StreamScheduleFormState, StreamScheduleFormValues } from "@/types/stream-schedule";
 import { generateStreamInstances } from "@/lib/utils";
 
-import { $Enums, StreamArchive, StreamSchedule, User } from "@prisma/client";
+import { $Enums, StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
+import { StreamArchiveRelations, StreamInstanceRelations, StreamScheduleRelations } from "@/types/prisma-relations";
 
-export async function getStreamArchiveByIdWithSchedule(id: string) {
-  return streamScheduleService.getStreamArchiveByIdWithSchedule(id);
+export async function findStreamArchiveById(
+  id: string,
+  options?: { include?: { [K in keyof StreamArchiveRelations]?: true } }
+): Promise<(StreamArchive & Partial<StreamArchiveRelations>) | null> {
+  return await streamScheduleService.findStreamArchiveById(id, options);
 }
 
-export async function getStreamInstancesByDateRange(dateStart: Date, dateEnd: Date) {
-  return streamScheduleService.getStreamInstancesByDateRange(dateStart, dateEnd);
-}
-
-export async function getCurrentStreamInstance() {
-  return streamScheduleService.getCurrentStreamInstance();
+export async function findStreamScheduleByIdAndPass(
+  id: string,
+  password: string,
+  options?: {include?: {[K in keyof StreamScheduleRelations]?: true}}
+): Promise<(StreamSchedule & Partial<StreamScheduleRelations>) | null> {
+  return await streamScheduleService.findStreamScheduleByIdAndPass(id, password, options);
 }
 
 export async function deleteStreamById(streamId: string) {
   return await streamScheduleService.deleteStreamById(streamId);
+}
+
+export async function getStreamInstancesByDateRange(
+  dateStart: Date,
+  dateEnd: Date,
+  options?: { include: { [K in keyof StreamInstanceRelations]?: true } },
+): Promise<(StreamInstance & Partial<StreamInstanceRelations>)[]> {
+  return await streamScheduleService.getStreamInstancesByDateRange(dateStart, dateEnd, options);
+}
+
+export async function getCurrentStreamInstance(
+  options?: { include?: { [K in keyof StreamInstanceRelations]?: true } }
+): Promise<(StreamInstance & Partial<StreamInstanceRelations>) | null> {
+  return await streamScheduleService.getCurrentStreamInstance(options);
+}
+
+export async function setStreamScheduleReviewedAt(id: string, reviewedAt: Date) {
+  return await streamScheduleService.setStreamScheduleReviewedAt(id, reviewedAt);
 }
 
 export async function setStreamStatus(stream: StreamSchedule & {user: User}, status: $Enums.ScheduleStatus) {
@@ -77,12 +99,11 @@ export async function setStreamStatus(stream: StreamSchedule & {user: User}, sta
   return {success: true, message: "Stream set to pending", error: ""};
 }
 
-export async function findAllStreamsByStatus(status: $Enums.ScheduleStatus) {
-  return await streamScheduleService.findAllStreamsByStatus(status);
-}
-
-export async function findAllStreamsByStatusWithUser(status: $Enums.ScheduleStatus) {
-  return await streamScheduleService.findAllStreamsByStatusWithUser(status);
+export async function findAllStreamsByStatus(
+  status: $Enums.ScheduleStatus,
+  options?: {include: {[K in keyof StreamScheduleRelations]?: true}}
+): Promise<(StreamSchedule & Partial<StreamScheduleRelations>)[]> {
+  return await streamScheduleService.findAllStreamsByStatus(status, options);
 }
 
 export async function findAllStreamsByStatusAndUser(userId: string, status: $Enums.ScheduleStatus) {

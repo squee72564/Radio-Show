@@ -1,22 +1,29 @@
 import { prisma } from "@/lib/db/prismaClient";
-import { $Enums, StreamArchive, StreamSchedule } from "@prisma/client";
+import { StreamArchiveRelations, StreamInstanceRelations, StreamScheduleRelations } from "@/types/prisma-relations";
+import { $Enums, StreamArchive, StreamInstance, StreamSchedule } from "@prisma/client";
 
-export async function getStreamArchiveByIdWithSchedule(id: string) {
+export async function findStreamArchiveById(
+  id: string,
+  options?: { include?: { [K in keyof StreamArchiveRelations]?: true } }
+): Promise<(StreamArchive & Partial<StreamArchiveRelations>) | null> {
   return await prisma.streamArchive.findUnique({
-    where: {id},
-    include: {
-      streamSchedule: true,
-    }
-  })
+    where: { id },
+    ...(options ?? {}),
+  });
 }
 
-export async function findStreamScheduleByIdAndPass(id: string, password: string) {
+export async function findStreamScheduleByIdAndPass(
+  id: string,
+  password: string,
+  options?: {include?: {[K in keyof StreamScheduleRelations]?: true}}
+): Promise<(StreamSchedule & Partial<StreamScheduleRelations>) | null> {
   return await prisma.streamSchedule.findUnique({
     where: {
       id_password: {
         id,
         password
-      }
+      },
+      ...(options ?? {}),
     }
   });
 }
@@ -25,6 +32,25 @@ export async function deleteStreamById(id: string) {
   return await prisma.streamSchedule.delete({
     where: {id}
   })
+}
+
+export async function getStreamInstancesByDateRange(
+  dateStart: Date, 
+  dateEnd: Date,
+  options?: { include: { [K in keyof StreamInstanceRelations]?: true } },
+): Promise<(StreamInstance & Partial<StreamInstanceRelations>)[]> {
+  return prisma.streamInstance.findMany({
+    where: {
+      scheduledStart: {
+        gte: dateStart,
+        lte: dateEnd,
+      },
+    },
+    orderBy: {
+      scheduledStart: 'asc',
+    },
+    ...(options ?? {}),
+  });
 }
 
 export async function setStreamScheduleReviewedAt(id: string, reviewedAt: Date) {
@@ -36,7 +62,9 @@ export async function setStreamScheduleReviewedAt(id: string, reviewedAt: Date) 
   });
 }
 
-export async function getCurrentStreamInstance() {
+export async function getCurrentStreamInstance(
+  options?: { include?: { [K in keyof StreamInstanceRelations]?: true } }
+): Promise<(StreamInstance & Partial<StreamInstanceRelations>) | null> {
   const now = new Date();
   return prisma.streamInstance.findFirst({
     where: {
@@ -53,28 +81,7 @@ export async function getCurrentStreamInstance() {
         }
       ]
     },
-    include: {
-      streamSchedule: true
-    }
-  });
-}
-
-
-export async function getStreamInstancesByDateRange(dateStart: Date, dateEnd: Date) {
-  return prisma.streamInstance.findMany({
-    where: {
-      scheduledStart: {
-        gte: dateStart,
-        lte: dateEnd,
-      },
-    },
-    orderBy: {
-      scheduledStart: 'asc',
-    },
-    include: {
-      user: true,
-      streamSchedule: true,
-    },
+    ...(options ?? {}),
   });
 }
 
@@ -91,19 +98,14 @@ export async function revokeStreamInstances(streamId: string) {
   })
 }
 
-export async function findAllStreamsByStatus(status: $Enums.ScheduleStatus) {
+export async function findAllStreamsByStatus(
+  status: $Enums.ScheduleStatus,
+  options?: {include: {[K in keyof StreamScheduleRelations]?: true}}
+): Promise<(StreamSchedule & Partial<StreamScheduleRelations>)[]> {
   return await prisma.streamSchedule.findMany({
-    where: {status: status}
+    where: {status: status},
+    ...(options ?? {}),
   })
-}
-
-export async function findAllStreamsByStatusWithUser(status: $Enums.ScheduleStatus) {
-  return await prisma.streamSchedule.findMany({
-    where: { status },
-    include: {
-      user: true,
-    },
-  });
 }
 
 export async function findAllStreamsByStatusAndUser(userId: string, status: $Enums.ScheduleStatus) {
@@ -203,9 +205,13 @@ export async function findAllStreamArchivesWithUserAndSchedule() {
   });
 }
 
-export async function findArchivesByUserId(userId: string) {
+export async function findArchivesByUserId(
+  userId: string,
+  options?: {include: {[K in keyof StreamArchiveRelations]?: true}}
+): Promise<(StreamArchive & Partial<StreamArchiveRelations>)[]> {
   return prisma.streamArchive.findMany({
-    where: {userId}
+    where: {userId},
+    ...(options ?? {}),
   }); 
 }
 

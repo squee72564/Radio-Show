@@ -1,6 +1,12 @@
 import { prisma } from "@/lib/db/prismaClient";
 import { $Enums, StreamArchive, StreamSchedule } from "@prisma/client";
 
+export async function getStreamArchiveById(id: string) {
+  return await prisma.streamArchive.findUnique({
+    where: {id}
+  })
+}
+
 export async function findStreamScheduleByIdAndPass(id: string, password: string) {
   return await prisma.streamSchedule.findUnique({
     where: {

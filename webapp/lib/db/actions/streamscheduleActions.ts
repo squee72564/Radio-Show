@@ -8,6 +8,10 @@ import { generateStreamInstances } from "@/lib/utils";
 
 import { $Enums, StreamArchive, StreamSchedule, User } from "@prisma/client";
 
+export async function getStreamArchiveById(id: string) {
+  return streamScheduleService.getStreamArchiveById(id);
+}
+
 export async function getStreamInstancesByDateRange(dateStart: Date, dateEnd: Date) {
   return streamScheduleService.getStreamInstancesByDateRange(dateStart, dateEnd);
 }

@@ -14,7 +14,7 @@ base_stream = input.harbor(
 
 # Set up output file
 output.file(
-  %mp3(bitrate=320, stereo_mode="joint_stereo", internal_quality=0, id3v2=true),
+  %mp3(bitrate=128, stereo_mode="joint_stereo", internal_quality=2, id3v2=true),
   on_start = fun() -> begin
     log(level=3, label="outfile.on_start", "Started Recording to #{radioshow.temp_filename}...")
     live_stream_active := true

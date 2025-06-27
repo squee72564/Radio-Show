@@ -4,13 +4,12 @@ import * as userService from "@/lib/db/services/userService";
 import { $Enums, User } from "@prisma/client";
 import { UserRelations } from "@/types/prisma-relations";
 
-export async function listUsers() {
-  return userService.findAllUsers();
-}
-
-export async function listUsersByRole(roleOrRoles: $Enums.Role | $Enums.Role[]) {
+export async function findUsersByRole(
+  roleOrRoles: $Enums.Role | $Enums.Role[],
+  options?: {include: {[K in keyof UserRelations]?: true}}
+): Promise<(User & Partial<UserRelations>)[]> {
   const roles = Array.isArray(roleOrRoles) ? roleOrRoles : [roleOrRoles];
-  return userService.findUsersByRole(roles);
+  return userService.findUsersByRole(roles, options);
 }
 
 export async function deleteUsers() {
@@ -35,8 +34,7 @@ export async function findRecentUsers(count: number) {
   return userService.findRecentUsers(count);
 }
 
-export async function updateUserBio(userId: string | undefined, newBio: string) {
-  if (userId === undefined)  return;
+export async function updateUserBio(userId: string, newBio: string) {
   return userService.updateUserBio(userId, newBio);
 }
 

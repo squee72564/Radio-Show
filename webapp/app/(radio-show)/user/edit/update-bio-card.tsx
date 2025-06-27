@@ -12,7 +12,7 @@ export default async function UpdateBioCard({user}: {user: User}) {
   async function updateBio(formData: FormData) {
     "use server"
     const newBio = formData.get("bio")?.toString() || ""
-    await updateUserBio(user?.id, newBio)
+    await updateUserBio(user.id, newBio)
     revalidatePath(`/user/${user?.id}`)
     redirect(`/user/${user?.id}`);
   }

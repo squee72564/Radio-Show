@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { User, $Enums } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import UserManagementCard from "./user-mangement-card"
-import { listUsersByRole } from "@/lib/db/actions/userActions";
+import { findUsersByRole } from "@/lib/db/actions/userActions";
 
 export default function UserGroupTabContent({
   status,
@@ -18,10 +18,10 @@ export default function UserGroupTabContent({
   useEffect(() => {
     const fetchUsers = async () => {
       if (status === $Enums.Role.ADMIN) {
-        const superUsers = await listUsersByRole([$Enums.Role.OWNER, $Enums.Role.ADMIN]);
+        const superUsers = await findUsersByRole([$Enums.Role.OWNER, $Enums.Role.ADMIN]) as User[];
         setUsers(superUsers);
       } else {
-        const users = await listUsersByRole(status);
+        const users = await findUsersByRole(status) as User[];
         setUsers(users);
       }
     };

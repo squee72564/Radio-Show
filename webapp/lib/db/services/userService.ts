@@ -26,18 +26,16 @@ export async function findUserByEmail(
   });
 }
 
-export async function findAllUsers() {
-  return prisma.user.findMany();
-}
-
 export async function findUsersByRole(
-  roles: $Enums.Role[]
-) {
+  roles: $Enums.Role[],
+  options?: {include: {[K in keyof UserRelations]?: true}}
+): Promise<(User & Partial<UserRelations>)[]> {
   return prisma.user.findMany({
     where: {
       status: {
         in: roles,
       },
+      ...(options ?? {}),
     },
   });
 }

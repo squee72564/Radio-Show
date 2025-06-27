@@ -7,13 +7,13 @@ import NavigationHeader from "@/components/nav-header"
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen max-h-screen w-full gap-10">
+    <div className="flex flex-col min-h-screen w-full gap-10">
       <NavigationHeader/>
       <main className="flex flex-col flex-1 items-center justify-center w-full">
-        <div className="flex flex-col md:flex-row w-full max-w-5xl gap-8 items-center px-6">
+        <div className="flex flex-col md:flex-row w-full max-w-5xl gap-8 items-center p-6">
           <Image
             src="/radio-show.jpeg"
-            alt="MugenBeat"
+            alt="MugenBeat Logo"
             width={640}
             height={640}
             className="rounded-3xl shadow-xl max-w-sm transform hover:scale-105 transition-transform duration-500 ease-in-out"

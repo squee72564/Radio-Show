@@ -7,12 +7,14 @@ type LocalDateProps = {
   date: Date;
   locale?: string;
   options?: Intl.DateTimeFormatOptions;
+  className?: string
 };
 
 export default function LocalDate({
   date,
   locale,
   options = { dateStyle: 'medium' },
+  className
 }: LocalDateProps) {
   const [formatted, setFormatted] = useState<string | null>(null);
 
@@ -21,7 +23,7 @@ export default function LocalDate({
   }, [date, locale, options]);
 
   if (!formatted) {
-    return <Skeleton className="w-22 h-5" />;
+    return <Skeleton className="inline-block align-middle w-22 h-5" />;
   }
-  return <>{formatted}</>;
+  return <span className={className}>{formatted}</span>;
 }

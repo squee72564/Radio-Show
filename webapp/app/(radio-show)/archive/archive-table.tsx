@@ -29,6 +29,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import LocalDate from "@/components/localdate";
 import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
 
 type ArchiveRowData = StreamArchive & {
   user: User;
@@ -78,7 +79,13 @@ export const columns: ColumnDef<ArchiveRowData>[] = [
     enableGlobalFilter: true,
     cell: ({row}) => {
       const tags = row.getValue("tags") as string[]
-      return <div className="overflow-auto text-center">{(tags.map((tag)=>tag)).join(",")}</div>
+      return (
+      <div 
+        className="flex flex-row gap-1 items-center overflow-auto no-scrollbar text-center"
+      >
+        {(tags.map((tag, idx)=><Badge key={idx} variant={"outline"}>{tag}</Badge>))}
+      </div>
+      )
     }
   },
   {

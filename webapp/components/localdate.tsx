@@ -23,7 +23,7 @@ export default function LocalDate({
   }, [date, locale, options]);
 
   if (!formatted) {
-    return <Skeleton className="inline-block align-middle w-22 h-5" />;
+    return <Skeleton className="bg-accent animate-pulse rounded-md w-22 h-5" />;
   }
   return <span className={className}>{formatted}</span>;
 }

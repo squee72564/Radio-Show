@@ -21,7 +21,7 @@ export default async function RecentArchives() {
         <ul className="list-disc pl-5 space-y-1 overflow-auto">
           {archives.map((archive, idx) => (
             <li key={idx}>
-              <Link href={`archive/${archive.id}`} className="hover:underline text-primary">
+              <Link href={`archive/${archive.id}`} className="flex flex-row gap-2 hover:underline text-primary">
                 {archive.streamSchedule.title} - <LocalDate date={archive.streamInstance.scheduledStart}/>
               </Link>
             </li>

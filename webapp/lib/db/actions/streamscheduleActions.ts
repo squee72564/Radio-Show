@@ -57,7 +57,10 @@ export async function setStreamScheduleReviewedAt(id: string, reviewedAt: Date) 
   return await streamScheduleService.setStreamScheduleReviewedAt(id, reviewedAt);
 }
 
-export async function setStreamStatus(stream: StreamSchedule & {user: User}, status: $Enums.ScheduleStatus) {
+export async function setStreamStatus(
+  stream: StreamSchedule & {user: User},
+  status: $Enums.ScheduleStatus
+): Promise<Result<{message: string}>> {
   const nowUTC = new Date();
   if (status == $Enums.ScheduleStatus.APPROVED) {
 
@@ -71,7 +74,7 @@ export async function setStreamStatus(stream: StreamSchedule & {user: User}, sta
     const conflicts = await streamScheduleService.isStreamInstancesConflicting(proposedInstances)
 
     if (conflicts) {
-      return {success: false, message: "", error: "There are already approved schedules that would conflict"}
+      return {type: "error", message: "There are already approved schedules that would conflict"}
     }
 
     await streamScheduleService.populateStreamInstances(
@@ -93,21 +96,20 @@ export async function setStreamStatus(stream: StreamSchedule & {user: User}, sta
       await userService.changeUserRole(stream.userId, $Enums.Role.STREAMER);
     }
 
-    return {success: true, message: "Stream Approved", error: ""}
+    return {type: "success", data: {message: "Stream Approved"} }
 
   } else if (status == $Enums.ScheduleStatus.REJECTED) {
 
     await streamScheduleService.setStreamScheduleStatus(stream.id, status);
     await streamScheduleService.setStreamScheduleReviewedAt(stream.id, nowUTC);
     await streamScheduleService.revokeStreamInstances(stream.id);
-    return {success: true, message: "Stream Rejected", error: ""}
+    return {type: "success", data: {message: "Stream Rejected"} }
   }
 
   await streamScheduleService.setStreamScheduleStatus(stream.id, status);
   await streamScheduleService.setStreamScheduleReviewedAt(stream.id, nowUTC);
   await streamScheduleService.revokeStreamInstances(stream.id);
-
-  return {success: true, message: "Stream set to pending", error: ""};
+  return {type: "success", data: {message: "Stream set to pending"} }
 }
 
 export async function findAllStreamsByStatus(

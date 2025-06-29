@@ -10,19 +10,20 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardAction, CardD
 import { Button } from "@/components/ui/button";
 import LocalTime from "@/components/localtime";
 import LocalDate from "@/components/localdate";
+import { Result } from "@/types/generic";
 
 export default function ScheduleManagementCard({stream}: {stream: StreamSchedule & {user: User} }) {
   const recurrence = RRule.fromString(stream.rrule).toText();
 
   const [pending, startTransition] = useTransition()
-  const [submissionstate, SetSubmissionState] = useState({success: false, message: "", error: ""});
+  const [submissionstate, SetSubmissionState] = useState<Result<{message: string}>>({type: "error", message: ""});
   const [disabled, setDisabled] = useState(false);
 
   const handleApproval = () => {
     startTransition(async () => {
       const result = await setStreamStatus(stream, $Enums.ScheduleStatus.APPROVED);
       SetSubmissionState(result);
-      if (result.success) setDisabled(true);
+      if (result.type === "success") setDisabled(true);
     });
   };
 
@@ -30,7 +31,7 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
     startTransition(async () => {
       const result = await setStreamStatus(stream, $Enums.ScheduleStatus.REJECTED);
       SetSubmissionState(result);
-      if (result.success) setDisabled(true);
+      if (result.type === "success") setDisabled(true);
     });
   };
 
@@ -38,14 +39,14 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
     startTransition(async () => {
       const result = await setStreamStatus(stream, $Enums.ScheduleStatus.PENDING)
       SetSubmissionState(result);
-      if (result.success) setDisabled(true);
+      if (result.type === "success") setDisabled(true);
     });
   }
 
   const handleDelete = () => {
     startTransition(async () => {
       await deleteStreamById(stream.id)
-      SetSubmissionState({success: true, message: `Stream deleted.`, error: ""})
+      SetSubmissionState({type: "success", data: {message: `Stream deleted.`}})
       setDisabled(true);
     });
   }
@@ -118,11 +119,11 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
           {stream.description}
       </CardContent>
       <CardFooter className="flex flex-col items-center justify-center gap-2 text-sm">
-        {submissionstate.message && (
-          <p className="text-green-600">{submissionstate.message}</p>
+        {submissionstate.type === "success" && submissionstate.data.message && (
+          <p className="text-green-600">{submissionstate.data.message}</p>
         )}
-        {submissionstate.error && (
-          <p className="text-red-600">Error: {submissionstate.error}</p>
+        {submissionstate.type === "error" && submissionstate.message && (
+          <p className="text-red-600">Error: {submissionstate.message}</p>
         )}
       </CardFooter>
     </Card>

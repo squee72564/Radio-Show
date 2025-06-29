@@ -209,7 +209,8 @@ export async function getStreamScheduleById(
   options?: {include: {[K in keyof StreamScheduleRelations]?: true}}
 ): Promise<(StreamSchedule & Partial<StreamScheduleRelations>) | null> {
   return prisma.streamSchedule.findUnique({
-    where: {id: id}
+    where: {id: id},
+    ...(options ?? {}),
   })
 }
 

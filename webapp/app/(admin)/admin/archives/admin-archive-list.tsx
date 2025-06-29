@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { findAllStreamArchives } from "@/lib/db/actions/streamscheduleActions";
-import { StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
+import { StreamArchive } from "@prisma/client";
 import ArchiveManagementCard from "./archive-management.card";
 import { StreamArchiveRelations } from "@/types/prisma-relations";
 

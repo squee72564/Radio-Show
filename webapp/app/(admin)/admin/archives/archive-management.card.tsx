@@ -1,7 +1,7 @@
 "use client"
 
 import { StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardAction, CardDescription } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardFooter, CardAction, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import LocalTime from "@/components/localtime";
 import LocalDate from "@/components/localdate";

@@ -152,7 +152,9 @@ export async function streamScheduleFormSubmit(
   const endTime   = new Date(endTimeISOString);
   const durationMs = (endTime.getTime() - startTime.getTime());
 
-  const rrule = `FREQ=WEEKLY;BYDAY=${validatedData.days.join(",")};INTERVAL=1`;
+  const interval = formData.get("interval") as string;
+
+  const rrule = `FREQ=WEEKLY;BYDAY=${validatedData.days.join(",")};INTERVAL=${interval}`;
 
   if (!(endTime > startTime)) {
     return {

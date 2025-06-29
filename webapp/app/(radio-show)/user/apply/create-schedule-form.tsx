@@ -54,6 +54,9 @@ function HoverCardData() {
         <strong>Credential:</strong> This is a credential that will be used to authenticate when streaming.
       </div>
       <div>
+        <strong>Interval:</strong> Interval between recurrences. 1 would be every week, 2 every other week, and so on.
+      </div>
+      <div>
         <strong>Password:</strong> This is a password that will be used as a credential to stream.
       </div>
     </>
@@ -249,6 +252,12 @@ export default function CreateScheduleForm({ user }: { user: User }) {
            
           </div>
           <ErrorMessage message={state.errors?.conflicts && state.errors.conflicts} />
+
+          <div>
+            <label htmlFor="interval">{"Interval (Weeks)"}</label>
+            <Input id="interval" name="interval" type="number" defaultValue={state.values?.interval}/>
+            <ErrorMessage message={state.errors?.interval}/>
+          </div>
 
           <div className="flex flex-col gap-4">
             <label htmlFor="password">Stream Password</label>

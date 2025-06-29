@@ -18,4 +18,6 @@ export const streamScheduleSchema = z.object({
     .regex(/[a-z]/, "Must contain at least one lowercase letter")
     .regex(/[A-Z]/, "Must contain at least one uppercase letter")
     .regex(/\d/, "Must contain at least one number"),
+
+  interval: z.coerce.number().min(1, "Minimum interval of 1 (every week)")
 });

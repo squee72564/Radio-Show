@@ -8,6 +8,17 @@ import { generateStreamInstances } from "@/lib/utils";
 
 import { $Enums, StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
 import { StreamArchiveRelations, StreamInstanceRelations, StreamScheduleRelations } from "@/types/prisma-relations";
+import { Result } from "@/types/generic";
+
+export async function deleteArchiveById(id: string) {
+  return await streamScheduleService.deleteArchiveById(id);
+}
+
+export async function findAllStreamArchives(
+  options?: { include?: { [K in keyof StreamArchiveRelations]?: true } }
+): Promise<(StreamArchive & Partial<StreamArchiveRelations>)[]> {
+  return await streamScheduleService.findAllStreamArchives(options);
+}
 
 export async function findStreamArchiveById(
   id: string,
@@ -265,4 +276,14 @@ export async function findFirstStreamInstanceAfterDate(date: Date) {
 
 export async function createStreamArchive(data: Omit<StreamArchive, "id">) {
   return streamScheduleService.createStreamArchive(data);
+}
+
+export async function adminDeleteArchive(id: string): Promise<Result<StreamArchive>> {
+  const archive = await deleteArchiveById(id);
+
+  if (!archive) {
+    return {type: "error", message: "Error deleting archive"}
+  }
+
+  return {type: "success", data: archive }
 }

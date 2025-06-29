@@ -2,6 +2,20 @@ import { prisma } from "@/lib/db/prismaClient";
 import { StreamArchiveRelations, StreamInstanceRelations, StreamScheduleRelations } from "@/types/prisma-relations";
 import { $Enums, StreamArchive, StreamInstance, StreamSchedule } from "@prisma/client";
 
+export async function deleteArchiveById(id: string) {
+  return await prisma.streamArchive.delete({
+    where: {id}
+  });
+}
+
+export async function findAllStreamArchives(
+  options?: { include?: { [K in keyof StreamArchiveRelations]?: true } }
+): Promise<(StreamArchive & Partial<StreamArchiveRelations>)[]> {
+  return await prisma.streamArchive.findMany({
+    ...(options ?? {}),
+  });
+}
+
 export async function findStreamArchiveById(
   id: string,
   options?: { include?: { [K in keyof StreamArchiveRelations]?: true } }

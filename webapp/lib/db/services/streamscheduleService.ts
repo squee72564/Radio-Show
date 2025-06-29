@@ -204,19 +204,13 @@ export async function createStreamSchedule(data: Omit<StreamSchedule, "id">) {
   });
 }
 
-export async function getStreamScheduleById(id: string) {
+export async function getStreamScheduleById(
+  id: string,
+  options?: {include: {[K in keyof StreamScheduleRelations]?: true}}
+): Promise<(StreamSchedule & Partial<StreamScheduleRelations>) | null> {
   return prisma.streamSchedule.findUnique({
     where: {id: id}
   })
-}
-
-export async function findAllStreamArchivesWithUserAndSchedule() {
-  return prisma.streamArchive.findMany({
-    include : {
-      user: true,
-      streamSchedule: true
-    }
-  });
 }
 
 export async function findArchivesByUserId(

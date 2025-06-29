@@ -1,9 +1,11 @@
 import { ArchiveIcon } from "lucide-react";
 import type { Metadata } from "next";
-import { findAllStreamArchivesWithUserAndSchedule } from "@/lib/db/services/streamscheduleService";
+import { findAllStreamArchives } from "@/lib/db/actions/streamscheduleActions";
 
 import { Separator } from "@/components/ui/separator";
 import ArchiveDataTable, { columns } from "@/app/(radio-show)/archive/archive-table";
+import { StreamArchive } from "@prisma/client";
+import { StreamArchiveRelations } from "@/types/prisma-relations";
 
 export const metadata: Metadata = {
   title: "MugenBeat - Archive",
@@ -11,7 +13,12 @@ export const metadata: Metadata = {
 };
 
 export default async function Archive() {
-  const data = await findAllStreamArchivesWithUserAndSchedule();
+  const data = await findAllStreamArchives({
+    include: {
+      user: true,
+      streamSchedule: true,
+    }
+  }) as (StreamArchive & Omit<StreamArchiveRelations, "streamInstance">)[];
 
   return (
     <main className="flex flex-col min-h-screen w-full p-6 gap-6">

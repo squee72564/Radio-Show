@@ -155,8 +155,6 @@ model StreamArchive {
   format            String?
 
   createdAt DateTime @default(now())
-
-  @@unique([streamInstanceId])
 }
 
 enum ScheduleStatus {

@@ -1,7 +1,7 @@
 import { createStreamArchive } from "@/lib/db/actions/streamscheduleActions";
 import { uploadStreamFile } from "@/lib/nodeUtils";
 import { parseBuffer } from "music-metadata";
-import { UploadResult } from "@/lib/nodeUtils";
+import { Result } from "@/types/generic";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
     const result = await uploadStreamFile({
       fileBuffer: buffer,
       filename: `archive-${userId}-${scheduleId}-${instanceId}-${Date.now()}.mp3`,
-    }) as UploadResult;
+    }) as Result<{location: string}>;
 
     if (result.type === "error") {
       return new Response(JSON.stringify({ error: result.message }), { status: 501 });
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
       userId,
       streamScheduleId: scheduleId,
       streamInstanceId: instanceId,
-      url: result.location,
+      url: result.data.location,
       durationInSeconds: durationInSeconds || null,
       fileSizeBytes: buffer.length,
       format: file.type || null,

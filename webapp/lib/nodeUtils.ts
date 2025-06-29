@@ -1,18 +1,9 @@
 import fs from "fs";
 import path from "path";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { Result } from "@/types/generic";
 
 const STORAGE_BACKEND = process.env.STORAGE_BACKEND;
-
-export type UploadResult =
-  | {
-      type: "success";
-      location: string;
-    }
-  | {
-      type: "error";
-      message: string;
-    };
 
 export async function uploadStreamFile({
   fileBuffer,
@@ -20,7 +11,7 @@ export async function uploadStreamFile({
 }: {
   fileBuffer: Buffer;
   filename: string;
-}): Promise<UploadResult> {
+}): Promise<Result<{location: string}>> {
 
   if (STORAGE_BACKEND === "local") {
     const uploadPath = "public/uploads";
@@ -29,7 +20,7 @@ export async function uploadStreamFile({
     try {
       fs.mkdirSync(uploadPath, { recursive: true });
       fs.writeFileSync(fullPath, fileBuffer);
-      return { type: "success", location: path.join("uploads", filename) };
+      return { type: "success", data: {location: path.join("uploads", filename)} };
     } catch (err) {
       return { type: "error", message: `Local upload failed: ${String(err)}` };
     }
@@ -71,7 +62,7 @@ export async function uploadStreamFile({
         })
       );
 
-      return { type: "success", location: filename };
+      return { type: "success", data: {location: filename} };
     } catch (err) {
       return { type: "error", message: `S3 upload failed: ${String(err)}` };
     }

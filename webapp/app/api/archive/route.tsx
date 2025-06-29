@@ -3,6 +3,13 @@ import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
+  const referer = req.headers.get("referer");
+  const allowedHosts = [process.env.SITE_URL!];
+
+  if (!referer || !allowedHosts.some(host => referer.startsWith(host))) {
+    return new NextResponse("Forbidden", { status: 403 });
+  }
+
   const url = new URL(req.url);
   const archiveId = url.searchParams.get("archiveId");
 

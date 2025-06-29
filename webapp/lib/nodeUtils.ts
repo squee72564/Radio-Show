@@ -71,12 +71,7 @@ export async function uploadStreamFile({
         })
       );
 
-      const fileUrl = `${S3_ENDPOINT}/${path.posix.join(
-        S3_BUCKET_NAME,
-        filename
-      )}`;
-
-      return { type: "success", location: fileUrl };
+      return { type: "success", location: filename };
     } catch (err) {
       return { type: "error", message: `S3 upload failed: ${String(err)}` };
     }

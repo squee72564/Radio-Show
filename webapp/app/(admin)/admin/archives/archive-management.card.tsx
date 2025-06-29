@@ -10,15 +10,12 @@ import { Clock4, PenIcon, UserIcon } from "lucide-react";
 import { formatTime } from "@/lib/utils";
 import { Result } from "@/types/generic";
 import { adminDeleteArchive } from "@/lib/db/actions/streamscheduleActions";
+import { StreamArchiveRelations } from "@/types/prisma-relations";
 
 export default function ArchiveManagementCard({
   archive
 }: {
-  archive: StreamArchive & {
-    streamSchedule: StreamSchedule,
-    streamInstance: StreamInstance,
-    user: User
-  }
+  archive: StreamArchive & StreamArchiveRelations
 }) {
   const [pending, startTransition] = useTransition()
   const [submissionstate, SetSubmissionState] = useState<Result<StreamArchive> | null>(null);

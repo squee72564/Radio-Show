@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { findAllStreamArchives } from "@/lib/db/actions/streamscheduleActions";
 import { StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
 import ArchiveManagementCard from "./archive-management.card";
+import { StreamArchiveRelations } from "@/types/prisma-relations";
 
 export default async function AdminArchiveList() {
   const archives = await findAllStreamArchives({
@@ -10,11 +11,7 @@ export default async function AdminArchiveList() {
       streamInstance: true,
       user: true
     }
-  }) as (StreamArchive & {
-    streamSchedule: StreamSchedule,
-    streamInstance: StreamInstance,
-    user: User
-  })[];
+  }) as (StreamArchive & StreamArchiveRelations)[];
 
   return (
     <div className="flex flex-col gap-2 w-full min-w-0">

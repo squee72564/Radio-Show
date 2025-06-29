@@ -35,6 +35,11 @@ export const adminItems: SidebarItems[] = [
     icon: UserRoundCogIcon,
   },
   {
+    title: "Archive Info",
+    url: "/admin/archives",
+    icon: Archive,
+  },
+  {
     title: "Settings",
     component: SettingsSheet,
     icon: Settings,

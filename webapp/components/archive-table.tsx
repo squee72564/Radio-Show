@@ -1,9 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUp, ArrowDown, Minus } from "lucide-react";
-
-import { StreamArchive, StreamSchedule, User } from "@prisma/client";
 
 import {
   ColumnDef,
@@ -27,16 +24,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import LocalDate from "@/components/localdate";
-import { useRouter } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
 
-type ArchiveRowData = StreamArchive & {
-  user: User;
-  streamSchedule: StreamSchedule;
-};
-
-const makeGlobalFilterFn = <T extends object>(searchableColumns: string[]): FilterFn<T> =>
+export const makeGlobalFilterFn = <T extends object>(searchableColumns: string[]): FilterFn<T> =>
   (row, _columnId, filterValue) => {
     return searchableColumns.some((id) => {
       const value = row.getValue(id) as string | string[] | undefined;
@@ -51,86 +40,24 @@ const makeGlobalFilterFn = <T extends object>(searchableColumns: string[]): Filt
     });
   };
 
-export const columns: ColumnDef<ArchiveRowData>[] = [
-  {
-    accessorFn: row => row.streamSchedule.title,
-    id: "title",
-    header: () => <div className="text-center">Title</div>,
-    enableGlobalFilter: true,
-    cell: ({row}) => {
-      const title = row.getValue("title") as string
-      return <div className="truncate text-center">{title ?? "Untitled"}</div>
-    }
-  },
-  {
-    accessorFn: row => row.user.name,
-    id: "username",
-    header: () => <div className="text-center">User</div>,
-    enableGlobalFilter: true,
-    cell: ({row}) => {
-      const userName = row.getValue("username") as string
-      return <div className="truncate text-center">{userName ?? "No Name Set"}</div>
-    }
-  },
-  {
-    accessorFn: row => row.streamSchedule.tags,
-    id: "tags",
-    header: () => <div className="text-center">Tags</div>,
-    enableGlobalFilter: true,
-    cell: ({row}) => {
-      const tags = row.getValue("tags") as string[]
-      return (
-      <div 
-        className="flex flex-row gap-1 items-center overflow-auto no-scrollbar text-center"
-      >
-        {(tags.map((tag, idx)=><Badge key={idx} variant={"outline"}>{tag}</Badge>))}
-      </div>
-      )
-    }
-  },
-  {
-    accessorKey: "createdAt",
-    header: ({column}) => {
-      const sortState = column.getIsSorted();
+interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
+  filterColumns?: string[]
+  rowOnClick?: (row: TData) => void
 
-      return (
-        <Button
-          variant={"ghost"}
-          onClick={() => column.toggleSorting(sortState === "asc")}
-          className="text-center w-full"
-        >
-        Date
-          {sortState === "asc" ? (
-            <ArrowUp className="ml-2 h-4 w-4" />
-          ) : sortState === "desc" ? (
-            <ArrowDown className="ml-2 h-4 w-4" />
-          ) : (
-            <Minus className="ml-2 h-4 w-4 opacity-50" />
-          )}
-        </Button>
-      )
-    },
-    cell: ({row}) => {
-      const date = row.getValue("createdAt") as Date
-      return <div className="truncate text-center">{<LocalDate date={date} />}</div>
-    }
-  }
-]
-
-interface DataTableProps<ArchiveRowData, TValue> {
-  columns: ColumnDef<ArchiveRowData, TValue>[]
-  data: ArchiveRowData[]
 }
  
-export default function ArchiveDataTable<TValue>({
+export default function ArchiveDataTable<TData extends object, TValue>({
   columns,
   data,
-}: DataTableProps<ArchiveRowData, TValue>) {
+  filterColumns,
+  rowOnClick,
+}: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = useState("");
-  const router = useRouter()
 
-  const table = useReactTable<ArchiveRowData>({
+  const table = useReactTable<TData>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -138,7 +65,11 @@ export default function ArchiveDataTable<TValue>({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: makeGlobalFilterFn<ArchiveRowData>(["title", "username", "tags"]),
+    globalFilterFn: filterColumns && filterColumns.length ? (
+      makeGlobalFilterFn<TData>(filterColumns)
+    ): (
+      "includesString"
+    ),
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
@@ -198,10 +129,7 @@ export default function ArchiveDataTable<TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() => {
-                    const archiveId = row.original.id;
-                    router.push(`/archive/${archiveId}`);
-                  }}
+                  onClick={() => rowOnClick?.(row.original)}
                   className="cursor-pointer hover:bg-secondary transition-all"
                 >
                   {row.getVisibleCells().map((cell) => (

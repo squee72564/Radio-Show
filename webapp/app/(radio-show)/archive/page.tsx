@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import { findAllStreamArchives } from "@/lib/db/actions/streamscheduleActions";
 
 import { Separator } from "@/components/ui/separator";
-import ArchiveDataTable, { columns } from "@/app/(radio-show)/archive/archive-table";
 import { StreamArchive } from "@prisma/client";
 import { StreamArchiveRelations } from "@/types/prisma-relations";
+import ArchiveUserTable from "./archive-table-user";
 
 export const metadata: Metadata = {
   title: "MugenBeat - Archive",
@@ -26,7 +26,7 @@ export default async function Archive() {
         <ArchiveIcon className="w-6 h-6" /> Archive
       </h1>
       <Separator />
-      <ArchiveDataTable columns={columns} data={data} />
+      <ArchiveUserTable data={data}/>
     </main>
   );
 };

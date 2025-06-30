@@ -15,7 +15,7 @@ import { adminDeleteArchive } from "@/lib/db/actions/streamscheduleActions";
 
 export type ArchiveRowData = StreamArchive & StreamArchiveRelations
 
-export const columns: ColumnDef<ArchiveRowData>[] = [
+export const columns = (onDelete: (id: string) => void): ColumnDef<ArchiveRowData>[] => [
   {
     accessorFn: row => row.streamSchedule.title,
     id: "title",
@@ -69,12 +69,18 @@ export const columns: ColumnDef<ArchiveRowData>[] = [
     header: () => <div className="text-center">Delete Archive</div>,
     cell: ({row}) => {
       const archiveId = row.getValue("id") as string
-      return <div className="flex flex-row justify-center"><DeleteArchiveComponent archiveId={archiveId}/></div>
+      return <div className="flex flex-row justify-center"><DeleteArchiveComponent archiveId={archiveId} onDelete={onDelete} /></div>
     }
   }
 ]
 
-const DeleteArchiveComponent = ({archiveId} : {archiveId: string}) => {
+const DeleteArchiveComponent = ({
+  archiveId,
+  onDelete
+}: {
+  archiveId: string;
+  onDelete: (id: string) => void;
+}) => {
   const [pending, startTransition] = useTransition();
   const [submissionstate, SetSubmissionState] = useState<Result<StreamArchive> | null>(null);
 
@@ -82,6 +88,9 @@ const DeleteArchiveComponent = ({archiveId} : {archiveId: string}) => {
     startTransition(async () => {
       const result = await adminDeleteArchive(archiveId);
       SetSubmissionState(result);
+      if (result.type === "success") {
+        onDelete(archiveId);
+      }
     });
   };
 
@@ -105,11 +114,16 @@ const DeleteArchiveComponent = ({archiveId} : {archiveId: string}) => {
 }
 
 export default function ArchiveAdminTable({ data }: { data: ArchiveRowData[] }) {
+  const [tableData, setTableData] = useState(data);
+
+  const handleDelete = (archiveId: string) => {
+    setTableData(prev => prev.filter(row => row.id !== archiveId));
+  };
 
   return (
     <ArchiveDataTable
-      data={data}
-      columns={columns}
+      data={tableData}
+      columns={columns(handleDelete)}
       filterColumns={["title", "tags", "username"]}
     />
   );

@@ -1,6 +1,5 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { Result } from "@/types/generic";
-import { StreamArchive } from "@prisma/client";
 
 export async function uploadArchiveFileToS3({
   fileBuffer,

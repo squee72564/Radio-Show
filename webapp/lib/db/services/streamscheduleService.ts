@@ -222,6 +222,7 @@ export async function createStreamSchedule(data: Omit<StreamSchedule, "id">) {
       data
     });
   } catch (err) {
+    console.log(err);
     return null;
   }
 

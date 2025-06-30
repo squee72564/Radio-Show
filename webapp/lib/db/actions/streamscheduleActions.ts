@@ -9,6 +9,7 @@ import { generateStreamInstances } from "@/lib/utils";
 import { $Enums, StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
 import { StreamArchiveRelations, StreamInstanceRelations, StreamScheduleRelations } from "@/types/prisma-relations";
 import { Result } from "@/types/generic";
+import { deleteArchiveFileFromS3 } from "@/lib/S3Utils";
 
 export async function deleteArchiveById(id: string) {
   return await streamScheduleService.deleteArchiveById(id);
@@ -283,10 +284,16 @@ export async function createStreamArchive(data: Omit<StreamArchive, "id">) {
 }
 
 export async function adminDeleteArchive(id: string): Promise<Result<StreamArchive>> {
-  const archive = await deleteArchiveById(id);
+  const archive = await deleteArchiveById(id) as StreamArchive;
 
   if (!archive) {
     return {type: "error", message: "Error deleting archive"}
+  }
+
+  const result = await deleteArchiveFileFromS3(archive)
+
+  if (result.type === "error") {
+    console.error("Error: Could not delete archive from S3!");
   }
 
   return {type: "success", data: archive }

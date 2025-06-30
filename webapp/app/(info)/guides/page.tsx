@@ -30,10 +30,10 @@ export default async function GuidesPage() {
                 <CardTitle>
                   {link.title}
                 </CardTitle>
-                <CardContent>
-                  {link.description}
-                </CardContent>
               </CardHeader>
+              <CardContent>
+                {link.description}
+              </CardContent>
             </Card>
           </Link>
         ))}

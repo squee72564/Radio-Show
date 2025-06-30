@@ -159,7 +159,7 @@ export default async function StreamingGeneralInfo() {
             </li>
             <li>
               <Link
-                href={"/guides/stream/application"}
+                href={"/guides/stream-application"}
                 className="hover:text-blue-600 hover:underline"
               >
                 Stream Application Additional Information

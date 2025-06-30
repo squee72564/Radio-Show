@@ -1,5 +1,5 @@
 import { createStreamArchive } from "@/lib/db/actions/streamscheduleActions";
-import { uploadStreamFile } from "@/lib/nodeUtils";
+import { uploadArchiveFileToS3 } from "@/lib/S3Utils";
 import { parseBuffer } from "music-metadata";
 import { Result } from "@/types/generic";
 
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
       ? Math.round(metadata.format.duration)
       : undefined;
 
-    const result = await uploadStreamFile({
+    const result = await uploadArchiveFileToS3({
       fileBuffer: buffer,
       filename: `archive-${userId}-${scheduleId}-${instanceId}-${Date.now()}.mp3`,
     }) as Result<{location: string}>;

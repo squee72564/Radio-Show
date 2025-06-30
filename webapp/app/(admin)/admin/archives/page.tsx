@@ -1,12 +1,12 @@
 import { Archive } from "lucide-react";
+import { Suspense } from "react";
 import { isUserAdmin } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { User } from "@prisma/client";
 import { Separator } from "@/components/ui/separator";
-import AdminArchiveList from "./admin-archive-list";
-import { Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
+import AdminArchiveList from "./admin-archive-list";
 
 export default async function AdminSchedulePage() {
   const session = await auth();

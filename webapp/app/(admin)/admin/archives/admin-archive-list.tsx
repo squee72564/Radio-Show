@@ -1,8 +1,7 @@
-import { Badge } from "@/components/ui/badge";
 import { findAllStreamArchives } from "@/lib/db/actions/streamscheduleActions";
 import { StreamArchive } from "@prisma/client";
-import ArchiveManagementCard from "./archive-management.card";
 import { StreamArchiveRelations } from "@/types/prisma-relations";
+import ArchiveAdminTable from "./archive-table-admin";
 
 export default async function AdminArchiveList() {
   const archives = await findAllStreamArchives({
@@ -15,13 +14,7 @@ export default async function AdminArchiveList() {
 
   return (
     <div className="flex flex-col gap-2 w-full min-w-0">
-      {archives.length === 0 ? (
-        <Badge variant={"outline"}>No archives found</Badge>
-      ): (
-        archives.map((archive,idx) => (
-          <ArchiveManagementCard key={idx} archive={archive}/>
-        ))
-      )}
+      <ArchiveAdminTable data={archives} />
     </div>
   );
 }

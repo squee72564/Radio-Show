@@ -25,9 +25,16 @@ export default async function ArchivePlayer({
 
   if (!streamArchive) {
     return (
-    <Badge variant={"outline"} className="text-lg font-bold">
-      No stream archive found.
-    </Badge>
+    <main className="flex flex-col min-h-screen w-full p-6 gap-6">
+        <h1 className="text-2xl font-bold flex items-center gap-2">
+          <ArchiveIcon className="w-6 h-6" />
+          Archive
+        </h1>
+        <Separator />
+      <Badge variant={"outline"} className="text-lg font-bold">
+        No stream archive found.
+      </Badge>
+    </main>
     )
   }
   
@@ -35,7 +42,7 @@ export default async function ArchivePlayer({
     <main className="flex flex-col min-h-screen w-full p-6 gap-6">
       <h1 className="text-2xl font-bold flex items-center gap-2">
         <ArchiveIcon className="w-6 h-6" />
-        Archive {streamArchive.streamInstance && <LocalDate date={streamArchive.streamInstance.scheduledStart}/>}
+        Archive {<LocalDate date={streamArchive.streamInstance.scheduledStart}/>}
       </h1>
       <Separator />
 

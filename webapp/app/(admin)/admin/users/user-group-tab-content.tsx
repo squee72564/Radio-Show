@@ -15,6 +15,12 @@ export default function UserGroupTabContent({
 }) {
   const [users, setUsers] = useState<User[] | null>(null);
 
+  const handleUserAction = (userId: string) => {
+    if (!users) return;
+
+    setUsers(prev => prev?.filter(user => user.id !== userId) || null);
+  }
+
   useEffect(() => {
     const fetchUsers = async () => {
       if (status === $Enums.Role.ADMIN) {
@@ -41,7 +47,14 @@ export default function UserGroupTabContent({
           No {status.toLowerCase()}s found
         </Badge>
       ) : (
-        users.map((user) => <UserManagementCard key={user.id} user={user} isOwnerViewing={isOwnerViewing}/>)
+        users.map((user) => 
+          <UserManagementCard
+            key={user.id}
+            user={user}
+            isOwnerViewing={isOwnerViewing}
+            userAction={handleUserAction}
+          />
+        )
       )}
     </div>
   );

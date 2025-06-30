@@ -12,7 +12,13 @@ import LocalTime from "@/components/localtime";
 import LocalDate from "@/components/localdate";
 import { Result } from "@/types/generic";
 
-export default function ScheduleManagementCard({stream}: {stream: StreamSchedule & {user: User} }) {
+export default function ScheduleManagementCard({
+  stream,
+  scheduleAction
+}: {
+  stream: StreamSchedule & {user: User};
+  scheduleAction: (scheduleId: string) => void
+}) {
   const recurrence = RRule.fromString(stream.rrule).toText();
 
   const [pending, startTransition] = useTransition()
@@ -24,6 +30,7 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
       const result = await setStreamStatus(stream, $Enums.ScheduleStatus.APPROVED);
       SetSubmissionState(result);
       if (result.type === "success") setDisabled(true);
+      scheduleAction(stream.id);
     });
   };
 
@@ -32,6 +39,7 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
       const result = await setStreamStatus(stream, $Enums.ScheduleStatus.REJECTED);
       SetSubmissionState(result);
       if (result.type === "success") setDisabled(true);
+      scheduleAction(stream.id);
     });
   };
 
@@ -40,6 +48,7 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
       const result = await setStreamStatus(stream, $Enums.ScheduleStatus.PENDING)
       SetSubmissionState(result);
       if (result.type === "success") setDisabled(true);
+      scheduleAction(stream.id);
     });
   }
 
@@ -48,6 +57,7 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
       const result = await deleteStreamById(stream.id)
       SetSubmissionState(result)
       if (result.type === "success") setDisabled(true);
+      scheduleAction(stream.id);
     });
   }
 

@@ -11,21 +11,40 @@ import { Button } from "@/components/ui/button";
 import LocalDate from "@/components/localdate";
 import UserAvatar from "@/components/user-avatar";
 
-export default function UserManagementCard({ user, isOwnerViewing }: { user: User, isOwnerViewing: boolean }) {
+export default function UserManagementCard({
+  user,
+  isOwnerViewing,
+  userAction
+}: {
+  user: User;
+  isOwnerViewing: boolean;
+  userAction: (userId: string) => void;
+}) {
   const [isPending, startTransition] = useTransition();
   const [disabled, setDisabled] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleMakeAdmin = () => {
-    startTransition(() => {
-      changeUserRole(user.id, $Enums.Role.ADMIN);
-      setDisabled(true);
+    startTransition(async () => {
+      const result = await changeUserRole(user.id, $Enums.Role.ADMIN);
+      if (result.type === "success") {
+        userAction(user.id);
+        setDisabled(true);
+      } else {
+        setError(result.message)
+      }
     });
   };
 
   const handleDemotion = () => {
-    startTransition(() => {
-      changeUserRole(user.id, $Enums.Role.USER);
-      setDisabled(true);
+    startTransition(async () => {
+      const result = await changeUserRole(user.id, $Enums.Role.USER);
+      if (result.type === "success") {
+        userAction(user.id);
+        setDisabled(true);
+      } else {
+        setError(result.message)
+      }
     });
   };
 
@@ -69,6 +88,7 @@ export default function UserManagementCard({ user, isOwnerViewing }: { user: Use
             {isPending ? "Demoting..." : "Demote"}
           </Button>
         )}
+        {error && <p className="text-red-500">{error}</p>}
       </CardFooter>
     </Card>
   );

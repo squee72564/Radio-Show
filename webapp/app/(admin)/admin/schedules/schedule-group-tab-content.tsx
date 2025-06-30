@@ -13,6 +13,12 @@ export default function ScheduleGroupTabContent({
 }) {
   const [schedules, setSchedules] = useState<(StreamSchedule & { user: User })[] | null>(null);
 
+  const handleScheduleAction = (scheduleId: string) => {
+    if (!schedules) return;
+    
+    setSchedules(prev => prev?.filter(schedule => schedule.id !== scheduleId) || null)
+  }
+
   useEffect(() => {
     const fetchSchedules = async () => {
       const schedules = await findAllStreamsByStatus(status,{
@@ -38,7 +44,13 @@ export default function ScheduleGroupTabContent({
           No {status.toLowerCase()} schedules found
         </Badge>
       ) : (
-        schedules.map((schedule) => <ScheduleManagementCard key={schedule.id} stream={schedule} />)
+        schedules.map((schedule) => 
+          <ScheduleManagementCard
+            key={schedule.id}
+            stream={schedule}
+            scheduleAction={handleScheduleAction}
+          />
+        )
       )}
     </div>
   );

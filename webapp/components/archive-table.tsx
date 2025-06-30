@@ -24,6 +24,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 export const makeGlobalFilterFn = <T extends object>(searchableColumns: string[]): FilterFn<T> =>
   (row, _columnId, filterValue) => {
@@ -130,7 +131,7 @@ export default function ArchiveDataTable<TData extends object, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() => rowOnClick?.(row.original)}
-                  className="cursor-pointer hover:bg-secondary transition-all"
+                  className={cn("transition-all", rowOnClick && "cursor-pointer hover:bg-secondary")}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

@@ -36,6 +36,8 @@ export async function GET(req: Request) {
     return new NextResponse("Missing env vars", {status: 500});
   }
 
+  const range = req.headers.get("range");
+
   const s3 = new S3Client({
     endpoint: S3_ENDPOINT,
     region: S3_REGION,
@@ -52,17 +54,23 @@ export async function GET(req: Request) {
   });
 
   try {
-    const { Body, ContentLength, ContentType } = await s3.send(command);
+    const { Body, ContentLength, ContentRange, ContentType } = await s3.send(command);
 
     const headers = new Headers();
     headers.set("Content-Type", ContentType || "audio/mpeg");
     headers.set("Cache-Control", "public, max-age=31536000");
+    headers.set("Accept-Ranges", "bytes");
 
     if (ContentLength !== undefined) {
       headers.set("Content-Length", ContentLength.toString());
     }
 
+    if (range && ContentRange) {
+      headers.set("Content-Range", ContentRange);
+    }
+
     return new NextResponse(Body as ReadableStream, {
+      status: range ? 206 : 200,
       headers,
     });
 

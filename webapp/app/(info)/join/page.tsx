@@ -109,7 +109,7 @@ export default async function DJSignupPage() {
             <p className="text-muted-foreground">
               For detailed setup instructions, including recommended broadcasting tools and troubleshooting tips, check out our full streaming guide.
             </p>
-            <Link href="/guides/streaming-setup" className="inline-block mt-2 underline text-sm text-blue-600 hover:text-blue-800">
+            <Link href="/guides" className="inline-block mt-2 underline text-sm text-blue-600 hover:text-blue-800">
               View Full Streaming Guide →
             </Link>
           </div>

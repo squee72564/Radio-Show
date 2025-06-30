@@ -14,32 +14,30 @@ const links = [
   },
   {
     url: "guides/stream-with-BUTT",
-    description: "Information on the B.U.T.T. application, how to set it up, and stream to MugenBeat.",
+    description: "Information on the B.U.T.T. application, how to set it up, and how to stream on MugenBeat.",
     title: "How to Stream with B.U.T.T."
   }
 ];
 
 export default async function GuidesPage() {
   return (
-    <main className="flex flex-col flex-1 w-full justify-center items-center text-center">
-      <ul className="flex flex-col gap-4 w-3xl">
+    <main className="flex flex-col gap-4 w-full justify-center items-center text-center">
+      <div className="flex flex-col gap-4 w-full max-w-3xl">
         {links.map((link, idx) => (
-          <li key={idx} className="hover:-translate-y-1 duration-300">
-            <Link href={link.url}>
-              <Card>
-                <CardHeader className="flex flex-col gap-4">
-                  <CardTitle>
-                    {link.title}
-                  </CardTitle>
-                  <CardContent>
-                    {link.description}
-                  </CardContent>
-                </CardHeader>
-              </Card>
-            </Link>
-          </li>
+          <Link key={idx} href={link.url} className="hover:-translate-y-1 duration-300">
+            <Card className="flex flex-col flex-1 w-full">
+              <CardHeader className="flex flex-col gap-4">
+                <CardTitle>
+                  {link.title}
+                </CardTitle>
+                <CardContent>
+                  {link.description}
+                </CardContent>
+              </CardHeader>
+            </Card>
+          </Link>
         ))}
-      </ul>
+      </div>
     </main>
   );
 }

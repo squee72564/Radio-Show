@@ -45,9 +45,9 @@ export default function ScheduleManagementCard({stream}: {stream: StreamSchedule
 
   const handleDelete = () => {
     startTransition(async () => {
-      await deleteStreamById(stream.id)
-      SetSubmissionState({type: "success", data: {message: `Stream deleted.`}})
-      setDisabled(true);
+      const result = await deleteStreamById(stream.id)
+      SetSubmissionState(result)
+      if (result.type === "success") setDisabled(true);
     });
   }
 

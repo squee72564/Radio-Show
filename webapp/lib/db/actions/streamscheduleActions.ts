@@ -36,8 +36,14 @@ export async function findStreamScheduleByIdAndPass(
   return await streamScheduleService.findStreamScheduleByIdAndPass(id, password, options);
 }
 
-export async function deleteStreamById(streamId: string) {
-  return await streamScheduleService.deleteStreamById(streamId);
+export async function deleteStreamById(streamId: string): Promise<Result<{message: string}>> {
+  const deletedStream = await streamScheduleService.deleteStreamById(streamId);
+
+  if (!deletedStream) {
+    return {type: "error", message: "Error deleting stream"}
+  }
+
+  return {type: "success", data: {message: "Successfully deleted stream"}};
 }
 
 export async function getStreamInstancesByDateRange(
@@ -264,8 +270,19 @@ export async function streamScheduleFormSubmit(
     password: validatedData.password,
   };
 
-
   const pendingSchedule = await createStreamSchedule(scheduleData);
+
+  if (!pendingSchedule) {
+    return {
+      ...prevState,
+      success: false,
+      message: "Error creating new stream schedule",
+      errors: {
+        conflicts: ["Error creating new stream schedule"]
+      },
+      values: merged,
+    }
+  }
 
   return {
     success: true,
@@ -284,13 +301,13 @@ export async function createStreamArchive(data: Omit<StreamArchive, "id">) {
 }
 
 export async function adminDeleteArchive(id: string): Promise<Result<StreamArchive>> {
-  const archive = await deleteArchiveById(id) as StreamArchive;
+  const archive = await deleteArchiveById(id);
 
   if (!archive) {
     return {type: "error", message: "Error deleting archive"}
   }
 
-  const result = await deleteArchiveFileFromS3(archive)
+  const result = await deleteArchiveFileFromS3(archive.url)
 
   if (result.type === "error") {
     console.error("Error: Could not delete archive from S3!");

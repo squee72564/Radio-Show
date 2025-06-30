@@ -3,9 +3,15 @@ import { StreamArchiveRelations, StreamInstanceRelations, StreamScheduleRelation
 import { $Enums, StreamArchive, StreamInstance, StreamSchedule } from "@prisma/client";
 
 export async function deleteArchiveById(id: string) {
-  return await prisma.streamArchive.delete({
-    where: {id}
-  });
+  try {
+    return await prisma.streamArchive.delete({
+      where: {id}
+    });
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+
 }
 
 export async function findAllStreamArchives(
@@ -37,15 +43,21 @@ export async function findStreamScheduleByIdAndPass(
         id,
         password
       },
-      ...(options ?? {}),
-    }
+    },
+    ...(options ?? {}),
   });
 }
 
 export async function deleteStreamById(id: string) {
-  return await prisma.streamSchedule.delete({
-    where: {id}
-  })
+  try {
+    return await prisma.streamSchedule.delete({
+      where: {id}
+    })
+  } catch (err) {
+    console.log(err)
+    return null;
+  }
+
 }
 
 export async function getStreamInstancesByDateRange(
@@ -68,12 +80,18 @@ export async function getStreamInstancesByDateRange(
 }
 
 export async function setStreamScheduleReviewedAt(id: string, reviewedAt: Date) {
-  return prisma.streamSchedule.update({
-    where: {id},
-    data: {
-      reviewedAt
-    }
-  });
+  try {
+    return prisma.streamSchedule.update({
+      where: {id},
+      data: {
+        reviewedAt
+      }
+    });
+  } catch (err) {
+    console.log(err)
+    return null;
+  }
+
 }
 
 export async function getCurrentStreamInstance(
@@ -199,16 +217,21 @@ export async function isStreamInstancesConflicting(
 }
 
 export async function createStreamSchedule(data: Omit<StreamSchedule, "id">) {
-  return prisma.streamSchedule.create({
-    data
-  });
+  try {
+    return await prisma.streamSchedule.create({
+      data
+    });
+  } catch (err) {
+    return null;
+  }
+
 }
 
 export async function getStreamScheduleById(
   id: string,
   options?: {include: {[K in keyof StreamScheduleRelations]?: true}}
 ): Promise<(StreamSchedule & Partial<StreamScheduleRelations>) | null> {
-  return prisma.streamSchedule.findUnique({
+  return await prisma.streamSchedule.findUnique({
     where: {id: id},
     ...(options ?? {}),
   })
@@ -218,7 +241,7 @@ export async function findArchivesByUserId(
   userId: string,
   options?: {include: {[K in keyof StreamArchiveRelations]?: true}}
 ): Promise<(StreamArchive & Partial<StreamArchiveRelations>)[]> {
-  return prisma.streamArchive.findMany({
+  return await prisma.streamArchive.findMany({
     where: {userId},
     ...(options ?? {}),
   }); 
@@ -228,7 +251,7 @@ export async function findRecentArchives(
   count: number,
   options?: {include: {[K in keyof StreamArchiveRelations]?: true}}
 ): Promise<(StreamArchive & Partial<StreamArchiveRelations>)[]> {
-  return prisma.streamArchive.findMany({
+  return await prisma.streamArchive.findMany({
     orderBy: {
       createdAt: 'desc',
     },
@@ -238,7 +261,7 @@ export async function findRecentArchives(
 }
 
 export async function findFirstStreamInstanceAfterDate(date: Date) {
-  return prisma.streamInstance.findFirst({
+  return await prisma.streamInstance.findFirst({
     where: {
       OR: [
         {
@@ -267,7 +290,12 @@ export async function findFirstStreamInstanceAfterDate(date: Date) {
 }
 
 export async function createStreamArchive(data: Omit<StreamArchive, "id">) {
-  return await prisma.streamArchive.create({
-    data
-  });
+  try {
+    return await prisma.streamArchive.create({
+      data
+    });
+  } catch (err) {
+    console.log(err)
+    return null;
+  }
 }

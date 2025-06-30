@@ -54,7 +54,7 @@ export async function uploadArchiveFileToS3({
 }
 
 export async function deleteArchiveFileFromS3(
-  streamArchive: StreamArchive
+  streamArchiveURL: string
 ): Promise<Result<{success: boolean}>> {
   const {
     S3_ENDPOINT,
@@ -85,7 +85,7 @@ export async function deleteArchiveFileFromS3(
     await s3.send(
       new DeleteObjectCommand({
         Bucket: S3_BUCKET_NAME,
-        Key: streamArchive.url,
+        Key: streamArchiveURL,
       })
     );
 

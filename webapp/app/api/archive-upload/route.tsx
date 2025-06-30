@@ -1,5 +1,5 @@
 import { createStreamArchive } from "@/lib/db/actions/streamscheduleActions";
-import { uploadArchiveFileToS3 } from "@/lib/S3Utils";
+import { deleteArchiveFileFromS3, uploadArchiveFileToS3 } from "@/lib/S3Utils";
 import { parseBuffer } from "music-metadata";
 import { Result } from "@/types/generic";
 
@@ -71,6 +71,19 @@ export async function POST(req: Request) {
     };
 
     const archive = await createStreamArchive(data);
+
+    if (!archive) {
+      const errMessages = ["Error creating archive in DB"];
+
+      const deleteResult = await deleteArchiveFileFromS3(result.data.location);
+
+      if (deleteResult.type === "error") {
+        console.log(deleteResult.message)
+        errMessages.push(deleteResult.message)
+      }
+
+      return new Response(JSON.stringify({ error: errMessages.join(", ") }), { status: 501 });
+    }
 
     return new Response(JSON.stringify({ success: true, url: archive.url }), {
       status: 200,

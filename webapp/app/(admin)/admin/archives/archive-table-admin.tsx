@@ -1,17 +1,20 @@
 "use client";
 
+import { useState, useTransition } from "react";
 import { ArrowUp, ArrowDown, Minus } from "lucide-react";
 import { StreamArchive } from "@prisma/client";
-
+import { StreamArchiveRelations } from "@/types/prisma-relations";
+import { Result } from "@/types/generic";
+import { adminDeleteArchive } from "@/lib/db/actions/streamscheduleActions";
 import { ColumnDef } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
 import LocalDate from "@/components/localdate";
 import ArchiveDataTable from "@/components/archive-table";
-import { StreamArchiveRelations } from "@/types/prisma-relations";
-import { useState, useTransition } from "react";
-import { Result } from "@/types/generic";
-import { adminDeleteArchive } from "@/lib/db/actions/streamscheduleActions";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 
 export type ArchiveRowData = StreamArchive & StreamArchiveRelations
 
@@ -95,21 +98,34 @@ const DeleteArchiveComponent = ({
   };
 
   return (
-    <Button 
-      variant="destructive"
-      disabled={pending || submissionstate?.type === "success"}
-      onClick={deleteArchive}
-    >
-      {!submissionstate ? (
-        "Delete"
-      ): (
-        submissionstate.type === "success" ? (
-          "Deleted"
-        ) : (
-          "Error"
-        )
-      )}
-    </Button>
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button 
+          variant="destructive"
+          disabled={pending || submissionstate?.type === "success"}
+        >
+          {!submissionstate ? (
+            "Delete"
+          ): (
+            submissionstate.type === "success" ? (
+              "Deleted"
+            ) : (
+              "Error"
+            )
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="flex flex-col justify-center items-center text-center gap-2">
+        <p>Confirm Delete?</p>
+        <p>This cannot be undone.</p>
+        <Button
+          onClick={deleteArchive}
+          disabled={pending || submissionstate?.type === "success"}
+        >
+          Confirm
+        </Button>
+      </PopoverContent>
+    </Popover>
   )
 }
 

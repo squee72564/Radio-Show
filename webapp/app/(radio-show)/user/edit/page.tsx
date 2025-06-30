@@ -10,6 +10,8 @@ import UserPendingStreamsCard from "@/app/(radio-show)/user/edit/user-pending-st
 import UserActiveStreamsCard from "@/app/(radio-show)/user/edit/user-active-streams-card"
 import UserStreamsSkeleton from "@/app/(radio-show)/user/edit/user-streams-skeleton"
 import UserApplyToStreamCard from "@/app/(radio-show)/user/edit/user-apply-to-stream-card"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 
 export default async function UserProfileEditPage() {
@@ -22,7 +24,8 @@ export default async function UserProfileEditPage() {
   }
 
   return (
-    <div className="w-full mx-auto p-6 space-y-6">
+    <div className="flex flex-col w-full p-6 gap-4">
+      <Link href={`/user/${user.id}`}><Button>Back To Profile</Button></Link>
       <UpdateBioCard user={user} />
       <UserApplyToStreamCard/>
       <div className="flex flex-col w-full gap-6 sm:gap-2 sm:flex-row max-h-[395px]">

@@ -3,6 +3,7 @@
 import * as userService from "@/lib/db/services/userService";
 import { $Enums, User } from "@prisma/client";
 import { UserRelations } from "@/types/prisma-relations";
+import { Result } from "@/types/generic";
 
 export async function findUsersByRole(
   roleOrRoles: $Enums.Role | $Enums.Role[],
@@ -34,14 +35,31 @@ export async function findRecentUsers(count: number) {
   return userService.findRecentUsers(count);
 }
 
-export async function updateUserBio(userId: string, newBio: string) {
-  return userService.updateUserBio(userId, newBio);
+export async function updateUserBio(
+  userId: string,
+  newBio: string
+): Promise<Result<User>> {
+  const result = await userService.updateUserBio(userId, newBio);
+
+  if (!result) {
+    return {type:"error", message: "User bio not updated!"}
+  }
+
+  return {type: "success", data: result};
 }
 
 export async function getUserCount() {
   return await userService.getUserCount();
 }
 
-export async function changeUserRole(userId: string, newRole: $Enums.Role) {
-  return await userService.changeUserRole(userId, newRole);
+export async function changeUserRole(
+  userId: string,
+  newRole: $Enums.Role
+): Promise<Result<{message: string}>> {
+  const result = await userService.changeUserRole(userId, newRole);
+  if (!result) {
+    return {type: "error", message: "Error changing user role"}
+  }
+
+  return {type: "success", data: {message: "User role successfully changed"}}
 }

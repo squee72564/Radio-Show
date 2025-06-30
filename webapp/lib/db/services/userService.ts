@@ -50,10 +50,15 @@ export async function findRecentUsers(count: number) {
 }
 
 export async function updateUserBio(userId: string, newBio: string) {
-  return await prisma.user.update({
-    where: { id: userId },
-    data: { bio: newBio }
-  });
+  try {
+    return await prisma.user.update({
+      where: { id: userId },
+      data: { bio: newBio }
+    });
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
 }
 
 export async function getUserCount() {
@@ -61,8 +66,13 @@ export async function getUserCount() {
 }
 
 export async function changeUserRole(userId: string, newRole: $Enums.Role) {
-  return await prisma.user.update({
-    where: {id: userId},
-    data: {status: newRole}
-  });
+  try {
+    return await prisma.user.update({
+      where: {id: userId},
+      data: {status: newRole}
+    });
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
 }

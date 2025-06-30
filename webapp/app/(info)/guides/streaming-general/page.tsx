@@ -5,7 +5,6 @@ import {
   CardTitle,
   CardContent,
   CardFooter,
-  CardAction,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ArchiveIcon, BookCheckIcon, CalendarIcon, CheckIcon, HeadphonesIcon, PlusCircleIcon, RocketIcon, RulerIcon } from "lucide-react";
@@ -34,9 +33,9 @@ export default async function StreamingGeneralInfo() {
         </CardHeader>
         <CardContent className="space-y-2">
           <p>
-            To stream on MugenBeat, you must first <strong>create an account</strong>.
-            The platform uses Google OAuth, so you will need a google account to stream.
-            Once you're logged in, you'll gain access to the stream scheduling system.
+            {"To stream on MugenBeat, you must first "}<strong>create an account</strong>.
+            {"The platform uses Google OAuth, so you will need a google account to stream."}
+            {"Once you're logged in, you'll gain access to the stream scheduling system."}
           </p>
         </CardContent>
       </Card>
@@ -88,7 +87,7 @@ export default async function StreamingGeneralInfo() {
             </li>
 
             <li>All requests are <strong>pending until approved</strong> by an admin.</li>
-            <li>Once approved, your stream appears on the calendar and you're authorized to broadcast.</li>
+            <li>{"Once approved, your stream appears on the calendar and you're authorized to broadcast."}</li>
             <li>Admins may revoke scheduled streams at any time.</li>
           </ul>
         </CardContent>

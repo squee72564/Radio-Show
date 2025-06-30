@@ -80,6 +80,10 @@ export const appItems: SidebarItems[] = [
         url: "/join",
       },
       {
+        title: "Guides",
+        url: "/guides"
+      },
+      {
         title: "Contact",
         url: "/contact",
       },

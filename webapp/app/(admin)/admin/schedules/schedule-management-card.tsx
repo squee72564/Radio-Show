@@ -29,8 +29,10 @@ export default function ScheduleManagementCard({
     startTransition(async () => {
       const result = await setStreamStatus(stream, $Enums.ScheduleStatus.APPROVED);
       SetSubmissionState(result);
-      if (result.type === "success") setDisabled(true);
-      scheduleAction(stream.id);
+      if (result.type === "success") {
+        setDisabled(true);
+        scheduleAction(stream.id);
+      }
     });
   };
 
@@ -38,8 +40,10 @@ export default function ScheduleManagementCard({
     startTransition(async () => {
       const result = await setStreamStatus(stream, $Enums.ScheduleStatus.REJECTED);
       SetSubmissionState(result);
-      if (result.type === "success") setDisabled(true);
-      scheduleAction(stream.id);
+      if (result.type === "success") {
+        setDisabled(true);
+        scheduleAction(stream.id);
+      }
     });
   };
 
@@ -47,17 +51,23 @@ export default function ScheduleManagementCard({
     startTransition(async () => {
       const result = await setStreamStatus(stream, $Enums.ScheduleStatus.PENDING)
       SetSubmissionState(result);
-      if (result.type === "success") setDisabled(true);
-      scheduleAction(stream.id);
+      if (result.type === "success") {
+        setDisabled(true);
+        scheduleAction(stream.id);
+      }
     });
   }
 
   const handleDelete = () => {
     startTransition(async () => {
-      const result = await deleteStreamById(stream.id)
-      SetSubmissionState(result)
-      if (result.type === "success") setDisabled(true);
-      scheduleAction(stream.id);
+      const result = await deleteStreamById(stream.id);
+      
+      if (result.type === "success") {
+        setDisabled(true);
+        SetSubmissionState({type: result.type, data: {message: "Stream Deleted"}})
+        scheduleAction(stream.id);
+      }
+      
     });
   }
 

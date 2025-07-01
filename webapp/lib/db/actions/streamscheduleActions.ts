@@ -36,14 +36,14 @@ export async function findStreamScheduleByIdAndPass(
   return await streamScheduleService.findStreamScheduleByIdAndPass(id, password, options);
 }
 
-export async function deleteStreamById(streamId: string): Promise<Result<{message: string}>> {
+export async function deleteStreamById(streamId: string): Promise<Result<StreamSchedule>> {
   const deletedStream = await streamScheduleService.deleteStreamById(streamId);
 
   if (!deletedStream) {
     return {type: "error", message: "Error deleting stream"}
   }
 
-  return {type: "success", data: {message: "Successfully deleted stream"}};
+  return {type: "success", data: deletedStream};
 }
 
 export async function getStreamInstancesByDateRange(
@@ -100,7 +100,11 @@ export async function setStreamStatus(
     await streamScheduleService.setStreamScheduleStatus(stream.id, status);
 
     if (stream.user.status === $Enums.Role.USER) {
-      await userService.changeUserRole(stream.userId, $Enums.Role.STREAMER);
+      const result = await userService.changeUserRole(stream.userId, $Enums.Role.STREAMER);
+
+      if (!result) {
+        console.error("Error changing user role.");
+      }
     }
 
     return {type: "success", data: {message: "Stream Approved"} }

@@ -55,11 +55,11 @@ export async function getUserCount() {
 export async function changeUserRole(
   userId: string,
   newRole: $Enums.Role
-): Promise<Result<{message: string}>> {
-  const result = await userService.changeUserRole(userId, newRole);
-  if (!result) {
+): Promise<Result<User>> {
+  const user = await userService.changeUserRole(userId, newRole);
+  if (!user) {
     return {type: "error", message: "Error changing user role"}
   }
 
-  return {type: "success", data: {message: "User role successfully changed"}}
+  return {type: "success", data: user}
 }

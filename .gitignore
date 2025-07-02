@@ -9,6 +9,7 @@
 
 .env.dev
 .env.prod
+.env.test
 
 /icecast/logs
 

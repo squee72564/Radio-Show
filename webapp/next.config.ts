@@ -1,5 +1,4 @@
 import type { NextConfig } from "next";
-import path from "path";
 import dotenv from "dotenv";
 
 const nodeEnvMap = {
@@ -8,7 +7,9 @@ const nodeEnvMap = {
   "test": "test"
 };
 
-dotenv.config({path: `../.env.${nodeEnvMap[process.env.NODE_ENV!]}`})
+const appEnv = (process.env.APP_ENV ?? "development") as keyof typeof nodeEnvMap;
+
+dotenv.config({path: `../.env.${nodeEnvMap[appEnv]}`})
 
 const nextConfig: NextConfig = {
   /* config options here */

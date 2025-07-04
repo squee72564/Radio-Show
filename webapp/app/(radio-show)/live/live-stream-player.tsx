@@ -40,12 +40,9 @@ export default function LiveStreamPlayer() {
       }
     };
 
-    if (status === 'live') {
-      checkStream();
-    } else {
-      setIsStreamLive(false);
-      setLoading(true);
-    }
+    checkStream();
+    setIsStreamLive(false);
+    setLoading(true);
 
     return () => clearTimeout(timeoutId);
   }, [status]);

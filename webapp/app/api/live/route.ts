@@ -1,10 +1,16 @@
-const icecastHost = process.env.ICECAST_HOST || "localhost";
-const icecastPort = process.env.ICECAST_PORT || "8000";
-const icecastMount = process.env.ICECAST_MOUNT || "live";
-
 export async function GET() {
+  const {
+    ICECAST_HOST_WEBAPP,
+    ICECAST_PORT,
+    ICECAST_MOUNT,
+  } = process.env;
+
+  if (!ICECAST_HOST_WEBAPP || !ICECAST_PORT || !ICECAST_MOUNT) {
+    return new Response("Env vars not set on server", {status: 500});
+  }
+
   try {
-    const upstream = await fetch(`http://${icecastHost}:${icecastPort}/${icecastMount}`);
+    const upstream = await fetch(`http://${ICECAST_HOST_WEBAPP}:${ICECAST_PORT}/${ICECAST_MOUNT}`);
 
     return new Response(upstream.body, {
       status: upstream.status,

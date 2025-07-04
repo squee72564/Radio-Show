@@ -1,17 +1,13 @@
 import { findStreamArchiveById } from "@/lib/db/actions/streamscheduleActions";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, GetObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
 
+
 export async function GET(req: Request) {
-  const referer = req.headers.get("referer");
-  const allowedHosts = [process.env.SITE_URL!];
-
-  if (!referer || !allowedHosts.some(host => referer.startsWith(host))) {
-    return new NextResponse("Forbidden", { status: 403 });
-  }
-
   const url = new URL(req.url);
   const archiveId = url.searchParams.get("archiveId");
+  const range = req.headers.get("range");
+
 
   if (!archiveId) {
     return new NextResponse("Missing filename", { status: 400 });
@@ -36,8 +32,6 @@ export async function GET(req: Request) {
     return new NextResponse("Missing env vars", {status: 500});
   }
 
-  const range = req.headers.get("range");
-
   const s3 = new S3Client({
     endpoint: S3_ENDPOINT,
     region: S3_REGION,
@@ -48,26 +42,44 @@ export async function GET(req: Request) {
     forcePathStyle: true,
   });
 
-  const command = new GetObjectCommand({
+  const s3Data = {
     Bucket: S3_BUCKET_NAME,
     Key: archive.url,
-  });
+  };
 
   try {
-    const { Body, ContentLength, ContentRange, ContentType } = await s3.send(command);
+    const headCommand = new HeadObjectCommand(s3Data);
+
+    const headData = await s3.send(headCommand);
+    const fileSize = headData.ContentLength ?? 0;
+
+    let start = 0;
+    let end = fileSize - 1;
 
     const headers = new Headers();
+
+    if (range) {
+      const match = range.match(/bytes=(\d+)-(\d*)/);
+      if (match) {
+        start = parseInt(match[1], 10);
+        end = match[2] ? parseInt(match[2], 10) : end;
+        headers.set("Content-Range", `bytes ${start}-${end}/${fileSize}`);
+        headers.set("Content-Length", (end - start + 1).toString());
+      }
+    } else {
+      headers.set("Content-Length", fileSize.toString());
+    }
+
+    const command = new GetObjectCommand({
+      ...s3Data,
+      Range: `bytes=${start}-${end}`,
+    });
+
+    const { Body, ContentType } = await s3.send(command);
+
     headers.set("Content-Type", ContentType || "audio/mpeg");
     headers.set("Cache-Control", "public, max-age=31536000");
     headers.set("Accept-Ranges", "bytes");
-
-    if (ContentLength !== undefined) {
-      headers.set("Content-Length", ContentLength.toString());
-    }
-
-    if (range && ContentRange) {
-      headers.set("Content-Range", ContentRange);
-    }
 
     return new NextResponse(Body as ReadableStream, {
       status: range ? 206 : 200,

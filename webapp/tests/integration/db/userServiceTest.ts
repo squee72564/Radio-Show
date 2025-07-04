@@ -1,4 +1,3 @@
-// __tests__/user.test.ts
 import { prisma } from "@/lib/db/prismaClient";
 import * as userService from "@/lib/db/services/userService";
 import { $Enums } from "@prisma/client";

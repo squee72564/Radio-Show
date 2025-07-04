@@ -36,8 +36,8 @@ export async function findStreamScheduleByIdAndPass(
   return await streamScheduleService.findStreamScheduleByIdAndPass(id, password, options);
 }
 
-export async function deleteStreamById(streamId: string): Promise<Result<StreamSchedule>> {
-  const deletedStream = await streamScheduleService.deleteStreamById(streamId);
+export async function deleteStreamScheduleById(streamId: string): Promise<Result<StreamSchedule>> {
+  const deletedStream = await streamScheduleService.deleteStreamScheduleById(streamId);
 
   if (!deletedStream) {
     return {type: "error", message: "Error deleting stream"}

@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { CalendarRange, Clock4, Repeat, UserIcon, PenIcon} from "lucide-react";
-import { deleteStreamById, setStreamStatus } from "@/lib/db/actions/streamscheduleActions";
+import { deleteStreamScheduleById, setStreamStatus } from "@/lib/db/actions/streamscheduleActions";
 import { RRule } from "rrule";
 import { $Enums, StreamSchedule, User } from "@prisma/client";
 
@@ -60,7 +60,7 @@ export default function ScheduleManagementCard({
 
   const handleDelete = () => {
     startTransition(async () => {
-      const result = await deleteStreamById(stream.id);
+      const result = await deleteStreamScheduleById(stream.id);
       
       if (result.type === "success") {
         setDisabled(true);

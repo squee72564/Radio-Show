@@ -15,7 +15,7 @@ export async function GET() {
     return new Response(upstream.body, {
       status: upstream.status,
       headers: {
-        "Content-Type": upstream.headers.get("content-type") || "audio/mpeg",
+        "Content-Type": "audio/mpeg",
         "Cache-Control": "no-store",
       },
     });

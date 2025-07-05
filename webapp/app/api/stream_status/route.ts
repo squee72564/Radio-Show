@@ -33,17 +33,13 @@ export async function GET() {
   }
 
   try {
-    const upstream = await fetch(`http://${ICECAST_HOST_WEBAPP}:${ICECAST_PORT}/${ICECAST_MOUNT}`, {
-      headers: { Range: "bytes=0-0" },
-    });
-
-    const status: "live" | "offline" = (upstream.ok) ? "live" : "offline";
-
+    const upstream = await fetch(`http://${ICECAST_HOST_WEBAPP}:${ICECAST_PORT}/${ICECAST_MOUNT}`);
+    const status = upstream.ok ? "live" : "offline";
     LiveState.setStatus(status);
     console.log("Broadcasting status:", LiveState.getStatus());
     LiveState.broadcastStatus();
 
-    return new Response(JSON.stringify({ status: upstream.status }), {
+    return new Response(JSON.stringify({ status: status }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

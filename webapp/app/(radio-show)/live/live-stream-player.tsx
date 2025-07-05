@@ -11,23 +11,33 @@ export default function LiveStreamPlayer() {
   const status = useStreamStatus(() => "ws://localhost:3000/api/ws");
   const [loading, setLoading] = useState<boolean>(true);
   const [isStreamLive, setIsStreamLive] = useState<boolean>(false);
+  const [hasMounted, setHasMounted] = useState<boolean>(false);
 
   useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hasMounted) return;
+
     let retries = 3;
     let timeoutId: NodeJS.Timeout;
 
-    const checkStream = () => {
-      fetch(streamUrl, { method: "HEAD" })
-        .then((res) => {
-          const isAudio = res.ok && res.headers.get("content-type")?.includes("audio");
-          if (isAudio) {
-            setIsStreamLive(true);
-            setLoading(false);
-          } else {
-            retry();
-          }
-        })
-        .catch(retry);
+    const checkStream = async () => {
+      try {
+        const response = await fetch("/api/stream_status");
+        console.log(response);
+        const data = await response.json();
+        if (response.ok && data.status === 200) {
+          setIsStreamLive(true);
+          setLoading(false);
+        } else {
+          retry();
+        }
+      } catch (err) {
+        console.log("error");
+        retry();
+      }
     };
 
     const retry = () => {
@@ -41,17 +51,14 @@ export default function LiveStreamPlayer() {
     };
 
     checkStream();
-    setIsStreamLive(false);
-    setLoading(true);
 
     return () => clearTimeout(timeoutId);
-  }, [status]);
-
+  }, [status, hasMounted]);
 
   return (
     <div className="flex flex-col flex-1 gap-4 w-full">
-      <CustomPlayer streamUrl={streamUrl} isStreamLive={isStreamLive} showControls={false}/>
-
+      <CustomPlayer streamUrl={streamUrl} isStreamLive={hasMounted && isStreamLive} showControls={false} />
+      
       { !isStreamLive ? (
         <Alert variant="default" className="w-full">
           <AlertTitle>Stream appears to be offline</AlertTitle>

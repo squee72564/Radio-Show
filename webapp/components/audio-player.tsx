@@ -95,8 +95,6 @@ function WaveformVisualizer({
   );
 }
 
-
-
 export function CustomPlayer({
   streamUrl,
   isStreamLive,
@@ -123,10 +121,16 @@ export function CustomPlayer({
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+    return () => setHasMounted(false);
+  });
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio || hasMounted) return;
 
     if (isStreamLive) {
       audio.pause();
@@ -139,11 +143,11 @@ export function CustomPlayer({
       audio.removeAttribute("src");
       audio.load();
     }
-  }, [streamUrl, isStreamLive]);
+  }, [streamUrl, isStreamLive, hasMounted]);
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio || !hasMounted) return;
 
     const handleCanPlay = async () => {
       setIsLoading(false);
@@ -175,7 +179,7 @@ export function CustomPlayer({
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
-  }, []);
+  }, [hasMounted]);
 
   const changeVolume = (val: number[]) => {
     const audio = audioRef.current;
@@ -183,6 +187,54 @@ export function CustomPlayer({
     setVolume(val[0]);
     if (audio) audio.volume = vol;
   };
+
+  if (!hasMounted) {
+    return (
+    <div className="flex flex-col items-center justify-center text-center w-full gap-4 bg-muted p-4 rounded-xl">
+      <div
+        className="flex flex-col justify-center items-center w-full max-w-full aspect-[4/1] bg-primary/10 rounded-xl"
+      >
+        <p>{"乁( ⁰͡ Ĺ̯ ⁰͡ ) ㄏ"}</p>
+        <p>Loading...</p>
+
+      </div>
+      <Button
+        className="p-1 text-xs"
+        variant="outline"
+      >
+        Loading...
+      </Button>
+      <div className="w-full flex flex-row gap-2">
+        <Badge variant={"outline"} className="text-sm text-muted-foreground mb-1">
+          Loading...
+        </Badge>
+        <Slider
+          id="volume"
+          defaultValue={[100]}
+          value={[volume]}
+          min={0}
+          max={100}
+        />
+      </div>
+      {showControls && 
+      <>
+        <div className="w-full flex flex-row gap-2 justify-center items-center">
+          <Badge variant="outline" className="text-xs mt-1">
+            Loading...
+          </Badge>
+          <Skeleton className="w-full h-2"/>
+        </div>
+        <Button
+          className="p-1 text-xs"
+          variant="outline"
+        >
+          <LoaderIcon/>
+        </Button>
+      </>
+      }
+    </div>
+    )
+  }
 
   return (
     <div className="flex flex-col items-center justify-center text-center w-full gap-4 bg-muted p-4 rounded-xl">

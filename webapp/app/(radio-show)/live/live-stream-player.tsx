@@ -5,32 +5,35 @@ import { useEffect, useState } from "react";
 import { useStreamStatus } from '@/hooks/use-streamstatus';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CustomPlayer } from "@/components/audio-player";
+import { ErrorBoundary } from "react-error-boundary";
+import { setStreamStatus } from "@/lib/db/actions/streamscheduleActions";
+
 
 export default function LiveStreamPlayer() {
   const streamUrl: string = "http://localhost:3000/api/live";
   const status = useStreamStatus(() => "ws://localhost:3000/api/ws");
+  const [isStreamLive, SetStreamLive] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isStreamLive, setIsStreamLive] = useState<boolean>(false);
   const [hasMounted, setHasMounted] = useState<boolean>(false);
 
   useEffect(() => {
     setHasMounted(true);
+    return () => setHasMounted(false);
   }, []);
 
   useEffect(() => {
     if (!hasMounted) return;
 
-    let retries = 3;
+    let retries = 2;
     let timeoutId: NodeJS.Timeout;
 
     const checkStream = async () => {
       try {
         const response = await fetch("/api/stream_status");
-        console.log(response);
         const data = await response.json();
         if (response.ok && data.status === 200) {
-          setIsStreamLive(true);
           setLoading(false);
+          SetStreamLive(true);
         } else {
           retry();
         }
@@ -45,10 +48,15 @@ export default function LiveStreamPlayer() {
         retries--;
         timeoutId = setTimeout(checkStream, 3000);
       } else {
-        setIsStreamLive(false);
         setLoading(true);
+        SetStreamLive(false);
       }
     };
+
+    if (status === "offline") {
+      setLoading(true);
+      SetStreamLive(false);
+    }
 
     checkStream();
 
@@ -57,7 +65,9 @@ export default function LiveStreamPlayer() {
 
   return (
     <div className="flex flex-col flex-1 gap-4 w-full">
-      <CustomPlayer streamUrl={streamUrl} isStreamLive={hasMounted && isStreamLive} showControls={false} />
+      <ErrorBoundary fallback={<></>}>
+        <CustomPlayer streamUrl={streamUrl} isStreamLive={hasMounted && isStreamLive} showControls={false} />
+      </ErrorBoundary>
       
       { !isStreamLive ? (
         <Alert variant="default" className="w-full">

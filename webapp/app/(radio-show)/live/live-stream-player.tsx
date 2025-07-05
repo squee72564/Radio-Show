@@ -36,7 +36,7 @@ export default function LiveStreamPlayer() {
           retry();
         }
       } catch (err) {
-        console.log("error");
+        console.log(err);
         retry();
       }
     };

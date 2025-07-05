@@ -126,7 +126,7 @@ export function CustomPlayer({
   useEffect(() => {
     setHasMounted(true);
     return () => setHasMounted(false);
-  });
+  }, []);
 
   useEffect(() => {
     const audio = audioRef.current;

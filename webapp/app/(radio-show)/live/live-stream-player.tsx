@@ -6,8 +6,6 @@ import { useStreamStatus } from '@/hooks/use-streamstatus';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CustomPlayer } from "@/components/audio-player";
 import { ErrorBoundary } from "react-error-boundary";
-import { setStreamStatus } from "@/lib/db/actions/streamscheduleActions";
-
 
 export default function LiveStreamPlayer() {
   const streamUrl: string = "http://localhost:3000/api/live";
@@ -31,7 +29,7 @@ export default function LiveStreamPlayer() {
       try {
         const response = await fetch("/api/stream_status");
         const data = await response.json();
-        if (response.ok && data.status === 200) {
+        if (response.ok && data.status === "live") {
           setLoading(false);
           SetStreamLive(true);
         } else {

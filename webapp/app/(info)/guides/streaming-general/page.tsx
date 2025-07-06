@@ -34,7 +34,7 @@ export default async function StreamingGeneralInfo() {
         <CardContent className="space-y-2">
           <p>
             {"To stream on MugenBeat, you must first "}<strong>create an account</strong>.
-            {"The platform uses Google OAuth, so you will need a google account to stream."}
+            {"The platform uses Google OAuth, so you will need a Google account to stream."}
             {"Once you're logged in, you'll gain access to the stream scheduling system."}
           </p>
         </CardContent>
@@ -53,23 +53,23 @@ export default async function StreamingGeneralInfo() {
           </p>
           <p>
             When scheduling a stream, select dates and times based on your own local
-            time zone. Behind the scenes MugenBeat will transform it all to UTC and display it to
-            other users in their own local timezone.
+            time zone. Behind the scenes, MugenBeat will transform it all to UTC and display it to
+            other users in their own local time zone.
           </p>
           <p className="flex flex-row gap-2 justify-center items-center text-center"> 
             <Badge className="max-h-8 text-black font-bold" variant="destructive">
               WARNING!
             </Badge>
             Keep in mind potential daylight savings time shifts when applying for a slot in the calendar.
-            Since MugenBeat internally operates on UTC, your schedule may shift forward or backwards
+            Since MugenBeat internally operates on UTC, your schedule may shift forward or backward
             an hour from when you originally scheduled it. Always check the schedule to see when your
             stream is starting in your own local time zone.
           </p>
 
           <p>Additional Notes:</p>
           <ul className="list-disc list-inside space-y-1">
-            <li>There are <strong>No overlapping streams</strong> — only one show can be live at any time.</li>
-            <li>Approved streams runs for a <strong>4-hour maximum time window</strong>.</li>
+            <li>There are <strong>no overlapping streams</strong> — only one show can be live at any time.</li>
+            <li>Approved streams run for a <strong>4-hour maximum time window</strong>.</li>
           </ul>
         </CardContent>
       </Card>
@@ -87,7 +87,7 @@ export default async function StreamingGeneralInfo() {
             </li>
 
             <li>All submitted streams are <strong>pending until approved</strong> by an admin.</li>
-            <li>{"Once approved, your stream appears on the calendar and you're authorized to broadcast."}</li>
+            <li>{"Once approved, your stream appears on the calendar, and you're authorized to broadcast."}</li>
             <li>Admins may revoke scheduled streams at any time.</li>
           </ul>
         </CardContent>

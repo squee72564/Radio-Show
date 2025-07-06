@@ -36,6 +36,14 @@ services:
       - backend
     command: server /data --console-address ":9001"
 
+  prometheus:
+    volumes:
+      - ./prometheus.dev.yml:/etc/prometheus/prometheus.yml:ro
+
+  grafana:
+    env_file:
+      - .env.dev
+
 volumes:
   dev-postgres-data:
   minio-data-dev:

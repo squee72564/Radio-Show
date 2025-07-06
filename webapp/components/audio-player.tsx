@@ -90,7 +90,7 @@ function WaveformVisualizer({
   return (
     <canvas
       ref={canvasRef}
-      className="w-full aspect-[4/1] bg-primary/50 rounded-xl"
+      className="w-full aspect-[4/1] rounded-xl bg-white/80 border-black/40 border-1"
     />
   );
 }
@@ -237,7 +237,7 @@ export function CustomPlayer({
   }
 
   return (
-    <div className="flex flex-col items-center justify-center text-center w-full gap-4 bg-muted p-4 rounded-xl">
+    <div className="flex flex-col items-center justify-center text-center w-full gap-4 bg-muted p-4 rounded-xl border-1 border-black/20 ">
       <div
         className="flex flex-col justify-center items-center w-full max-w-full aspect-[4/1] bg-primary/10 rounded-xl"
       >
@@ -291,7 +291,7 @@ export function CustomPlayer({
         View: {isTimeDomain ? "Time Domain" : "Frequency Domain"}
       </Button>
       <div className="w-full flex flex-row gap-2">
-        <Badge variant={"outline"} className="text-sm text-muted-foreground mb-1">
+        <Badge variant={"outline"} className="text-sm mb-1">
           {!isStreamLive ? "Offline" : isLoading ? "Loading..." : `Volume: ${volume}%`}
         </Badge>
         <Slider

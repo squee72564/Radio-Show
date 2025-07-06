@@ -4,11 +4,13 @@ import { StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/cli
 import {
   Card,
   CardAction,
+  CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import LocalDate  from "@/components/localdate";
 import { formatTime } from "@/lib/utils";
+import UserAvatar from "./user-avatar";
 
 export default function StreamArchiveInfoCard({
   streamArchive
@@ -18,22 +20,21 @@ export default function StreamArchiveInfoCard({
 
   return (
     <Link href={`/archive/${streamArchive.id}`}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex gap-5">
-            {streamArchive.streamSchedule.title}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Clock4 className="w-4 h-4" />
-              <p>{streamArchive.durationInSeconds ? formatTime(streamArchive.durationInSeconds) : "N/A"}</p>
+      <Card className="py-2 text-center">
+        <CardContent className="flex items-center justify-between gap-2">
+            <p className="truncate">{streamArchive.streamSchedule.title}</p>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground hidden md:block">
+              <p>Duration: {streamArchive.durationInSeconds ? formatTime(streamArchive.durationInSeconds) : "N/A"}</p>
             </div>
-          </CardTitle>
-          <CardAction>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <CalendarRange className="w-4 h-4" />
+              <CalendarRange className="w-4 h-4 hidden lg:block" />
               <LocalDate date={streamArchive.streamInstance.scheduledStart}/>
             </div>
-          </CardAction>
-        </CardHeader>
+            <div className="hidden md:block">
+              <UserAvatar user={streamArchive.user}/>
+
+            </div>
+        </CardContent>
       </Card>
     </Link>
 

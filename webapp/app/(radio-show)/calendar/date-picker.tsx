@@ -27,8 +27,9 @@ export function DatePicker() {
   const searchParams = useSearchParams();
   const initialDateParam = searchParams.get("date");
 
-  const [date, setDate] = useState<Date | undefined>(() => {
-    return initialDateParam ? new Date(initialDateParam) : new Date();
+  const [date, setDate] = useState<Date>(() => {
+    const parsed = new Date(initialDateParam ?? "");
+    return isNaN(parsed.getTime()) ? new Date() : parsed;
   });
 
   useEffect(() => {
@@ -36,10 +37,11 @@ export function DatePicker() {
 
     const timeout = setTimeout(() => {
       const startOfDay = new Date(date);
-      startOfDay.setHours(0, 0, 0, 0);
-
       const endOfDay = new Date(date);
+
+      startOfDay.setHours(0, 0, 0, 0);
       endOfDay.setHours(23, 59, 59, 999);
+
       startTransition(async () => {
         setSchedule(
           await getStreamInstancesByDateRange(

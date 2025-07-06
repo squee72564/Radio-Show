@@ -1,12 +1,9 @@
-import { CalendarRange, Clock4 } from "lucide-react";
+import { CalendarRange } from "lucide-react";
 import Link from "next/link";
 import { StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
 import {
   Card,
-  CardAction,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import LocalDate  from "@/components/localdate";
 import { formatTime } from "@/lib/utils";

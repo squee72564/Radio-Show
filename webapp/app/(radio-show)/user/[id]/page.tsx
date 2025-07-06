@@ -61,9 +61,9 @@ export default async function UserProfilePage({
         </TabsList>
 
         <TabsContent value="bio" className="flex-1 flex flex-col min-h-[200px]">
-          <Card className="w-full flex-1 flex flex-col">
+          <Card className="w-full flex-1 flex flex-col bg-transparent">
             <CardHeader>
-              <CardTitle>About</CardTitle>
+              <CardTitle className="font-bold text-xl">About</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col overflow-y-auto min-h-[200px] max-h-[calc(100vh-500px)] px-6">
               {userProfileInfo.bio ? (
@@ -80,11 +80,11 @@ export default async function UserProfilePage({
         </TabsContent>
 
         <TabsContent value="shows" className="flex-1 flex flex-col min-h-[200px]">
-          <Card className="w-full flex-1 flex flex-col">
+          <Card className="w-full flex-1 flex flex-col bg-transparent">
             <CardHeader>
-              <CardTitle>Active Streams</CardTitle>
+              <CardTitle className="font-bold text-xl">Active Streams</CardTitle>
             </CardHeader>
-            <CardContent className="overflow-y-auto min-h-[200px] max-h-[calc(100vh-500px)] px-2">
+            <CardContent className="overflow-y-auto min-h-[200px] max-h-[calc(100vh-475px)] mx-4">
               <Suspense fallback={<Badge variant="outline" className="text-center mx-3 p-2">Loading...</Badge>}>
                 <UserProfileStreamList userProfileInfo={userProfileInfo}/>
               </Suspense>
@@ -94,9 +94,9 @@ export default async function UserProfilePage({
         </TabsContent>
 
         <TabsContent value="archive" className="flex-1 flex flex-col min-h-[200px]">
-          <Card className="flex flex-col">
+          <Card className="w-full flex-1 flex flex-col bg-transparent">
             <CardHeader>
-              <CardTitle>Archives</CardTitle>
+              <CardTitle className="font-bold text-xl">Archives</CardTitle>
             </CardHeader>
             <CardContent className="overflow-y-auto min-h-[200px] max-h-[calc(100vh-500px)] px-2">
               <Suspense fallback={<Badge variant="outline" className="text-center mx-3 p-2">Loading...</Badge>}>

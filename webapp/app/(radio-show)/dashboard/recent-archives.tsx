@@ -3,16 +3,22 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { findRecentArchives } from "@/lib/db/services/streamscheduleService";
-import { StreamArchive, StreamInstance, StreamSchedule } from "@prisma/client";
+import { StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
 import LocalDate from "@/components/localdate";
+import StreamArchiveInfoCard from "@/components/streamarchive-info-card";
 
 export default async function RecentArchives() {
   const archives = await findRecentArchives(5, {
     include: {
       streamSchedule: true,
-      streamInstance: true
+      streamInstance: true,
+      user: true
     }
-  }) as (StreamArchive & {streamSchedule: StreamSchedule, streamInstance: StreamInstance})[];
+  }) as (StreamArchive & {
+    streamSchedule: StreamSchedule,
+    streamInstance: StreamInstance
+    user: User
+  })[];
 
   return (
     <section className="min-h-41 max-h-41 w-full">
@@ -20,11 +26,7 @@ export default async function RecentArchives() {
       {archives.length > 0 ? (
         <ul className="list-disc pl-5 space-y-1 overflow-auto">
           {archives.map((archive, idx) => (
-            <li key={idx}>
-              <Link href={`archive/${archive.id}`} className="flex flex-row gap-2 hover:underline text-primary">
-                {archive.streamSchedule.title} - <LocalDate date={archive.streamInstance.scheduledStart}/>
-              </Link>
-            </li>
+            <StreamArchiveInfoCard key={idx} streamArchive={archive}/>
           ))}
         </ul>
       ) : (

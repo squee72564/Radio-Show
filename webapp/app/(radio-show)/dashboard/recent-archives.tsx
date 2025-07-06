@@ -24,11 +24,11 @@ export default async function RecentArchives() {
     <section className="min-h-41 max-h-41 w-full">
       <h2 className="text-lg font-medium mb-4">Recent Archives</h2>
       {archives.length > 0 ? (
-        <ul className="list-disc pl-5 space-y-1 overflow-auto">
+        <div className="list-disc space-y-1 overflow-auto">
           {archives.map((archive, idx) => (
             <StreamArchiveInfoCard key={idx} streamArchive={archive}/>
           ))}
-        </ul>
+        </div>
       ) : (
         <Badge variant="outline" className="text-muted-foreground">
           No previous archives

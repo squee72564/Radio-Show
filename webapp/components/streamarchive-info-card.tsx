@@ -3,8 +3,7 @@ import Link from "next/link";
 import { StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
 import {
   Card,
-  CardContent,
-  CardDescription,
+  CardAction,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -21,21 +20,20 @@ export default function StreamArchiveInfoCard({
     <Link href={`/archive/${streamArchive.id}`}>
       <Card>
         <CardHeader>
-          <CardTitle className="mb-2">{streamArchive.streamSchedule.title}</CardTitle>
-          <CardDescription className="flex flex-col gap-2">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <CalendarRange className="w-4 h-4" />
-              <LocalDate date={streamArchive.streamInstance.scheduledStart}/>
-            </div>
+          <CardTitle className="flex gap-5">
+            {streamArchive.streamSchedule.title}
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Clock4 className="w-4 h-4" />
               <p>{streamArchive.durationInSeconds ? formatTime(streamArchive.durationInSeconds) : "N/A"}</p>
             </div>
-          </CardDescription>
+          </CardTitle>
+          <CardAction>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <CalendarRange className="w-4 h-4" />
+              <LocalDate date={streamArchive.streamInstance.scheduledStart}/>
+            </div>
+          </CardAction>
         </CardHeader>
-        <CardContent>
-          <p className="truncate">{streamArchive.streamSchedule.description}</p>
-        </CardContent>
       </Card>
     </Link>
 

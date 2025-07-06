@@ -43,7 +43,10 @@ services:
   grafana:
     env_file:
       - .env.dev
+    volumes:
+      - grafana-storage-dev:/var/lib/grafana
 
 volumes:
+  grafana-storage-dev:
   dev-postgres-data:
   minio-data-dev:

@@ -19,10 +19,10 @@ export default async function RecentArchives() {
   })[];
 
   return (
-    <section className="min-h-41 max-h-41 w-full">
+    <section className="w-full">
       <h2 className="text-lg font-medium mb-4">Recent Archives</h2>
       {archives.length > 0 ? (
-        <div className="flex flex-col gap-2 overflow-auto">
+        <div className="flex flex-col gap-3 min-h-41 max-h-41 overflow-auto">
           {archives.map((archive, idx) => (
             <StreamArchiveInfoCard key={idx} streamArchive={archive}/>
           ))}

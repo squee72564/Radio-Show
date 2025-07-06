@@ -2,15 +2,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default async function RecentArchivesSkeleton() {
   return (
-    <section className="w-full">
+    <section className="w-full ">
       <h2 className="text-lg font-medium mb-4">Recent Archives</h2>
-      <ul className="list-disc pl-5 space-y-2">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <li key={i}>
-            <Skeleton className="h-4 w-2/3" />
-          </li>
+      <div className="flex flex-col gap-3 overflow-auto min-h-41 max-h-41">
+        {Array.from({ length: 2 }).map((_, i) => (
+          <Skeleton key={i} className="p-6 w-full" />
         ))}
-      </ul>
+      </div>
     </section>
   );
 }

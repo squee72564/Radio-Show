@@ -17,17 +17,26 @@ export default function StreamArchiveInfoCard({
 
   return (
     <Link href={`/archive/${streamArchive.id}`}>
-      <Card className="p-0 py-2 text-center">
-        <CardContent className="flex items-center justify-between gap-2">
-            <p className="truncate">{streamArchive.streamSchedule.title}</p>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground hidden md:block">
-              <p>Duration: {streamArchive.durationInSeconds ? formatTime(streamArchive.durationInSeconds) : "N/A"}</p>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <CalendarRange className="w-4 h-4 hidden lg:block" />
-              <LocalDate date={streamArchive.streamInstance.scheduledStart}/>
-            </div>
-            <UserAvatar className="hidden md:block" user={streamArchive.user}/>
+      <Card className="p-0 py-2 text-center min-w-0">
+        <CardContent className="flex items-center justify-between gap-4 px-4 h-8">
+          <div className="flex-1 min-w-0">
+            <p className="truncate text-left text-base font-medium">
+              {streamArchive.streamSchedule.title}
+            </p>
+          </div>
+
+          <div className="hidden lg:flex items-center gap-2 text-sm text-muted-foreground whitespace-nowrap">
+            <p>Duration: {streamArchive.durationInSeconds ? formatTime(streamArchive.durationInSeconds) : "N/A"}</p>
+          </div>
+
+          <div className="flex items-center gap-1 text-sm text-muted-foreground whitespace-nowrap">
+            <CalendarRange className="w-4 h-4 hidden lg:inline" />
+            <LocalDate date={streamArchive.streamInstance.scheduledStart}/>
+          </div>
+
+          <div className="hidden md:block flex-shrink-0">
+            <UserAvatar user={streamArchive.user} />
+          </div>
         </CardContent>
       </Card>
     </Link>

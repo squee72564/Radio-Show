@@ -10,18 +10,18 @@ export default async function RecentUsers() {
   const users = await findRecentUsers(5);
   
   return (
-    <section className="w-full">
-      <h2 className="text-lg font-medium mb-4">Recent Users</h2>
+    <div className="flex flex-col gap-4 w-full">
+      <h2 className="text-lg font-medium">Recent Users</h2>
       {users.length > 0 ? (
-        <div className="flex flex-col gap-3 min-h-41 max-h-41 overflow-auto">
+        <div className="flex flex-col gap-2 min-h-41 max-h-41 overflow-auto">
           {users.map((user: User, idx: number) => (
             <Link
               key={idx}
               href={`/user/${user.id}`}
-              className="flex items-center gap-4 p-2 rounded-md hover:bg-muted transition-colors"
+              className="flex items-center gap-4 p-2 rounded-md hover:bg-muted transition-colors h-12"
             >
-              <UserAvatar user={user} className="h-9 w-9"/>
-              <span className="text-sm font-medium">{user.name}</span>
+              <UserAvatar user={user} className="h-9 w-9 hidden md:flex"/>
+              <span className="text-sm font-medium truncate">{user.name}</span>
             </Link>
           ))}
         </div>
@@ -30,6 +30,6 @@ export default async function RecentUsers() {
           No recent users.
         </Badge>
       )}
-    </section>
+    </div>
   );
 }

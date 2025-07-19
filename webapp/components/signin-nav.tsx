@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/sidebar"
 
 import { isUserAdmin } from "@/lib/utils";
-import { MoreVerticalIcon, UserCircleIcon, LogIn, LogOut, CrownIcon } from "lucide-react"
+import { MoreVerticalIcon, UserCircleIcon, LogIn, LogOut, CrownIcon, PlusIcon } from "lucide-react"
 import { User } from "@prisma/client";
 import Link from "next/link"
 import { JSX } from "react";
@@ -114,6 +114,15 @@ export async function SignInOutNav() {
                         </DropdownMenuItem>
                       </Link> 
                     }
+                    <Link
+                      href={`/user/apply`}
+                      className="w-full"
+                    >
+                      <DropdownMenuItem className="w-full">
+                        <PlusIcon />
+                        Apply To Stream
+                      </DropdownMenuItem>
+                    </Link>
                   </>
                 }
                 <form

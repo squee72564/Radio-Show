@@ -12,7 +12,13 @@ const appEnv = (process.env.APP_ENV ?? "development") as keyof typeof nodeEnvMap
 dotenv.config({path: `../.env.${nodeEnvMap[appEnv]}`})
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  logging: {
+    fetches: {
+      fullUrl: true,
+      hmrRefreshes: true,
+    },
+    incomingRequests: true
+  }
 };
 
 export default nextConfig;

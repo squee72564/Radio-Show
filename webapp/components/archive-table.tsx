@@ -104,8 +104,8 @@ export default function ArchiveDataTable<TData extends object, TValue>({
           Next
         </Button>
       </CardHeader>
-      <CardContent className="border flex-1 min-h-90">
-        <Table className="table-fixed w-full`">
+      <CardContent className="border flex flex-1">
+        <Table className="flex-1 table-fixed w-full`">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -151,7 +151,7 @@ export default function ArchiveDataTable<TData extends object, TValue>({
         </Table>
       </CardContent>
       <CardFooter className="mx-auto">
-        Page {table.getPageCount()}
+        Total Pages {table.getPageCount()}
       </CardFooter>
     </Card>
   )

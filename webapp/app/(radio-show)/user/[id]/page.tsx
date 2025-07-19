@@ -94,16 +94,9 @@ export default async function UserProfilePage({
         </TabsContent>
 
         <TabsContent value="archive" className="flex-1 flex flex-col min-h-[200px]">
-          <Card className="w-full flex-1 flex flex-col bg-transparent">
-            <CardHeader>
-              <CardTitle className="font-bold text-xl">Archives</CardTitle>
-            </CardHeader>
-            <CardContent className="overflow-y-auto min-h-[200px] max-h-[calc(100vh-500px)] px-2">
-              <Suspense fallback={<Badge variant="outline" className="text-center mx-3 p-2">Loading...</Badge>}>
-                <UserProfileArchiveList userProfileInfo={userProfileInfo}/>
-              </Suspense>
-            </CardContent>
-          </Card>
+          <Suspense fallback={<Badge variant="outline" className="text-center mx-3 p-2">Loading...</Badge>}>
+            <UserProfileArchiveList userProfileInfo={userProfileInfo}/>
+          </Suspense>
         </TabsContent>
       </Tabs>
     </div>

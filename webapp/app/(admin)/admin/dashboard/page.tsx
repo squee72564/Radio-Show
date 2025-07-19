@@ -2,13 +2,6 @@
 
 import { Suspense } from "react";
 import { ShieldUserIcon } from "lucide-react";
-import { redirect } from "next/navigation";
-
-import { isUserAdmin } from "@/lib/utils";
-
-import { auth } from "@/auth";
-import { User } from "@prisma/client";
-
 import { Separator } from "@/components/ui/separator";
 import SkeletonCountCard from "@/app/(admin)/admin/dashboard/skeleton-card";
 import UserCountCard from "@/app/(admin)/admin/dashboard/user-count-card";
@@ -16,13 +9,6 @@ import ApprovedSchedulesCountCard from "@/app/(admin)/admin/dashboard/approved-s
 import PendingSchedulesCard from "@/app/(admin)/admin/dashboard/pending-schedules-count-card";
 
 export default async function AdminDashboard() {
-  const session = await auth();
-  const user = session?.user as User | undefined;
-
-  if (!user || !isUserAdmin(user.status)) {
-    redirect("/dashboard");
-  }
-
   return (
     <div className="w-full p-6 space-y-6">
       <h1 className="text-2xl font-bold flex items-center gap-2">

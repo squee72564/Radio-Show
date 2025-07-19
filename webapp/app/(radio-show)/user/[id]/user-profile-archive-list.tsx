@@ -1,5 +1,5 @@
 import { findArchivesByUserId } from "@/lib/db/services/streamscheduleService";
-import { StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
+import { StreamArchive, User } from "@prisma/client";
 import UserArchiveTable from "./user-archive-table";
 import { StreamArchiveRelations } from "@/types/prisma-relations";
 

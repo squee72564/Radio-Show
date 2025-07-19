@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import LocalDate from "@/components/localdate";
 import { Badge } from "@/components/ui/badge";
-import ArchiveDataTable from "@/components/archive-table";
+import DataTable from "@/components/data-table";
 import { StreamArchiveRelations } from "@/types/prisma-relations";
 
 export type ArchiveRowData = StreamArchive & Omit<StreamArchiveRelations, "streamInstance">
@@ -84,7 +84,7 @@ export default function ArchiveUserTable({ data }: { data: ArchiveRowData[] }) {
   const router = useRouter();
 
   return (
-    <ArchiveDataTable
+    <DataTable
       data={data}
       columns={columns}
       filterColumns={["title", "tags", "username"]}

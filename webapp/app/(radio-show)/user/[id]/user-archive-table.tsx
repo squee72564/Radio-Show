@@ -6,13 +6,13 @@ import { StreamArchiveRelations } from "@/types/prisma-relations";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import LocalDate from "@/components/localdate";
-import ArchiveDataTable from "@/components/archive-table";
+import DataTable from "@/components/data-table";
 import { formatTime } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
-export type ArchiveRowData = StreamArchive & StreamArchiveRelations
+type UserArchiveRowData = StreamArchive & StreamArchiveRelations
 
-export const columns: ColumnDef<ArchiveRowData>[] = [
+export const columns: ColumnDef<UserArchiveRowData>[] = [
   {
     accessorFn: row => row.streamSchedule.title,
     id: "title",
@@ -61,11 +61,11 @@ export const columns: ColumnDef<ArchiveRowData>[] = [
   }
 ]
 
-export default function UserArchiveTable({ data }: { data: ArchiveRowData[] }) {
+export default function UserArchiveTable({ data }: { data: UserArchiveRowData[] }) {
   const router = useRouter();
 
   return (
-    <ArchiveDataTable
+    <DataTable
       data={data}
       columns={columns}
       filterColumns={["title"]}

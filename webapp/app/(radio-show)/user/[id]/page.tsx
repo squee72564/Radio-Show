@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { User } from "@prisma/client";
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -80,17 +80,9 @@ export default async function UserProfilePage({
         </TabsContent>
 
         <TabsContent value="shows" className="flex-1 flex flex-col min-h-[200px]">
-          <Card className="w-full flex-1 flex flex-col bg-transparent">
-            <CardHeader>
-              <CardTitle className="font-bold text-xl">Active Streams</CardTitle>
-            </CardHeader>
-            <CardContent className="overflow-y-auto min-h-[200px] max-h-[calc(100vh-475px)] mx-4">
-              <Suspense fallback={<Badge variant="outline" className="text-center mx-3 p-2">Loading...</Badge>}>
-                <UserProfileStreamList userProfileInfo={userProfileInfo}/>
-              </Suspense>
-            </CardContent>
-          </Card>
-          <CardFooter className="hidden"/>
+          <Suspense fallback={<Badge variant="outline" className="text-center mx-3 p-2">Loading...</Badge>}>
+            <UserProfileStreamList userProfileInfo={userProfileInfo}/>
+          </Suspense>
         </TabsContent>
 
         <TabsContent value="archive" className="flex-1 flex flex-col min-h-[200px]">

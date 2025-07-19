@@ -1,6 +1,7 @@
 import { findArchivesByUserId } from "@/lib/db/services/streamscheduleService";
 import { StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
 import UserArchiveTable from "./user-archive-table";
+import { StreamArchiveRelations } from "@/types/prisma-relations";
 
 export default async function UserProfileArchiveList({userProfileInfo}: {userProfileInfo: User}) {
   const archives = await findArchivesByUserId(userProfileInfo.id,{
@@ -9,7 +10,7 @@ export default async function UserProfileArchiveList({userProfileInfo}: {userPro
       streamSchedule: true,
       user: true,
     }
-  }) as (StreamArchive & {streamInstance: StreamInstance, streamSchedule: StreamSchedule, user: User})[];
+  }) as (StreamArchive & StreamArchiveRelations)[];
 
   return (
     <UserArchiveTable data={archives}/>

@@ -9,7 +9,7 @@ import { adminDeleteArchive } from "@/lib/db/actions/streamscheduleActions";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import LocalDate from "@/components/localdate";
-import ArchiveDataTable from "@/components/archive-table";
+import DataTable from "@/components/data-table";
 import {
   Popover,
   PopoverContent,
@@ -137,7 +137,7 @@ export default function ArchiveAdminTable({ data }: { data: ArchiveRowData[] }) 
   };
 
   return (
-    <ArchiveDataTable
+    <DataTable
       data={tableData}
       columns={columns(handleDelete)}
       filterColumns={["title", "tags", "username"]}

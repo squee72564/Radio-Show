@@ -49,7 +49,7 @@ interface DataTableProps<TData, TValue> {
 
 }
  
-export default function ArchiveDataTable<TData extends object, TValue>({
+export default function DataTable<TData extends object, TValue>({
   columns,
   data,
   filterColumns,
@@ -82,7 +82,7 @@ export default function ArchiveDataTable<TData extends object, TValue>({
     <Card className="flex flex-col flex-1 w-full rounded-sm border">
       <CardHeader className="flex items-center justify-center gap-5">
         <Input
-          placeholder="Filter Archives..."
+          placeholder={`Filter by ${filterColumns?.join(', ')}...`}
           value={globalFilter ?? ""}
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"

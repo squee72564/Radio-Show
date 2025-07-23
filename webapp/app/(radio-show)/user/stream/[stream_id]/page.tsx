@@ -11,6 +11,7 @@ import { CalendarRange, Clock4, Repeat } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import LocalTime from "@/components/localtime";
 import LocalDate from "@/components/localdate";
+import SecretTextToggle from "@/components/secret-text-toggle";
 
 export default async function UserProfilePage({
   params
@@ -70,10 +71,7 @@ export default async function UserProfilePage({
               <span>Credential: </span>
               {streamSchedule.id}
             </div>
-            <div className="w-full">
-              <span>Password: </span>
-              {streamSchedule.password}
-            </div>
+            <SecretTextToggle secret={streamSchedule.password} />
           </CardFooter>
         </>
       }

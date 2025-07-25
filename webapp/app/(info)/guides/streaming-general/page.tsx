@@ -154,7 +154,7 @@ export default async function StreamingGeneralInfo() {
                 href={"/guides/stream-with-BUTT"}
                 className="hover:text-blue-600 hover:underline"
               >
-                Streaming with B.U.T.T.
+                Streaming with BUTT
               </Link>
             </li>
             <li>

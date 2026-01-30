@@ -2,7 +2,7 @@ import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
 import prettierConfig from "eslint-config-prettier";
 
-export default [
+const config = [
   ...nextCoreWebVitals,
   ...nextTypescript,
   {
@@ -10,3 +10,5 @@ export default [
     rules: prettierConfig.rules,
   },
 ];
+
+export default config;

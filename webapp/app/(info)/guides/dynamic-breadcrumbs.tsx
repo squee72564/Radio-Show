@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Breadcrumb,
@@ -6,8 +6,8 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { usePathname } from "next/navigation";
+} from '@/components/ui/breadcrumb';
+import { usePathname } from 'next/navigation';
 
 export default function DynamicBreadcrumbs() {
   const pathname = usePathname();
@@ -19,7 +19,7 @@ export default function DynamicBreadcrumbs() {
       const href = '/' + arr.slice(0, index + 1).join('/');
       const label = decodeURIComponent(segment.replace(/-/g, ' '))
         .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 
       return {
@@ -33,7 +33,7 @@ export default function DynamicBreadcrumbs() {
       <BreadcrumbList className="flex-1 w-full justify-center items-center text-center">
         {segments.map((segment, index) => (
           <div key={segment.href} className="flex flex-row gap-2 justify-center items-center">
-            <BreadcrumbItem >
+            <BreadcrumbItem>
               <BreadcrumbLink href={segment.href.toLowerCase()} className="text-lg font-bold">
                 {segment.label}
               </BreadcrumbLink>

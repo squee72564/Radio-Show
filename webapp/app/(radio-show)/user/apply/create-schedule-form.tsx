@@ -1,33 +1,24 @@
-"use client";
+'use client';
 
-import { useActionState, useState } from "react";
-import { CircleHelpIcon } from "lucide-react";
-import { redirect } from "next/navigation";
-import { streamScheduleFormSubmit } from "@/lib/db/actions/streamscheduleActions";
-import { StreamScheduleFormState, weekdays, Weekday, StreamScheduleFormValues } from "@/types/stream-schedule";
-import { User } from "@prisma/client";
-import { Button } from "@/components/ui/button";
+import { useActionState, useState } from 'react';
+import { CircleHelpIcon } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { streamScheduleFormSubmit } from '@/lib/db/actions/streamscheduleActions';
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { CheckCircle2Icon } from "lucide-react"
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert"
+  StreamScheduleFormState,
+  weekdays,
+  Weekday,
+  StreamScheduleFormValues,
+} from '@/types/stream-schedule';
+import { User } from '@prisma/client';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { CheckCircle2Icon } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-import { streamScheduleSchema } from "@/validations/stream-schedule";
+import { streamScheduleSchema } from '@/validations/stream-schedule';
 
 function HoverCardData() {
   return (
@@ -51,10 +42,12 @@ function HoverCardData() {
         <strong>Repeat Weekly On:</strong> Selected days of the week the stream recurs.
       </div>
       <div>
-        <strong>Credential:</strong> This is a credential that will be used to authenticate when streaming.
+        <strong>Credential:</strong> This is a credential that will be used to authenticate when
+        streaming.
       </div>
       <div>
-        <strong>Interval:</strong> Interval between recurrences. 1 would be every week, 2 every other week, and so on.
+        <strong>Interval:</strong> Interval between recurrences. 1 would be every week, 2 every
+        other week, and so on.
       </div>
       <div>
         <strong>Password:</strong> This is a password that will be used as a credential to stream.
@@ -65,22 +58,17 @@ function HoverCardData() {
 
 function ErrorMessage({ message }: { message?: string[] }) {
   if (!message || message.length === 0) return null;
-  return (
-    <p className="text-sm text-red-500 mt-1">{message.join(", ")}</p>
-  );
+  return <p className="text-sm text-red-500 mt-1">{message.join(', ')}</p>;
 }
 
 export default function CreateScheduleForm({ user }: { user: User }) {
   const [showPassword, setShowPassword] = useState(false);
-  
-  const formActionWithUser = async (
-    prevState: StreamScheduleFormState,
-    formData: FormData
-  ) => {
-    const days = formData.getAll("days") as [Weekday, ...(Weekday)[]];
+
+  const formActionWithUser = async (prevState: StreamScheduleFormState, formData: FormData) => {
+    const days = formData.getAll('days') as [Weekday, ...Weekday[]];
     const raw = Object.fromEntries(formData.entries());
     const clean = Object.fromEntries(
-      Object.entries(raw).filter(([key]) => !key.startsWith("$ACTION_") && !key.startsWith("$"))
+      Object.entries(raw).filter(([key]) => !key.startsWith('$ACTION_') && !key.startsWith('$')),
     );
 
     const merged = { ...clean, days } as Partial<StreamScheduleFormValues>;
@@ -91,7 +79,7 @@ export default function CreateScheduleForm({ user }: { user: User }) {
       return {
         ...prevState,
         success: false,
-        message: "Error validating schedule",
+        message: 'Error validating schedule',
         errors: { ...result.error.flatten().fieldErrors, conflicts: undefined },
         values: merged,
       };
@@ -99,10 +87,10 @@ export default function CreateScheduleForm({ user }: { user: User }) {
 
     const validatedData = result.data;
 
-    const [startYear, startMonth, startDay] = validatedData["start-date"].split("-").map(Number);
-    const [endYear, endMonth, endDay] = validatedData["end-date"].split("-").map(Number);
-    const [startHour, startMinute] = validatedData["start-time"].split(":").map(Number);
-    const [endHour, endMinute] = validatedData["end-time"].split(":").map(Number);
+    const [startYear, startMonth, startDay] = validatedData['start-date'].split('-').map(Number);
+    const [endYear, endMonth, endDay] = validatedData['end-date'].split('-').map(Number);
+    const [startHour, startMinute] = validatedData['start-time'].split(':').map(Number);
+    const [endHour, endMinute] = validatedData['end-time'].split(':').map(Number);
 
     const localStart = new Date(startYear, startMonth - 1, startDay, startHour, startMinute);
     const localEnd = new Date(endYear, endMonth - 1, endDay, endHour, endMinute);
@@ -114,22 +102,22 @@ export default function CreateScheduleForm({ user }: { user: User }) {
       localEndTime.setDate(localEndTime.getDate() + 1);
     }
 
-    formData.append("UTC-start", localStart.toISOString());
-    formData.append("UTC-end", localEnd.toISOString());
+    formData.append('UTC-start', localStart.toISOString());
+    formData.append('UTC-end', localEnd.toISOString());
 
-    formData.append("UTC-start-time", localStartTime.toISOString());
-    formData.append("UTC-end-time", localEndTime.toISOString());
+    formData.append('UTC-start-time', localStartTime.toISOString());
+    formData.append('UTC-end-time', localEndTime.toISOString());
 
     return streamScheduleFormSubmit(user.id, merged, validatedData, prevState, formData);
   };
 
   const [state, formAction] = useActionState(formActionWithUser, {
     success: false,
-    message: "",
+    message: '',
     errors: {},
-    values: {}
+    values: {},
   });
-  
+
   const tomorrowDate = new Date();
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
 
@@ -151,14 +139,11 @@ export default function CreateScheduleForm({ user }: { user: User }) {
         </Alert>
         <Button onClick={() => redirect(`/user/edit`)}>Understood</Button>
       </div>
-    )
+    );
   }
 
   return (
-    <form
-      className="py-5"
-      action={formAction}
-    >
+    <form className="py-5" action={formAction}>
       <Card>
         <CardHeader className="w-full flex flex-row">
           <CardTitle>Stream Schedule Application</CardTitle>
@@ -174,32 +159,42 @@ export default function CreateScheduleForm({ user }: { user: User }) {
         <CardContent className="flex flex-col gap-4">
           <div>
             <label htmlFor="title">Title</label>
-            <Input id="title" name="title" defaultValue={state.values?.title}/>
+            <Input id="title" name="title" defaultValue={state.values?.title} />
             <ErrorMessage message={state.errors?.title} />
           </div>
 
           <div>
             <label htmlFor="description">Description</label>
-            <Input id="description" name="description" defaultValue={state.values?.description}/>
+            <Input id="description" name="description" defaultValue={state.values?.description} />
             <ErrorMessage message={state.errors?.description} />
           </div>
 
           <div>
             <label htmlFor="tags">Tags (comma-separated)</label>
-            <Input id="tags" name="tags" defaultValue={state.values?.tags}/>
-            <ErrorMessage message={state.errors?.tags}/>
+            <Input id="tags" name="tags" defaultValue={state.values?.tags} />
+            <ErrorMessage message={state.errors?.tags} />
           </div>
 
           <div className="flex gap-4">
             <div className="flex-1">
               <label htmlFor="start-time">Start Time</label>
-              <Input type="time" name="start-time" id="start-time" defaultValue={state.values?.["start-time"]}/>
-              <ErrorMessage message={state.errors?.["start-time"]} />
+              <Input
+                type="time"
+                name="start-time"
+                id="start-time"
+                defaultValue={state.values?.['start-time']}
+              />
+              <ErrorMessage message={state.errors?.['start-time']} />
             </div>
             <div className="flex-1">
               <label htmlFor="end-time">End Time</label>
-              <Input type="time" name="end-time" id="end-time" defaultValue={state.values?.["end-time"]}/>
-              <ErrorMessage message={state.errors?.["end-time"]} />
+              <Input
+                type="time"
+                name="end-time"
+                id="end-time"
+                defaultValue={state.values?.['end-time']}
+              />
+              <ErrorMessage message={state.errors?.['end-time']} />
             </div>
           </div>
 
@@ -210,25 +205,21 @@ export default function CreateScheduleForm({ user }: { user: User }) {
                 id="start-date"
                 name="start-date"
                 type="date"
-                min={formattedTomorrow} 
-                defaultValue={
-                  state.values?.["start-date"]
-                }
+                min={formattedTomorrow}
+                defaultValue={state.values?.['start-date']}
               />
-              <ErrorMessage message={state.errors?.["start-date"]} />
+              <ErrorMessage message={state.errors?.['start-date']} />
             </div>
             <div className="flex-1">
               <label htmlFor="end-date">End Date</label>
               <Input
                 id="end-date"
                 name="end-date"
-                type="date" 
+                type="date"
                 min={formattedTomorrow}
-                defaultValue={
-                  state.values?.["end-date"]
-                }
+                defaultValue={state.values?.['end-date']}
               />
-              <ErrorMessage message={state.errors?.["end-date"]} />
+              <ErrorMessage message={state.errors?.['end-date']} />
             </div>
           </div>
           <div className="flex w-full items-center gap-10 py-4">
@@ -249,21 +240,25 @@ export default function CreateScheduleForm({ user }: { user: User }) {
               ))}
               <ErrorMessage message={state.errors?.days} />
             </div>
-           
           </div>
           <ErrorMessage message={state.errors?.conflicts && state.errors.conflicts} />
 
           <div>
-            <label htmlFor="interval">{"Interval (Weeks)"}</label>
-            <Input id="interval" name="interval" type="number" defaultValue={state.values?.interval}/>
-            <ErrorMessage message={state.errors?.interval}/>
+            <label htmlFor="interval">{'Interval (Weeks)'}</label>
+            <Input
+              id="interval"
+              name="interval"
+              type="number"
+              defaultValue={state.values?.interval}
+            />
+            <ErrorMessage message={state.errors?.interval} />
           </div>
 
           <div className="flex flex-col gap-4">
             <label htmlFor="password">Stream Password</label>
             <div className="relative">
               <Input
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 name="password"
                 id="password"
                 defaultValue={state.values?.password}
@@ -274,15 +269,16 @@ export default function CreateScheduleForm({ user }: { user: User }) {
                 onClick={() => setShowPassword((prev) => !prev)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-muted-foreground"
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? 'Hide' : 'Show'}
               </button>
             </div>
             <ErrorMessage message={state.errors?.password} />
-
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" variant="outline">Submit Applicaiton</Button>
+          <Button type="submit" variant="outline">
+            Submit Applicaiton
+          </Button>
         </CardFooter>
       </Card>
     </form>

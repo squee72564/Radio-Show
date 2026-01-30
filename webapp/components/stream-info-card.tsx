@@ -1,19 +1,17 @@
-import { StreamSchedule } from "@prisma/client";
-import { CalendarRange, Clock4, Repeat } from "lucide-react";
-import { RRule } from "rrule";
-import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
-import LocalTime from "@/components/localtime";
-import LocalDate  from "./localdate";
+import { StreamSchedule } from '@prisma/client';
+import { CalendarRange, Clock4, Repeat } from 'lucide-react';
+import { RRule } from 'rrule';
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import LocalTime from '@/components/localtime';
+import LocalDate from './localdate';
 
-export default function StreamInfoCard({stream}: {stream: StreamSchedule}) {
+export default function StreamInfoCard({ stream }: { stream: StreamSchedule }) {
   const recurrence = RRule.fromString(stream.rrule).toText();
 
   return (
     <Card className="shadow-md">
       <CardHeader>
-        <CardTitle className="font-bold text-lg">
-          {stream.title}
-        </CardTitle>
+        <CardTitle className="font-bold text-lg">{stream.title}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -31,7 +29,6 @@ export default function StreamInfoCard({stream}: {stream: StreamSchedule}) {
           <span>{recurrence}</span>
         </div>
       </CardContent>
-
     </Card>
   );
 }

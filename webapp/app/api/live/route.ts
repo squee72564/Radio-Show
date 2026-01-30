@@ -1,12 +1,8 @@
 export async function GET() {
-  const {
-    ICECAST_HOST_WEBAPP,
-    ICECAST_PORT,
-    ICECAST_MOUNT,
-  } = process.env;
+  const { ICECAST_HOST_WEBAPP, ICECAST_PORT, ICECAST_MOUNT } = process.env;
 
   if (!ICECAST_HOST_WEBAPP || !ICECAST_PORT || !ICECAST_MOUNT) {
-    return new Response("Env vars not set on server", {status: 500});
+    return new Response('Env vars not set on server', { status: 500 });
   }
 
   try {
@@ -15,8 +11,8 @@ export async function GET() {
     return new Response(upstream.body, {
       status: upstream.status,
       headers: {
-        "Content-Type": "audio/mpeg",
-        "Cache-Control": "no-store",
+        'Content-Type': 'audio/mpeg',
+        'Cache-Control': 'no-store',
       },
     });
   } catch (err) {

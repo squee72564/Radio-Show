@@ -1,36 +1,34 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
+import * as React from 'react';
+import { Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useEffect, useState } from "react"
-
+} from '@/components/ui/dropdown-menu';
+import { useEffect, useState } from 'react';
 
 const themes = [
-  { name: "Slate", value: "light"},
-  { name: "Slate Dark", value: "dark" },
-  { name: "Bubblegum", value: "bubblegum"},
-  { name: "Bubblegum Dark", value: "bubblegum-dark" },
-  { name: "Doom64", value: "doom64"},
-  { name: "Doom64 Dark", value: "doom64-dark" },
-  { name: "Kodama Grove", value: "kodamagrove"},
-  { name: "Kodama Grove Dark", value: "kodamagrove-dark" },
-  { name: "Pastel Dreams", value: "pasteldreams"},
-  { name: "Pastel Dreams Dark", value: "pasteldreams-dark" },
-
+  { name: 'Slate', value: 'light' },
+  { name: 'Slate Dark', value: 'dark' },
+  { name: 'Bubblegum', value: 'bubblegum' },
+  { name: 'Bubblegum Dark', value: 'bubblegum-dark' },
+  { name: 'Doom64', value: 'doom64' },
+  { name: 'Doom64 Dark', value: 'doom64-dark' },
+  { name: 'Kodama Grove', value: 'kodamagrove' },
+  { name: 'Kodama Grove Dark', value: 'kodamagrove-dark' },
+  { name: 'Pastel Dreams', value: 'pasteldreams' },
+  { name: 'Pastel Dreams Dark', value: 'pasteldreams-dark' },
 ];
 
 export function ModeToggle() {
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const id = setTimeout(() => setMounted(true), 0);
@@ -38,16 +36,18 @@ export function ModeToggle() {
   }, []);
 
   if (!mounted) return null;
-  
+
   return (
     <>
-      <span>Theme: {themes.find((themeData) => themeData.value === theme)?.name || "undefined"}</span>
+      <span>
+        Theme: {themes.find((themeData) => themeData.value === theme)?.name || 'undefined'}
+      </span>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">
-            {(theme && theme.includes("dark")) ? (
+            {theme && theme.includes('dark') ? (
               <Moon className="h-[1.2rem] w-[1.2rem]" />
-            ): (
+            ) : (
               <Sun className="h-[1.2rem] w-[1.2rem]" />
             )}
           </Button>
@@ -61,5 +61,5 @@ export function ModeToggle() {
         </DropdownMenuContent>
       </DropdownMenu>
     </>
-  )
+  );
 }

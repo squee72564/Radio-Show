@@ -6,7 +6,7 @@ import {
   StreamInstance,
   StreamSchedule,
   User,
-} from "@prisma/client";
+} from '@prisma/client';
 
 export type UserRelations = {
   accounts: Account[];

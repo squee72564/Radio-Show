@@ -1,13 +1,13 @@
-import { MailQuestionIcon, BugOffIcon } from "lucide-react"
-import { Metadata } from "next"
+import { MailQuestionIcon, BugOffIcon } from 'lucide-react';
+import { Metadata } from 'next';
 
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 
 export const metadata: Metadata = {
-  title: "MugenBeat - Contact",
-  description: "Contact page for MugenBeat",
+  title: 'MugenBeat - Contact',
+  description: 'Contact page for MugenBeat',
 };
 
 export default function Contact() {
@@ -26,14 +26,16 @@ export default function Contact() {
       <Card className="text-center">
         <CardContent className="space-y-15">
           <div className="flex flex-col items-center">
-            <MailQuestionIcon /> 
+            <MailQuestionIcon />
             <h2 className="text-xl font-semibold mb-1">Email</h2>
             <p className="text-muted-foreground">
-              You can contact us at <a href="mailto:contact@radioshow.fm" className="underline">contact@radioshow.fm</a>.
+              You can contact us at{' '}
+              <a href="mailto:contact@radioshow.fm" className="underline">
+                contact@radioshow.fm
+              </a>
+              .
             </p>
-            <p className="text-muted-foreground">
-                We’ll try to respond within a day or two.
-            </p>
+            <p className="text-muted-foreground">We’ll try to respond within a day or two.</p>
           </div>
 
           <div className="flex flex-col items-center">
@@ -42,7 +44,6 @@ export default function Contact() {
             <p className="text-muted-foreground">
               Found a bug or want to suggest a feature? Submit it on GitHub:
             </p>
-
           </div>
         </CardContent>
         <CardFooter>
@@ -59,5 +60,5 @@ export default function Contact() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }

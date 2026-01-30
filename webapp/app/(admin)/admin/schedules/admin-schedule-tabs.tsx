@@ -1,20 +1,18 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import UserGroupTabContent from "./schedule-group-tab-content";
-import { $Enums } from "@prisma/client";
+import { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import UserGroupTabContent from './schedule-group-tab-content';
+import { $Enums } from '@prisma/client';
 
 const scheduleTabs = [
-  { value: $Enums.ScheduleStatus.PENDING, label: "Pending" },
-  { value: $Enums.ScheduleStatus.APPROVED, label: "Approved" },
-  { value: $Enums.ScheduleStatus.REJECTED, label: "Rejected" },
+  { value: $Enums.ScheduleStatus.PENDING, label: 'Pending' },
+  { value: $Enums.ScheduleStatus.APPROVED, label: 'Approved' },
+  { value: $Enums.ScheduleStatus.REJECTED, label: 'Rejected' },
 ];
 
 export default function AdminScheduleTabs() {
-  const [activeTab, setActiveTab] = useState<$Enums.ScheduleStatus>(
-    $Enums.ScheduleStatus.PENDING
-  );
+  const [activeTab, setActiveTab] = useState<$Enums.ScheduleStatus>($Enums.ScheduleStatus.PENDING);
 
   return (
     <Tabs

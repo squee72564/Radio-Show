@@ -1,4 +1,4 @@
-import { SidebarItems } from "@/types/sidebar";
+import { SidebarItems } from '@/types/sidebar';
 import {
   Archive,
   Calendar,
@@ -8,39 +8,39 @@ import {
   Music,
   Settings,
   UserRoundCogIcon,
-  ShieldUserIcon
-} from "lucide-react";
-import { AboutCollapsible } from "./about-collapsible";
-import { SettingsSheet } from "./settings-sheet";
+  ShieldUserIcon,
+} from 'lucide-react';
+import { AboutCollapsible } from './about-collapsible';
+import { SettingsSheet } from './settings-sheet';
 
 export const adminItems: SidebarItems[] = [
   {
-    title: "Admin Dashboard",
-    url: "/admin/dashboard",
+    title: 'Admin Dashboard',
+    url: '/admin/dashboard',
     icon: ShieldUserIcon,
   },
   {
-    title: "Main Dashboard",
-    url: "/dashboard",
+    title: 'Main Dashboard',
+    url: '/dashboard',
     icon: LayoutDashboard,
   },
   {
-    title: "Schedules Info",
-    url: "/admin/schedules",
+    title: 'Schedules Info',
+    url: '/admin/schedules',
     icon: CalendarCogIcon,
   },
   {
-    title: "Users Info",
-    url: "/admin/users",
+    title: 'Users Info',
+    url: '/admin/users',
     icon: UserRoundCogIcon,
   },
   {
-    title: "Archive Info",
-    url: "/admin/archives",
+    title: 'Archive Info',
+    url: '/admin/archives',
     icon: Archive,
   },
   {
-    title: "Settings",
+    title: 'Settings',
     component: SettingsSheet,
     icon: Settings,
   },
@@ -48,50 +48,50 @@ export const adminItems: SidebarItems[] = [
 
 export const appItems: SidebarItems[] = [
   {
-    title: "Dashboard",
-    url: "/dashboard",
+    title: 'Dashboard',
+    url: '/dashboard',
     icon: LayoutDashboard,
   },
   {
-    title: "Live Radio",
-    url: "/live",
+    title: 'Live Radio',
+    url: '/live',
     icon: Music,
   },
   {
-    title: "Archived Shows",
-    url: "/archive",
+    title: 'Archived Shows',
+    url: '/archive',
     icon: Archive,
   },
   {
-    title: "Calendar",
-    url: "/calendar",
+    title: 'Calendar',
+    url: '/calendar',
     icon: Calendar,
   },
   {
-    title: "More Information",
+    title: 'More Information',
     component: AboutCollapsible,
-    items : [
+    items: [
       {
-        title: "About",
-        url: "/about",
+        title: 'About',
+        url: '/about',
       },
       {
-        title: "Want to DJ?",
-        url: "/join",
+        title: 'Want to DJ?',
+        url: '/join',
       },
       {
-        title: "Guides",
-        url: "/guides"
+        title: 'Guides',
+        url: '/guides',
       },
       {
-        title: "Contact",
-        url: "/contact",
+        title: 'Contact',
+        url: '/contact',
       },
     ],
-    icon: FileQuestionIcon
+    icon: FileQuestionIcon,
   },
   {
-    title: "Settings",
+    title: 'Settings',
     component: SettingsSheet,
     icon: Settings,
   },

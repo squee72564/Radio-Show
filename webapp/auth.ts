@@ -1,13 +1,18 @@
-import { type Adapter } from "next-auth/adapters"
-import NextAuth from "next-auth"
-import Google from "next-auth/providers/google";
+import { type Adapter } from 'next-auth/adapters';
+import NextAuth from 'next-auth';
+import Google from 'next-auth/providers/google';
 
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import { prisma } from "@/lib/db/prismaClient";
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import { prisma } from '@/lib/db/prismaClient';
 
 const adapter = PrismaAdapter(prisma) as Adapter;
 
-export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
+export const {
+  handlers: { GET, POST },
+  auth,
+  signIn,
+  signOut,
+} = NextAuth({
   adapter: adapter,
   providers: [Google],
-})
+});

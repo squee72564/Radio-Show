@@ -1,27 +1,33 @@
-import { Badge } from "@/components/ui/badge";
+import { Badge } from '@/components/ui/badge';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { ArchiveIcon, BookCheckIcon, CalendarIcon, CheckIcon, HeadphonesIcon, PlusCircleIcon, RocketIcon, RulerIcon } from "lucide-react";
-import Link from "next/link";
+  ArchiveIcon,
+  BookCheckIcon,
+  CalendarIcon,
+  CheckIcon,
+  HeadphonesIcon,
+  PlusCircleIcon,
+  RocketIcon,
+  RulerIcon,
+} from 'lucide-react';
+import Link from 'next/link';
 
 export default async function StreamingGeneralInfo() {
   return (
     <main className="flex flex-col gap-6 p-6 max-w-4xl mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle className="flex gap-2 items-center"><HeadphonesIcon/>MugenBeat Streaming Guide</CardTitle>
+          <CardTitle className="flex gap-2 items-center">
+            <HeadphonesIcon />
+            MugenBeat Streaming Guide
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <p>
-            Welcome to <strong>MugenBeat</strong>, a global internet radio platform where you
-            can share your sound with the world. This guide will walk you through everything
-            you need to know about streaming on the platform.
+            Welcome to <strong>MugenBeat</strong>, a global internet radio platform where you can
+            share your sound with the world. This guide will walk you through everything you need to
+            know about streaming on the platform.
           </p>
         </CardContent>
       </Card>
@@ -29,12 +35,16 @@ export default async function StreamingGeneralInfo() {
       {/* Account Section */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex gap-2 items-center"><RocketIcon/>Getting Started</CardTitle>
+          <CardTitle className="flex gap-2 items-center">
+            <RocketIcon />
+            Getting Started
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           <p>
-            {"To stream on MugenBeat, you must first "}<strong>create an account</strong>.
-            {"The platform uses Google OAuth, so you will need a Google account to stream."}
+            {'To stream on MugenBeat, you must first '}
+            <strong>create an account</strong>.
+            {'The platform uses Google OAuth, so you will need a Google account to stream.'}
             {"Once you're logged in, you'll gain access to the stream scheduling system."}
           </p>
         </CardContent>
@@ -43,33 +53,41 @@ export default async function StreamingGeneralInfo() {
       {/* Schedule Overview */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex gap-2 items-center"><CalendarIcon/>Streaming Schedule</CardTitle>
+          <CardTitle className="flex gap-2 items-center">
+            <CalendarIcon />
+            Streaming Schedule
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <p>
-            MugenBeat uses a <strong>global calendar</strong> for scheduling.
-            The platform uses UTC for all internal dates and times,
-            but it will render your local time for scheduled events on the browser.
+            MugenBeat uses a <strong>global calendar</strong> for scheduling. The platform uses UTC
+            for all internal dates and times, but it will render your local time for scheduled
+            events on the browser.
           </p>
           <p>
-            When scheduling a stream, select dates and times based on your own local
-            time zone. Behind the scenes, MugenBeat will transform it all to UTC and display it to
-            other users in their own local time zone.
+            When scheduling a stream, select dates and times based on your own local time zone.
+            Behind the scenes, MugenBeat will transform it all to UTC and display it to other users
+            in their own local time zone.
           </p>
-          <p className="flex flex-row gap-2 justify-center items-center text-center"> 
+          <p className="flex flex-row gap-2 justify-center items-center text-center">
             <Badge className="max-h-8 text-black font-bold" variant="destructive">
               WARNING!
             </Badge>
-            Keep in mind potential daylight savings time shifts when applying for a slot in the calendar.
-            Since MugenBeat internally operates on UTC, your schedule may shift forward or backward
-            an hour from when you originally scheduled it. Always check the schedule to see when your
-            stream is starting in your own local time zone.
+            Keep in mind potential daylight savings time shifts when applying for a slot in the
+            calendar. Since MugenBeat internally operates on UTC, your schedule may shift forward or
+            backward an hour from when you originally scheduled it. Always check the schedule to see
+            when your stream is starting in your own local time zone.
           </p>
 
           <p>Additional Notes:</p>
           <ul className="list-disc list-inside space-y-1">
-            <li>There are <strong>no overlapping streams</strong> — only one show can be live at any time.</li>
-            <li>Approved streams run for a <strong>4-hour maximum time window</strong>.</li>
+            <li>
+              There are <strong>no overlapping streams</strong> — only one show can be live at any
+              time.
+            </li>
+            <li>
+              Approved streams run for a <strong>4-hour maximum time window</strong>.
+            </li>
           </ul>
         </CardContent>
       </Card>
@@ -77,23 +95,37 @@ export default async function StreamingGeneralInfo() {
       {/* Slot Requests */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex gap-2 items-center"><BookCheckIcon/>Stream Application Form</CardTitle>
+          <CardTitle className="flex gap-2 items-center">
+            <BookCheckIcon />
+            Stream Application Form
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <ul className="list-disc list-inside space-y-1">
             <li>
-              Apply for a slot by navigating to your user page,
-              clicking the edit button at the top right, and then the apply button.
+              Apply for a slot by navigating to your user page, clicking the edit button at the top
+              right, and then the apply button.
             </li>
 
-            <li>All submitted streams are <strong>pending until approved</strong> by an admin.</li>
-            <li>{"Once approved, your stream appears on the calendar, and you're authorized to broadcast."}</li>
+            <li>
+              All submitted streams are <strong>pending until approved</strong> by an admin.
+            </li>
+            <li>
+              {
+                "Once approved, your stream appears on the calendar, and you're authorized to broadcast."
+              }
+            </li>
             <li>Admins may revoke scheduled streams at any time.</li>
           </ul>
         </CardContent>
         <CardFooter>
           <p>
-            <Link className="font-bold hover:underline hover:text-blue-600" href={"/guides/stream-application"}>Click Here </Link>
+            <Link
+              className="font-bold hover:underline hover:text-blue-600"
+              href={'/guides/stream-application'}
+            >
+              Click Here{' '}
+            </Link>
             to see more information about the stream application form itself.
           </p>
         </CardFooter>
@@ -102,13 +134,18 @@ export default async function StreamingGeneralInfo() {
       {/* Streaming Rules */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex gap-2 items-center"><RulerIcon/>Streaming Rules</CardTitle>
+          <CardTitle className="flex gap-2 items-center">
+            <RulerIcon />
+            Streaming Rules
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <ul className="list-disc list-inside space-y-1">
             <li>You can only stream during your approved slot.</li>
             <li>Unauthorized connection attempts will be rejected.</li>
-            <li>Streams are <strong>automatically cut off</strong> when your allotted time ends.</li>
+            <li>
+              Streams are <strong>automatically cut off</strong> when your allotted time ends.
+            </li>
             <li>The content of the streams must be appropriate for all ages</li>
           </ul>
         </CardContent>
@@ -117,13 +154,17 @@ export default async function StreamingGeneralInfo() {
       {/* Archives */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex gap-2 items-center"><ArchiveIcon/>Automatic Archives</CardTitle>
+          <CardTitle className="flex gap-2 items-center">
+            <ArchiveIcon />
+            Automatic Archives
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <p>
-            All live streams are <strong>automatically archived</strong> after completion. These
-            are made available for replay for all users. You can individually delete archives that
-            you no longer want associated with your profile, but <strong>this action is permanent</strong>.
+            All live streams are <strong>automatically archived</strong> after completion. These are
+            made available for replay for all users. You can individually delete archives that you
+            no longer want associated with your profile, but{' '}
+            <strong>this action is permanent</strong>.
           </p>
         </CardContent>
       </Card>
@@ -131,7 +172,10 @@ export default async function StreamingGeneralInfo() {
       {/* Best Practices */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex gap-2 items-center"><CheckIcon/>Best Practices</CardTitle>
+          <CardTitle className="flex gap-2 items-center">
+            <CheckIcon />
+            Best Practices
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <ul className="list-disc list-inside space-y-1">
@@ -145,13 +189,16 @@ export default async function StreamingGeneralInfo() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex gap-2 items-center"><PlusCircleIcon/>Additional Resources</CardTitle>
+          <CardTitle className="flex gap-2 items-center">
+            <PlusCircleIcon />
+            Additional Resources
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <ul className="list-disc list-inside space-y-1">
             <li>
               <Link
-                href={"/guides/stream-with-BUTT"}
+                href={'/guides/stream-with-BUTT'}
                 className="hover:text-blue-600 hover:underline"
               >
                 Streaming with BUTT
@@ -159,7 +206,7 @@ export default async function StreamingGeneralInfo() {
             </li>
             <li>
               <Link
-                href={"/guides/stream-application"}
+                href={'/guides/stream-application'}
                 className="hover:text-blue-600 hover:underline"
               >
                 Stream Application Additional Information
@@ -172,7 +219,10 @@ export default async function StreamingGeneralInfo() {
       <Separator />
 
       <p className="text-sm text-muted-foreground text-center">
-        Have questions? <Link className="underline" href="/contact">Contact the admin team here.</Link>
+        Have questions?{' '}
+        <Link className="underline" href="/contact">
+          Contact the admin team here.
+        </Link>
       </p>
     </main>
   );

@@ -1,15 +1,15 @@
-import type { NextConfig } from "next";
-import dotenv from "dotenv";
+import type { NextConfig } from 'next';
+import dotenv from 'dotenv';
 
 const nodeEnvMap = {
-  "production": "prod",
-  "development": "dev",
-  "test": "test"
+  production: 'prod',
+  development: 'dev',
+  test: 'test',
 };
 
-const appEnv = (process.env.APP_ENV ?? "development") as keyof typeof nodeEnvMap;
+const appEnv = (process.env.APP_ENV ?? 'development') as keyof typeof nodeEnvMap;
 
-dotenv.config({path: `../.env.${nodeEnvMap[appEnv]}`})
+dotenv.config({ path: `../.env.${nodeEnvMap[appEnv]}` });
 
 const nextConfig: NextConfig = {
   logging: {
@@ -17,8 +17,8 @@ const nextConfig: NextConfig = {
       fullUrl: true,
       hmrRefreshes: true,
     },
-    incomingRequests: true
-  }
+    incomingRequests: true,
+  },
 };
 
 export default nextConfig;

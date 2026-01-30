@@ -1,38 +1,39 @@
-import Link from "next/link"
+import Link from 'next/link';
 
 import {
   NavigationMenu,
   NavigationMenuList,
   NavigationMenuItem,
   NavigationMenuLink,
-} from "@/components/ui/navigation-menu"
-import { Music4Icon } from "lucide-react"
-import { Button } from "./ui/button"
+} from '@/components/ui/navigation-menu';
+import { Music4Icon } from 'lucide-react';
+import { Button } from './ui/button';
 
 export default function NavigationHeader() {
   return (
     <header className="sticky top-0 z-40 w-full pt-6">
       <div className="container flex flex-row gap-10 items-center justify-around px-4">
-        <Link href={"/"} className="hidden items-center text-center gap-2 lg:flex">
-          <Music4Icon className="h-10 w-10"/>
-          <span className="text-sm lg:text-xl font-bold cursor-pointer">MugenBeat - 無限ビート</span>
+        <Link href={'/'} className="hidden items-center text-center gap-2 lg:flex">
+          <Music4Icon className="h-10 w-10" />
+          <span className="text-sm lg:text-xl font-bold cursor-pointer">
+            MugenBeat - 無限ビート
+          </span>
         </Link>
         <NavigationMenu>
           <NavigationMenuList>
             <div className="flex gap-8 items-center justify-center flex-wrap">
               {[
-                { title: "Dashboard", href: "/dashboard" },
-                { title: "About", href: "/about" },
-                { title: "Contact", href: "/contact" },
-                { title: "Sign Up To DJ", href: "/join" },
-                { title: "Guides", href: "/guides"}
-
+                { title: 'Dashboard', href: '/dashboard' },
+                { title: 'About', href: '/about' },
+                { title: 'Contact', href: '/contact' },
+                { title: 'Sign Up To DJ', href: '/join' },
+                { title: 'Guides', href: '/guides' },
               ].map(({ title, href }) => (
                 <NavigationMenuItem key={href}>
                   <NavigationMenuLink asChild>
-                    <Button variant={"secondary"}>
+                    <Button variant={'secondary'}>
                       <Link href={href} className="font-medium">
-                          {title}
+                        {title}
                       </Link>
                     </Button>
                   </NavigationMenuLink>
@@ -43,5 +44,5 @@ export default function NavigationHeader() {
         </NavigationMenu>
       </div>
     </header>
-  )
+  );
 }

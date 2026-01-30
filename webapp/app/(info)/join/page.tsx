@@ -1,17 +1,16 @@
-import { Metadata } from "next"
-import Link from "next/link"
-import { auth, signIn } from "@/auth"
+import { Metadata } from 'next';
+import Link from 'next/link';
+import { auth, signIn } from '@/auth';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { NotebookPenIcon, RocketIcon, BookHeadphonesIcon } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { NotebookPenIcon, RocketIcon, BookHeadphonesIcon } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "MugenBeat - DJ",
-  description: "Join Information page for MugenBeat",
+  title: 'MugenBeat - DJ',
+  description: 'Join Information page for MugenBeat',
 };
-
 
 export default async function DJSignupPage() {
   const session = await auth();
@@ -21,11 +20,9 @@ export default async function DJSignupPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
       <h1 className="text-4xl font-bold mb-4">Become a DJ</h1>
+      <p className="text-muted-foreground text-lg">Want to stream your music live to the world?</p>
       <p className="text-muted-foreground text-lg">
-        Want to stream your music live to the world?
-      </p>
-      <p className="text-muted-foreground text-lg">
-        MugenBeat is a free, community-driven platform for DJs of all styles and skill levels. 
+        MugenBeat is a free, community-driven platform for DJs of all styles and skill levels.
       </p>
       <p className="text-muted-foreground text-lg mb-8">
         Signing up is easy — and streaming is even easier.
@@ -65,32 +62,28 @@ export default async function DJSignupPage() {
         <CardContent>
           <div>
             <p className="text-muted-foreground mb-4">
-              {signedIn ? (
-                "Click below to start the application."
-              ): (
-                "Click below to login with Google and start the application."
-              )}
-              
+              {signedIn
+                ? 'Click below to start the application.'
+                : 'Click below to login with Google and start the application.'}
             </p>
             {signedIn ? (
               <Link href="/user/apply">
                 <Button variant="outline">Apply to DJ</Button>
               </Link>
-            ): (
+            ) : (
               <Button
                 variant="outline"
-                onClick={ async () => {
-                  "use server";
-                  await signIn("google", {
+                onClick={async () => {
+                  'use server';
+                  await signIn('google', {
                     redirect: true,
-                    redirectTo: "/user/apply",
+                    redirectTo: '/user/apply',
                   });
                 }}
               >
                 Login with Google and Apply
               </Button>
             )}
-
           </div>
         </CardContent>
       </Card>
@@ -107,14 +100,18 @@ export default async function DJSignupPage() {
         <CardContent>
           <div>
             <p className="text-muted-foreground">
-              For detailed setup instructions, including recommended broadcasting tools and troubleshooting tips, check out our full streaming guide.
+              For detailed setup instructions, including recommended broadcasting tools and
+              troubleshooting tips, check out our full streaming guide.
             </p>
-            <Link href="/guides" className="inline-block mt-2 underline text-sm text-blue-600 hover:text-blue-800">
+            <Link
+              href="/guides"
+              className="inline-block mt-2 underline text-sm text-blue-600 hover:text-blue-800"
+            >
               View Full Streaming Guide →
             </Link>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

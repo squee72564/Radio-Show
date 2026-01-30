@@ -7,14 +7,14 @@ type LocalDateProps = {
   date: Date;
   locale?: string;
   options?: Intl.DateTimeFormatOptions;
-  className?: string
+  className?: string;
 };
 
 export default function LocalDate({
   date,
   locale,
   options = { dateStyle: 'medium' },
-  className
+  className,
 }: LocalDateProps) {
   const [formatted, setFormatted] = useState<string | null>(null);
 

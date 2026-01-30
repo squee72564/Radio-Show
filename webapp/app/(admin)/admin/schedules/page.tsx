@@ -1,6 +1,6 @@
-import { CalendarCogIcon } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import AdminScheduleTabs from "./admin-schedule-tabs";
+import { CalendarCogIcon } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import AdminScheduleTabs from './admin-schedule-tabs';
 
 export default async function AdminSchedulePage() {
   return (

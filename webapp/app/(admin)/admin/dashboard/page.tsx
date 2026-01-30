@@ -1,12 +1,12 @@
-"use server";
+'use server';
 
-import { Suspense } from "react";
-import { ShieldUserIcon } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import SkeletonCountCard from "@/app/(admin)/admin/dashboard/skeleton-card";
-import UserCountCard from "@/app/(admin)/admin/dashboard/user-count-card";
-import ApprovedSchedulesCountCard from "@/app/(admin)/admin/dashboard/approved-schedules-count-card";
-import PendingSchedulesCard from "@/app/(admin)/admin/dashboard/pending-schedules-count-card";
+import { Suspense } from 'react';
+import { ShieldUserIcon } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import SkeletonCountCard from '@/app/(admin)/admin/dashboard/skeleton-card';
+import UserCountCard from '@/app/(admin)/admin/dashboard/user-count-card';
+import ApprovedSchedulesCountCard from '@/app/(admin)/admin/dashboard/approved-schedules-count-card';
+import PendingSchedulesCard from '@/app/(admin)/admin/dashboard/pending-schedules-count-card';
 
 export default async function AdminDashboard() {
   return (

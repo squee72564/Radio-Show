@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
-import DynamicBreadcrumbs from "./dynamic-breadcrumbs";
+import type { Metadata } from 'next';
+import DynamicBreadcrumbs from './dynamic-breadcrumbs';
 
 export const metadata: Metadata = {
-  title: "MugenBeat - Guides",
-  description: "MugenBeat Guides"
+  title: 'MugenBeat - Guides',
+  description: 'MugenBeat Guides',
 };
 
 export default function InfoLayout({

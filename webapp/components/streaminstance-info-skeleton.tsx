@@ -1,5 +1,13 @@
-import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Skeleton } from "./ui/skeleton";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
+import { Skeleton } from './ui/skeleton';
 
 export function StreamInstanceInfoCardSkeleton() {
   return (

@@ -1,21 +1,21 @@
-"use server";
+'use server';
 
-import { Badge } from "@/components/ui/badge";
-import { findRecentArchives } from "@/lib/db/services/streamscheduleService";
-import { StreamArchive, StreamInstance, StreamSchedule, User } from "@prisma/client";
-import StreamArchiveInfoCard from "@/components/streamarchive-info-card";
+import { Badge } from '@/components/ui/badge';
+import { findRecentArchives } from '@/lib/db/services/streamscheduleService';
+import { StreamArchive, StreamInstance, StreamSchedule, User } from '@prisma/client';
+import StreamArchiveInfoCard from '@/components/streamarchive-info-card';
 
 export default async function RecentArchives() {
-  const archives = await findRecentArchives(5, {
+  const archives = (await findRecentArchives(5, {
     include: {
       streamSchedule: true,
       streamInstance: true,
-      user: true
-    }
-  }) as (StreamArchive & {
-    streamSchedule: StreamSchedule,
-    streamInstance: StreamInstance
-    user: User
+      user: true,
+    },
+  })) as (StreamArchive & {
+    streamSchedule: StreamSchedule;
+    streamInstance: StreamInstance;
+    user: User;
   })[];
 
   return (
@@ -24,7 +24,7 @@ export default async function RecentArchives() {
       {archives.length > 0 ? (
         <div className="flex flex-col gap-2 min-h-41 max-h-41 overflow-auto">
           {archives.map((archive, idx) => (
-            <StreamArchiveInfoCard key={idx} streamArchive={archive}/>
+            <StreamArchiveInfoCard key={idx} streamArchive={archive} />
           ))}
         </div>
       ) : (
@@ -32,6 +32,6 @@ export default async function RecentArchives() {
           No previous archives
         </Badge>
       )}
-    </div>  
+    </div>
   );
 }

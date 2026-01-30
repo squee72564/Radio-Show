@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/db/prismaClient";
-import { $Enums, User } from "@prisma/client";
-import { UserRelations } from "@/types/prisma-relations";
+import { prisma } from '@/lib/db/prismaClient';
+import { $Enums, User } from '@prisma/client';
+import { UserRelations } from '@/types/prisma-relations';
 
 export async function deleteAllUsers() {
   return prisma.user.deleteMany();
@@ -8,7 +8,7 @@ export async function deleteAllUsers() {
 
 export async function findUserById(
   id: string,
-  options?: { include?: { [K in keyof UserRelations]?: true } }
+  options?: { include?: { [K in keyof UserRelations]?: true } },
 ): Promise<(User & Partial<UserRelations>) | null> {
   return await prisma.user.findUnique({
     where: { id },
@@ -18,7 +18,7 @@ export async function findUserById(
 
 export async function findUserByEmail(
   email: string,
-  options?: { include?: { [K in keyof UserRelations]?: true } }
+  options?: { include?: { [K in keyof UserRelations]?: true } },
 ): Promise<(User & Partial<UserRelations>) | null> {
   return await prisma.user.findUnique({
     where: { email },
@@ -28,7 +28,7 @@ export async function findUserByEmail(
 
 export async function findUsersByRole(
   roles: $Enums.Role[],
-  options?: {include: {[K in keyof UserRelations]?: true}}
+  options?: { include: { [K in keyof UserRelations]?: true } },
 ): Promise<(User & Partial<UserRelations>)[]> {
   return prisma.user.findMany({
     where: {
@@ -53,7 +53,7 @@ export async function updateUserBio(userId: string, newBio: string) {
   try {
     return await prisma.user.update({
       where: { id: userId },
-      data: { bio: newBio }
+      data: { bio: newBio },
     });
   } catch (err) {
     console.log(err);
@@ -68,8 +68,8 @@ export async function getUserCount() {
 export async function changeUserRole(userId: string, newRole: $Enums.Role) {
   try {
     return await prisma.user.update({
-      where: {id: userId},
-      data: {status: newRole}
+      where: { id: userId },
+      data: { status: newRole },
     });
   } catch (err) {
     console.log(err);

@@ -1,4 +1,4 @@
-import { LucideIcon } from "lucide-react";
+import { LucideIcon } from 'lucide-react';
 
 export interface SidebarComponentProps {
   Title: string;
@@ -10,6 +10,6 @@ export interface SidebarItems {
   title: string;
   url?: string;
   icon: LucideIcon;
-  component?: React.ComponentType<SidebarComponentProps>
-  items?: {title: string, url:string }[];
-};
+  component?: React.ComponentType<SidebarComponentProps>;
+  items?: { title: string; url: string }[];
+}

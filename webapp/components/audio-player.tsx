@@ -1,39 +1,38 @@
-"use client";
+'use client';
 
-import { useAudioNodeGraph } from "@/hooks/use-audionodegraph";
-import { useEffect, useRef, useState } from "react";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
-import { Slider } from "./ui/slider";
-import { Skeleton } from "./ui/skeleton";
-import { LoaderIcon, PauseIcon, PlayIcon } from "lucide-react";
+import { useAudioNodeGraph } from '@/hooks/use-audionodegraph';
+import { useEffect, useRef, useState } from 'react';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import { Slider } from './ui/slider';
+import { Skeleton } from './ui/skeleton';
+import { LoaderIcon, PauseIcon, PlayIcon } from 'lucide-react';
 
-import { formatTime } from "@/lib/utils";
+import { formatTime } from '@/lib/utils';
 
 function WaveformVisualizer({
   audioRef,
   audioCtxRef,
   sourceNodeRef,
   analyserRef,
-  isTimeDomain
+  isTimeDomain,
 }: {
   audioRef: React.RefObject<HTMLAudioElement | null>;
   audioCtxRef: React.RefObject<AudioContext | null>;
   sourceNodeRef: React.RefObject<MediaElementAudioSourceNode | null>;
   analyserRef: React.RefObject<AnalyserNode | null>;
-  isTimeDomain: boolean
+  isTimeDomain: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     const audio = audioRef.current;
     const canvas = canvasRef.current;
-    const canvasCtx = canvas?.getContext("2d");
+    const canvasCtx = canvas?.getContext('2d');
     const source = sourceNodeRef.current;
     const analyser = analyserRef.current;
 
-    if (!audio || !canvas || !canvasCtx || !audioCtxRef.current || !source || !analyser)
-      return;
+    if (!audio || !canvas || !canvasCtx || !audioCtxRef.current || !source || !analyser) return;
 
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
@@ -44,10 +43,10 @@ function WaveformVisualizer({
 
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
       canvasCtx.lineWidth = 1;
-      
+
       const styles = getComputedStyle(canvas);
-      const chart1 = styles.getPropertyValue("--chart-5").trim() || "#181363";
-      const chart2 = styles.getPropertyValue("--chart-2").trim() || "#181363";
+      const chart1 = styles.getPropertyValue('--chart-5').trim() || '#181363';
+      const chart2 = styles.getPropertyValue('--chart-2').trim() || '#181363';
 
       canvasCtx.strokeStyle = chart1;
       canvasCtx.fillStyle = chart2;
@@ -73,7 +72,7 @@ function WaveformVisualizer({
         for (let i = 0; i < bufferLength; i++) {
           const barHeight = (dataArray[i] / 255) * canvas.height;
           const y = canvas.height - barHeight;
-          canvasCtx.fillStyle = "#070a2e";
+          canvasCtx.fillStyle = '#070a2e';
           canvasCtx.fillRect(x, y, barWidth, barHeight);
           x += barWidth + 1;
         }
@@ -95,52 +94,37 @@ function WaveformVisualizer({
   );
 }
 
-function CustomPlayerDefault({showControls} : {showControls: boolean}) {
+function CustomPlayerDefault({ showControls }: { showControls: boolean }) {
   return (
     <div className="flex flex-col items-center justify-center text-center w-full gap-4 bg-muted p-4 rounded-xl">
-      <div
-        className="flex flex-col justify-center items-center w-full max-w-full aspect-[4/1] bg-primary/10 rounded-xl"
-      >
-        <p>{"乁( ⁰͡ Ĺ̯ ⁰͡ ) ㄏ"}</p>
+      <div className="flex flex-col justify-center items-center w-full max-w-full aspect-[4/1] bg-primary/10 rounded-xl">
+        <p>{'乁( ⁰͡ Ĺ̯ ⁰͡ ) ㄏ'}</p>
         <p>Loading...</p>
-
       </div>
-      <Button
-        className="p-1 text-xs"
-        variant="outline"
-      >
+      <Button className="p-1 text-xs" variant="outline">
         Loading...
       </Button>
       <div className="w-full flex flex-row gap-2">
-        <Badge variant={"outline"} className="text-sm text-muted-foreground mb-1">
+        <Badge variant={'outline'} className="text-sm text-muted-foreground mb-1">
           Loading...
         </Badge>
-        <Slider
-          id="volume"
-          defaultValue={[100]}
-          value={[100]}
-          min={0}
-          max={100}
-        />
+        <Slider id="volume" defaultValue={[100]} value={[100]} min={0} max={100} />
       </div>
-      {showControls && 
-      <>
-        <div className="w-full flex flex-row gap-2 justify-center items-center">
-          <Badge variant="outline" className="text-xs mt-1">
-            Loading...
-          </Badge>
-          <Skeleton className="w-full h-2"/>
-        </div>
-        <Button
-          className="p-1 text-xs"
-          variant="outline"
-        >
-          <LoaderIcon/>
-        </Button>
-      </>
-      }
+      {showControls && (
+        <>
+          <div className="w-full flex flex-row gap-2 justify-center items-center">
+            <Badge variant="outline" className="text-xs mt-1">
+              Loading...
+            </Badge>
+            <Skeleton className="w-full h-2" />
+          </div>
+          <Button className="p-1 text-xs" variant="outline">
+            <LoaderIcon />
+          </Button>
+        </>
+      )}
     </div>
-  )
+  );
 }
 
 export function CustomPlayer({
@@ -148,12 +132,12 @@ export function CustomPlayer({
   isStreamLive,
   showControls,
 }: {
-  streamUrl: string,
-  isStreamLive: boolean
-  showControls: boolean
+  streamUrl: string;
+  isStreamLive: boolean;
+  showControls: boolean;
 }) {
   const audioRef = useRef<HTMLAudioElement>(null);
-  
+
   const {
     audioCtxRef,
     analyserRef,
@@ -182,13 +166,13 @@ export function CustomPlayer({
 
     if (isStreamLive) {
       audio.pause();
-      audio.removeAttribute("src");
+      audio.removeAttribute('src');
       audio.load();
       audio.src = streamUrl;
       audio.load();
     } else {
       audio.pause();
-      audio.removeAttribute("src");
+      audio.removeAttribute('src');
       audio.load();
     }
   }, [streamUrl, isStreamLive, hasMounted]);
@@ -204,7 +188,7 @@ export function CustomPlayer({
     const handleLoadStart = () => {
       setIsLoading(true);
       setIsPlaying(false);
-    }
+    };
 
     const handleTimeUpdate = () => {
       setCurrentTime(audio.currentTime);
@@ -214,18 +198,18 @@ export function CustomPlayer({
       setDuration(audio.duration);
     };
 
-    audio.addEventListener("timeupdate", handleTimeUpdate);
-    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
 
-    audio.addEventListener("loadstart", handleLoadStart);
-    audio.addEventListener("canplay", handleCanPlay);
+    audio.addEventListener('loadstart', handleLoadStart);
+    audio.addEventListener('canplay', handleCanPlay);
 
     return () => {
-      audio.removeEventListener("canplay", handleCanPlay);
-      audio.removeEventListener("loadstart", handleLoadStart);
+      audio.removeEventListener('canplay', handleCanPlay);
+      audio.removeEventListener('loadstart', handleLoadStart);
 
-      audio.removeEventListener("timeupdate", handleTimeUpdate);
-      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
     };
   }, [hasMounted]);
 
@@ -237,24 +221,22 @@ export function CustomPlayer({
   };
 
   if (!hasMounted) {
-    return <CustomPlayerDefault showControls={showControls} />
+    return <CustomPlayerDefault showControls={showControls} />;
   }
 
   return (
     <div className="flex flex-col items-center justify-center text-center w-full gap-4 bg-muted p-4 rounded-xl border-1 border-black/20 ">
-      <div
-        className="flex flex-col justify-center items-center w-full max-w-full aspect-[4/1] bg-primary/10 rounded-xl"
-      >
-        { !isStreamLive ? (
+      <div className="flex flex-col justify-center items-center w-full max-w-full aspect-[4/1] bg-primary/10 rounded-xl">
+        {!isStreamLive ? (
           <>
-            <p>{"乁( ⁰͡ Ĺ̯ ⁰͡ ) ㄏ"}</p>
+            <p>{'乁( ⁰͡ Ĺ̯ ⁰͡ ) ㄏ'}</p>
             <p>Offline.</p>
           </>
         ) : isLoading ? (
-            <>
-              <p>{"( ͡~ ͜ʖ ͡°)"}</p>
-              <p>Loading...</p>
-            </>
+          <>
+            <p>{'( ͡~ ͜ʖ ͡°)'}</p>
+            <p>Loading...</p>
+          </>
         ) : !isPlaying ? (
           <div
             onClick={async () => {
@@ -268,23 +250,24 @@ export function CustomPlayer({
                 await audio.play();
                 setIsPlaying(true);
               } catch (err) {
-                console.error("Playback failed:", err);
+                console.error('Playback failed:', err);
               }
             }}
             className="flex flex-col justify-center w-full h-full hover:font-bold"
           >
-            <p>{"(♡´౪`♡)"}</p>
+            <p>{'(♡´౪`♡)'}</p>
             <p>Click to Play!</p>
           </div>
         ) : (
-          audioRef &&
-          <WaveformVisualizer
-            audioRef={audioRef}
-            audioCtxRef={audioCtxRef}
-            sourceNodeRef={sourceNodeRef}
-            analyserRef={analyserRef}
-            isTimeDomain={isTimeDomain}
-          />
+          audioRef && (
+            <WaveformVisualizer
+              audioRef={audioRef}
+              audioCtxRef={audioCtxRef}
+              sourceNodeRef={sourceNodeRef}
+              analyserRef={analyserRef}
+              isTimeDomain={isTimeDomain}
+            />
+          )
         )}
       </div>
       <Button
@@ -292,11 +275,11 @@ export function CustomPlayer({
         variant="outline"
         onClick={() => setIsTimeDomain((prev) => !prev)}
       >
-        View: {isTimeDomain ? "Time Domain" : "Frequency Domain"}
+        View: {isTimeDomain ? 'Time Domain' : 'Frequency Domain'}
       </Button>
       <div className="w-full flex flex-row gap-2">
-        <Badge variant={"outline"} className="text-sm mb-1">
-          {!isStreamLive ? "Offline" : isLoading ? "Loading..." : `Volume: ${volume}%`}
+        <Badge variant={'outline'} className="text-sm mb-1">
+          {!isStreamLive ? 'Offline' : isLoading ? 'Loading...' : `Volume: ${volume}%`}
         </Badge>
         <Slider
           id="volume"
@@ -308,59 +291,58 @@ export function CustomPlayer({
           onValueChange={changeVolume}
         />
       </div>
-      {showControls && 
-      <>
-        <div className="w-full flex flex-row gap-2 justify-center items-center">
-          <Badge variant="outline" className="text-xs mt-1">
-            {formatTime(currentTime)} / {formatTime(duration)}
-          </Badge>
-          {isLoading ? (
-            <Skeleton className="w-full h-2"/>
-          ): (
-            <Slider
-              id="seek"
-              value={[currentTime]}
-              min={0}
-              max={duration || 0}
-              step={0.1}
-              onValueChange={(val) => {
-                const audio = audioRef.current;
-                if (audio) {
-                  audio.currentTime = val[0];
-                  setCurrentTime(val[0]);
+      {showControls && (
+        <>
+          <div className="w-full flex flex-row gap-2 justify-center items-center">
+            <Badge variant="outline" className="text-xs mt-1">
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </Badge>
+            {isLoading ? (
+              <Skeleton className="w-full h-2" />
+            ) : (
+              <Slider
+                id="seek"
+                value={[currentTime]}
+                min={0}
+                max={duration || 0}
+                step={0.1}
+                onValueChange={(val) => {
+                  const audio = audioRef.current;
+                  if (audio) {
+                    audio.currentTime = val[0];
+                    setCurrentTime(val[0]);
+                  }
+                }}
+              />
+            )}
+          </div>
+          <Button
+            className="p-1 text-xs"
+            variant="outline"
+            onClick={async () => {
+              const audio = audioRef.current;
+              if (!audio || isLoading) return;
+
+              if (!isInitialized) initAudioGraph();
+              await resumeIfSuspended();
+
+              if (audio.paused) {
+                try {
+                  await audio.play();
+                  setIsPlaying(true);
+                } catch (err) {
+                  console.error('Playback failed:', err);
                 }
-              }}
-            />
-          )}
-
-        </div>
-        <Button
-          className="p-1 text-xs"
-          variant="outline"
-          onClick={async () => {
-            const audio = audioRef.current;
-            if (!audio || isLoading) return;
-
-            if (!isInitialized) initAudioGraph();
-            await resumeIfSuspended();
-
-            if (audio.paused) {
-              try {
-                await audio.play();
-                setIsPlaying(true);
-              } catch (err) {
-                console.error("Playback failed:", err);
+              } else {
+                audio.pause();
+                setIsPlaying(false);
               }
-            } else {
-              audio.pause();
-              setIsPlaying(false);
-            }
-          }}
-        >
-          {isLoading ? <LoaderIcon/> : isPlaying ? <PauseIcon/> : <PlayIcon/>}
-        </Button>
-      </>
-      }
+            }}
+          >
+            {isLoading ? <LoaderIcon /> : isPlaying ? <PauseIcon /> : <PlayIcon />}
+          </Button>
+        </>
+      )}
       <audio ref={audioRef} src={streamUrl} />
     </div>
   );

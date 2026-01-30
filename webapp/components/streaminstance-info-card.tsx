@@ -1,6 +1,6 @@
-import { CalendarRange, Clock4 } from "lucide-react";
-import Link from "next/link";
-import { StreamInstance, StreamSchedule, User } from "@prisma/client";
+import { CalendarRange, Clock4 } from 'lucide-react';
+import Link from 'next/link';
+import { StreamInstance, StreamSchedule, User } from '@prisma/client';
 import {
   Card,
   CardAction,
@@ -9,39 +9,41 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import {
-  HoverCard,
-  HoverCardTrigger,
-  HoverCardContent,
-} from "@/components/ui/hover-card";
-import { Badge } from "./ui/badge";
-import LocalTime from "@/components/localtime";
-import LocalDate  from "@/components/localdate";
-import LiveTag from "./live-tag";
-import UserAvatar from "./user-avatar";
+} from '@/components/ui/card';
+import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
+import { Badge } from './ui/badge';
+import LocalTime from '@/components/localtime';
+import LocalDate from '@/components/localdate';
+import LiveTag from './live-tag';
+import UserAvatar from './user-avatar';
 
-export default function StreamInstanceInfoCard({streamInstance}: {streamInstance: StreamInstance & {streamSchedule: StreamSchedule, user: User}}) {
+export default function StreamInstanceInfoCard({
+  streamInstance,
+}: {
+  streamInstance: StreamInstance & { streamSchedule: StreamSchedule; user: User };
+}) {
   const MAX_VISIBLE_TAGS = 15;
-  const tags = streamInstance.streamSchedule.tags.filter(t => t.trim() !== "");
+  const tags = streamInstance.streamSchedule.tags.filter((t) => t.trim() !== '');
   const visibleTags = tags.slice(0, MAX_VISIBLE_TAGS);
   const hiddenTags = tags.slice(MAX_VISIBLE_TAGS);
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="mb-2">
-          {streamInstance.streamSchedule.title}
-        </CardTitle>
+        <CardTitle className="mb-2">{streamInstance.streamSchedule.title}</CardTitle>
         <CardDescription className="flex flex-col gap-2">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <CalendarRange className="w-4 h-4" />
-            <LocalDate date={streamInstance.scheduledStart}/>
+            <LocalDate date={streamInstance.scheduledStart} />
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Clock4 className="w-4 h-4" />
-            <LocalTime date={streamInstance.scheduledStart} /> - <LocalTime date={streamInstance.scheduledEnd}/>
-            <LiveTag liveStart={streamInstance.scheduledStart} liveEnd={streamInstance.scheduledEnd} />
+            <LocalTime date={streamInstance.scheduledStart} /> -{' '}
+            <LocalTime date={streamInstance.scheduledEnd} />
+            <LiveTag
+              liveStart={streamInstance.scheduledStart}
+              liveEnd={streamInstance.scheduledEnd}
+            />
           </div>
         </CardDescription>
         <CardAction className="space-y-2">
@@ -49,7 +51,10 @@ export default function StreamInstanceInfoCard({streamInstance}: {streamInstance
             className="flex flex-col items-center justify-center hover:text-muted-foreground"
             href={`/user/${streamInstance.userId}`}
           >
-            <UserAvatar user={streamInstance.user} className="flex flex-col items-center justify-center"/>
+            <UserAvatar
+              user={streamInstance.user}
+              className="flex flex-col items-center justify-center"
+            />
             {streamInstance.user.name}
           </Link>
         </CardAction>
@@ -91,6 +96,5 @@ export default function StreamInstanceInfoCard({streamInstance}: {streamInstance
         )}
       </CardFooter>
     </Card>
-  )
-
+  );
 }

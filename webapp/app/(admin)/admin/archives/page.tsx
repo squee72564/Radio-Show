@@ -1,8 +1,8 @@
-import { Archive } from "lucide-react";
-import { Suspense } from "react";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import AdminArchiveList from "./admin-archive-list";
+import { Archive } from 'lucide-react';
+import { Suspense } from 'react';
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
+import AdminArchiveList from './admin-archive-list';
 
 export default async function AdminSchedulePage() {
   return (
@@ -11,9 +11,9 @@ export default async function AdminSchedulePage() {
         <Archive className="w-6 h-6" /> Admin: Archive Management
       </h1>
       <Separator />
-      
-      <Suspense fallback={<Badge variant={"outline"}>Loading...</Badge>}>
-        <AdminArchiveList/>
+
+      <Suspense fallback={<Badge variant={'outline'}>Loading...</Badge>}>
+        <AdminArchiveList />
       </Suspense>
     </div>
   );

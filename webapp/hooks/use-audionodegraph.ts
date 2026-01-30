@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 export function useAudioNodeGraph(audioRef: React.RefObject<HTMLAudioElement | null>) {
   const audioCtxRef = useRef<AudioContext | null>(null);
@@ -12,7 +12,7 @@ export function useAudioNodeGraph(audioRef: React.RefObject<HTMLAudioElement | n
     const audio = audioRef.current;
     if (!audio) return;
 
-    if (!audioCtxRef.current || audioCtxRef.current.state === "closed") {
+    if (!audioCtxRef.current || audioCtxRef.current.state === 'closed') {
       audioCtxRef.current = new AudioContext();
     }
 
@@ -31,7 +31,7 @@ export function useAudioNodeGraph(audioRef: React.RefObject<HTMLAudioElement | n
   };
 
   const resumeIfSuspended = async () => {
-    if (audioCtxRef.current?.state === "suspended") {
+    if (audioCtxRef.current?.state === 'suspended') {
       await audioCtxRef.current.resume();
     }
   };

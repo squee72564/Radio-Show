@@ -1,5 +1,5 @@
 export const runtime = 'nodejs';
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 import client from 'prom-client';
@@ -21,8 +21,8 @@ export async function GET() {
     headers: {
       'Content-Type': client.register.contentType,
       'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0',
+      Pragma: 'no-cache',
+      Expires: '0',
     },
   });
 }

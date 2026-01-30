@@ -1,7 +1,7 @@
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
 
-import { execSync } from "child_process";
+import { execSync } from 'child_process';
 
 beforeAll(() => {
-  execSync("npx prisma migrate reset --force --skip-seed", { stdio: "inherit" });
+  execSync('npx prisma migrate reset --force --skip-seed', { stdio: 'inherit' });
 });

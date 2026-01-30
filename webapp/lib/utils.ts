@@ -1,10 +1,10 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-import { $Enums } from "@prisma/client";
-import { RRule, rrulestr } from "rrule";
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+import { $Enums } from '@prisma/client';
+import { RRule, rrulestr } from 'rrule';
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export function saltAndHashPassword(password: string): string {
@@ -16,25 +16,24 @@ export function isUserRole(userStatus: $Enums.Role, role: $Enums.Role) {
 }
 
 export function isUserAdmin(status: $Enums.Role) {
-  return (status === $Enums.Role.ADMIN|| status === $Enums.Role.OWNER)
+  return status === $Enums.Role.ADMIN || status === $Enums.Role.OWNER;
 }
 
 export function isUserOwner(status: $Enums.Role) {
-  return (status === $Enums.Role.OWNER)
+  return status === $Enums.Role.OWNER;
 }
 
 export async function generateStreamInstances({
   dtstart,
   until,
   durationMs,
-  rrule
-} : {
-  dtstart: Date,
-  until: Date,
-  durationMs: number,
-  rrule: string
+  rrule,
+}: {
+  dtstart: Date;
+  until: Date;
+  durationMs: number;
+  rrule: string;
 }) {
-
   const rule = rrulestr(rrule, {
     dtstart,
   }) as RRule;
@@ -48,7 +47,7 @@ export async function generateStreamInstances({
       scheduledStart,
       scheduledEnd,
     };
-  })
+  });
 }
 
 export function formatTime(sec: number) {

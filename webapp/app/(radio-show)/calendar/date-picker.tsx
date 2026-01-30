@@ -1,34 +1,32 @@
-"use client";
+'use client';
 
-import { useState, useTransition, useEffect } from "react";
-import { CalendarIcon } from "lucide-react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { StreamInstance, StreamSchedule, User } from "@prisma/client";
-import { motion } from "framer-motion";
+import { useState, useTransition, useEffect } from 'react';
+import { CalendarIcon } from 'lucide-react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { StreamInstance, StreamSchedule, User } from '@prisma/client';
+import { motion } from 'framer-motion';
 
-import { cn } from "@/lib/utils";
-import { getStreamInstancesByDateRange } from "@/lib/db/actions/streamscheduleActions";
+import { cn } from '@/lib/utils';
+import { getStreamInstancesByDateRange } from '@/lib/db/actions/streamscheduleActions';
 
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Badge } from "@/components/ui/badge";
-import StreamInstanceInfoCard from "@/components/streaminstance-info-card";
-import LocalDate from "@/components/localdate";
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Badge } from '@/components/ui/badge';
+import StreamInstanceInfoCard from '@/components/streaminstance-info-card';
+import LocalDate from '@/components/localdate';
 
 export function DatePicker() {
-  const [schedule, setSchedule] = useState<(StreamInstance & {user: User, streamSchedule: StreamSchedule})[] | null>(null);
+  const [schedule, setSchedule] = useState<
+    (StreamInstance & { user: User; streamSchedule: StreamSchedule })[] | null
+  >(null);
   const [pending, startTransition] = useTransition();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialDateParam = searchParams.get("date");
+  const initialDateParam = searchParams.get('date');
 
   const [date, setDate] = useState<Date>(() => {
-    const parsed = new Date(initialDateParam ?? "");
+    const parsed = new Date(initialDateParam ?? '');
     return isNaN(parsed.getTime()) ? new Date() : parsed;
   });
 
@@ -44,16 +42,12 @@ export function DatePicker() {
 
       startTransition(async () => {
         setSchedule(
-          await getStreamInstancesByDateRange(
-            startOfDay,
-            endOfDay,
-            {
-              include: {
-                user: true,
-                streamSchedule: true,
-              }
-            }
-          ) as (StreamInstance & {user: User, streamSchedule: StreamSchedule})[]
+          (await getStreamInstancesByDateRange(startOfDay, endOfDay, {
+            include: {
+              user: true,
+              streamSchedule: true,
+            },
+          })) as (StreamInstance & { user: User; streamSchedule: StreamSchedule })[],
         );
       });
     }, 150);
@@ -70,9 +64,9 @@ export function DatePicker() {
 
     const formatted = newDate.toLocaleDateString();
     const params = new URLSearchParams(searchParams.toString());
-    params.set("date", formatted);
+    params.set('date', formatted);
     router.replace(`?${params.toString()}`);
-  }
+  };
 
   return (
     <div className="flex flex-col flex-1">
@@ -82,12 +76,12 @@ export function DatePicker() {
             <Button
               variant="outline"
               className={cn(
-                "w-[280px] justify-start text-left font-normal",
-                !date && "text-muted-foreground"
+                'w-[280px] justify-start text-left font-normal',
+                !date && 'text-muted-foreground',
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? <LocalDate date={date}/> : <span>Pick a date</span>}
+              {date ? <LocalDate date={date} /> : <span>Pick a date</span>}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto">
@@ -99,7 +93,7 @@ export function DatePicker() {
                   setDate(selectedDate);
                   const formatted = selectedDate.toLocaleDateString();
                   const params = new URLSearchParams(searchParams.toString());
-                  params.set("date", formatted);
+                  params.set('date', formatted);
 
                   router.replace(`?${params.toString()}`);
                 }
@@ -109,24 +103,16 @@ export function DatePicker() {
           </PopoverContent>
         </Popover>
         <div className="flex flex-row gap-5">
-          <Button
-            className="max-w-25"
-            variant="outline"
-            onClick={() => changeDay(-1)}
-          >
+          <Button className="max-w-25" variant="outline" onClick={() => changeDay(-1)}>
             Prev Day
           </Button>
 
-          <Button
-            className="max-w-25"
-            variant="outline"
-            onClick={() => changeDay(1)}
-          >
+          <Button className="max-w-25" variant="outline" onClick={() => changeDay(1)}>
             Next Day
           </Button>
         </div>
       </div>
-      
+
       <div className="flex flex-col space-y-4 overflow-y-auto p-5 min-h-80 max-h-[calc(100vh-200px)]">
         {pending ? (
           <Badge variant="outline">Loading...</Badge>
@@ -139,13 +125,12 @@ export function DatePicker() {
               transition={{
                 duration: 0.4,
                 delay: idx * 0.12,
-                ease: "easeOut"
+                ease: 'easeOut',
               }}
             >
               <StreamInstanceInfoCard streamInstance={streamInstance} />
             </motion.div>
           ))
-
         ) : (
           <Badge variant="outline">No scheduled Streams</Badge>
         )}

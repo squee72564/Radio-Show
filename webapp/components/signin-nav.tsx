@@ -1,10 +1,6 @@
-import { auth, signIn, signOut } from "@/auth";
+import { auth, signIn, signOut } from '@/auth';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,49 +9,43 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu';
 
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar"
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 
-import { isUserAdmin } from "@/lib/utils";
-import { MoreVerticalIcon, UserCircleIcon, LogIn, LogOut, CrownIcon, PlusIcon } from "lucide-react"
-import { User } from "@prisma/client";
-import Link from "next/link"
-import { JSX } from "react";
-import UserAvatar from "./user-avatar";
+import { isUserAdmin } from '@/lib/utils';
+import { MoreVerticalIcon, UserCircleIcon, LogIn, LogOut, CrownIcon, PlusIcon } from 'lucide-react';
+import { User } from '@prisma/client';
+import Link from 'next/link';
+import { JSX } from 'react';
+import UserAvatar from './user-avatar';
 
 const signInFnAsync = async () => {
-  "use server";
+  'use server';
   await signIn();
 };
 
 const signOutFnAsync = async () => {
-  "use server";
+  'use server';
   await signOut();
 };
 
-const UserInfo = ({user}: {user: User | undefined}): JSX.Element => {
+const UserInfo = ({ user }: { user: User | undefined }): JSX.Element => {
   const signedIn = user !== undefined;
   return (
     <>
-        {signedIn ? (
-          <UserAvatar user={user}/>
-        ) : (
-          <Avatar>
-            <AvatarImage src={undefined} alt={"anon"} />
-            <AvatarFallback>{"?"}</AvatarFallback>
-          </Avatar>
-        )}
-      
+      {signedIn ? (
+        <UserAvatar user={user} />
+      ) : (
+        <Avatar>
+          <AvatarImage src={undefined} alt={'anon'} />
+          <AvatarFallback>{'?'}</AvatarFallback>
+        </Avatar>
+      )}
+
       <div className="grid flex-1 text-left text-sm leading-tight">
-        <span className="truncate font-medium">{signedIn ? user.name : "Anonymous"}</span>
-        {signedIn && <span className="truncate text-xs text-muted-foreground">
-          {user.email}
-        </span>}
+        <span className="truncate font-medium">{signedIn ? user.name : 'Anonymous'}</span>
+        {signedIn && <span className="truncate text-xs text-muted-foreground">{user.email}</span>}
       </div>
     </>
   );
@@ -69,85 +59,77 @@ export async function SignInOutNav() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <SidebarMenuButton
-                size="lg"
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              >
-                <UserInfo user={user}/>
-                <MoreVerticalIcon className="ml-auto size-4" />
-              </SidebarMenuButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-              side={"right"}
-              align="end"
-              sideOffset={4}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <DropdownMenuLabel className="p-0 font-normal">
-                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  <UserInfo user={user}/>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                {signedIn &&
-                  <>
-                    <Link
-                      href={`/user/${user.id}`}
-                      className="w-full"
-                    >
-                      <DropdownMenuItem className="w-full">
-                        <UserCircleIcon />
-                        User Profile
-                      </DropdownMenuItem>
-                    </Link>
-                    { isUserAdmin(user.status) &&
-                      <Link
-                        href={`/admin/dashboard`}
-                        className="w-full"
-                      >
-                        <DropdownMenuItem className="w-full">
-                          <CrownIcon />
-                          Admin Panel
-                        </DropdownMenuItem>
-                      </Link> 
-                    }
-                    <Link
-                      href={`/user/apply`}
-                      className="w-full"
-                    >
-                      <DropdownMenuItem className="w-full">
-                        <PlusIcon />
-                        Apply To Stream
-                      </DropdownMenuItem>
-                    </Link>
-                  </>
-                }
-                <form
-                  action={signedIn ? signOutFnAsync : signInFnAsync}
-                >
-                  <button type="submit" className="flex flex-row gap-2 justify-center items-center w-full">
+              <UserInfo user={user} />
+              <MoreVerticalIcon className="ml-auto size-4" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            side={'right'}
+            align="end"
+            sideOffset={4}
+          >
+            <DropdownMenuLabel className="p-0 font-normal">
+              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                <UserInfo user={user} />
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              {signedIn && (
+                <>
+                  <Link href={`/user/${user.id}`} className="w-full">
                     <DropdownMenuItem className="w-full">
-                        {signedIn ? (
-                          <>
-                            <LogOut />
-                            Log Out
-                          </>
-                        ): (
-                          <>
-                            <LogIn />
-                            Log In With Google
-                          </>
-                        )}
+                      <UserCircleIcon />
+                      User Profile
                     </DropdownMenuItem>
-                  </button>
-                </form>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                  </Link>
+                  {isUserAdmin(user.status) && (
+                    <Link href={`/admin/dashboard`} className="w-full">
+                      <DropdownMenuItem className="w-full">
+                        <CrownIcon />
+                        Admin Panel
+                      </DropdownMenuItem>
+                    </Link>
+                  )}
+                  <Link href={`/user/apply`} className="w-full">
+                    <DropdownMenuItem className="w-full">
+                      <PlusIcon />
+                      Apply To Stream
+                    </DropdownMenuItem>
+                  </Link>
+                </>
+              )}
+              <form action={signedIn ? signOutFnAsync : signInFnAsync}>
+                <button
+                  type="submit"
+                  className="flex flex-row gap-2 justify-center items-center w-full"
+                >
+                  <DropdownMenuItem className="w-full">
+                    {signedIn ? (
+                      <>
+                        <LogOut />
+                        Log Out
+                      </>
+                    ) : (
+                      <>
+                        <LogIn />
+                        Log In With Google
+                      </>
+                    )}
+                  </DropdownMenuItem>
+                </button>
+              </form>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

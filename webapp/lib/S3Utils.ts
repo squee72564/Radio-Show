@@ -1,5 +1,5 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { Result } from "@/types/generic";
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { Result } from '@/types/generic';
 
 export async function uploadArchiveFileToS3({
   fileBuffer,
@@ -7,19 +7,13 @@ export async function uploadArchiveFileToS3({
 }: {
   fileBuffer: Buffer;
   filename: string;
-}): Promise<Result<{location: string}>> {
-  const {
-    S3_ENDPOINT,
-    S3_BUCKET_NAME,
-    S3_ROOT_USER,
-    S3_ROOT_PASSWORD,
-    S3_REGION,
-  } = process.env;
+}): Promise<Result<{ location: string }>> {
+  const { S3_ENDPOINT, S3_BUCKET_NAME, S3_ROOT_USER, S3_ROOT_PASSWORD, S3_REGION } = process.env;
 
   if (!S3_ENDPOINT || !S3_BUCKET_NAME || !S3_ROOT_USER || !S3_ROOT_PASSWORD || !S3_REGION) {
     return {
-      type: "error",
-      message: "Missing required S3 environment variables",
+      type: 'error',
+      message: 'Missing required S3 environment variables',
     };
   }
 
@@ -39,34 +33,28 @@ export async function uploadArchiveFileToS3({
         Bucket: S3_BUCKET_NAME,
         Key: filename,
         Body: fileBuffer,
-        ContentType: "audio/mpeg",
-      })
+        ContentType: 'audio/mpeg',
+      }),
     );
 
-    return { type: "success", data: {location: filename} };
+    return { type: 'success', data: { location: filename } };
   } catch (err) {
     return {
-      type: "error",
-      message: `S3 upload failed: ${err instanceof Error ? err.message : String(err)}`
+      type: 'error',
+      message: `S3 upload failed: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
 }
 
 export async function deleteArchiveFileFromS3(
-  streamArchiveURL: string
-): Promise<Result<{success: boolean}>> {
-  const {
-    S3_ENDPOINT,
-    S3_BUCKET_NAME,
-    S3_ROOT_USER,
-    S3_ROOT_PASSWORD,
-    S3_REGION,
-  } = process.env;
+  streamArchiveURL: string,
+): Promise<Result<{ success: boolean }>> {
+  const { S3_ENDPOINT, S3_BUCKET_NAME, S3_ROOT_USER, S3_ROOT_PASSWORD, S3_REGION } = process.env;
 
   if (!S3_ENDPOINT || !S3_BUCKET_NAME || !S3_ROOT_USER || !S3_ROOT_PASSWORD || !S3_REGION) {
     return {
-      type: "error",
-      message: "Missing required S3 environment variables",
+      type: 'error',
+      message: 'Missing required S3 environment variables',
     };
   }
 
@@ -85,13 +73,13 @@ export async function deleteArchiveFileFromS3(
       new DeleteObjectCommand({
         Bucket: S3_BUCKET_NAME,
         Key: streamArchiveURL,
-      })
+      }),
     );
 
-    return { type: "success", data: {success: true} };
+    return { type: 'success', data: { success: true } };
   } catch (err) {
     return {
-      type: "error",
+      type: 'error',
       message: `S3 delete failed: ${err instanceof Error ? err.message : String(err)}`,
     };
   }

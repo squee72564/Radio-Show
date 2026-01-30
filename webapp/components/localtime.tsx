@@ -14,7 +14,7 @@ export default function LocalTime({
   date,
   locale,
   options = { hour: '2-digit', minute: '2-digit' },
-  className
+  className,
 }: LocalTimeProps) {
   const [formatted, setFormatted] = useState<string | null>(null);
 
@@ -25,6 +25,6 @@ export default function LocalTime({
   if (!formatted) {
     return <Skeleton className="bg-accent animate-pulse rounded-md w-14 h-5" />;
   }
-  
+
   return <span className={className}>{formatted}</span>;
 }

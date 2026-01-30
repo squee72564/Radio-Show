@@ -18,9 +18,7 @@ export function useStreamStatus(getUrl: () => string) {
 
     try {
       const data =
-        typeof lastMessage.data === 'string'
-          ? lastMessage.data
-          : JSON.stringify(lastMessage.data);
+        typeof lastMessage.data === 'string' ? lastMessage.data : JSON.stringify(lastMessage.data);
 
       const payload = JSON.parse(data);
       if (payload.status === 'live' || payload.status === 'offline') {

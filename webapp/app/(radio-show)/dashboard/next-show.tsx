@@ -1,8 +1,8 @@
-"use server";
+'use server';
 
-import { Badge } from "@/components/ui/badge";
-import { findFirstStreamInstanceAfterDate } from "@/lib/db/actions/streamscheduleActions";
-import StreamInstanceInfoCard from "@/components/streaminstance-info-card";
+import { Badge } from '@/components/ui/badge';
+import { findFirstStreamInstanceAfterDate } from '@/lib/db/actions/streamscheduleActions';
+import StreamInstanceInfoCard from '@/components/streaminstance-info-card';
 
 export default async function NextShow() {
   const nowUTC = new Date();
@@ -19,5 +19,5 @@ export default async function NextShow() {
         </Badge>
       )}
     </section>
-  );   
+  );
 }

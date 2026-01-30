@@ -1,16 +1,15 @@
-import { Suspense } from "react";
-import { CalendarIcon } from "lucide-react";
-import type { Metadata } from "next";
+import { Suspense } from 'react';
+import { CalendarIcon } from 'lucide-react';
+import type { Metadata } from 'next';
 
-import { DatePicker } from "@/app/(radio-show)/calendar/date-picker";
-import { Separator } from "@/components/ui/separator";
-import DatePickerSkeleton from "./date-picker-skeleton";
+import { DatePicker } from '@/app/(radio-show)/calendar/date-picker';
+import { Separator } from '@/components/ui/separator';
+import DatePickerSkeleton from './date-picker-skeleton';
 
 export const metadata: Metadata = {
-  title: "MugenBeat - Calendar",
-  description: "Calendar schedule for streams"
+  title: 'MugenBeat - Calendar',
+  description: 'Calendar schedule for streams',
 };
-
 
 export default function Calendar() {
   return (
@@ -18,7 +17,7 @@ export default function Calendar() {
       <h1 className="text-2xl font-bold flex items-center gap-2">
         <CalendarIcon className="w-6 h-6" /> Calendar
       </h1>
-      <Separator/>
+      <Separator />
 
       <div className="flex flex-col flex-1">
         <Suspense fallback={<DatePickerSkeleton />}>

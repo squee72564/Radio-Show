@@ -1,23 +1,25 @@
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
-import { ChevronRight, LucideIcon } from "lucide-react";
-import { SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem } from "./ui/sidebar";
-import Link from "next/link";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible';
+import { ChevronRight, LucideIcon } from 'lucide-react';
+import {
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+} from './ui/sidebar';
+import Link from 'next/link';
 
 export function AboutCollapsible({
   Items,
   Icon,
-  Title
+  Title,
 }: {
-  Items?: {title: string, url:string }[],
-  Title: string,
-  Icon: LucideIcon
+  Items?: { title: string; url: string }[];
+  Title: string;
+  Icon: LucideIcon;
 }) {
   return (
-    <Collapsible
-      asChild
-      defaultOpen={false}
-      className="group/collapsible"
-    >
+    <Collapsible asChild defaultOpen={false} className="group/collapsible">
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
           <SidebarMenuButton tooltip={Title}>

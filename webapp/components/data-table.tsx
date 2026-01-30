@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
 import {
   ColumnDef,
@@ -12,7 +12,7 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   FilterFn,
-} from "@tanstack/react-table"
+} from '@tanstack/react-table';
 import {
   Table,
   TableBody,
@@ -20,13 +20,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
-export const makeGlobalFilterFn = <T extends object>(searchableColumns: string[]): FilterFn<T> =>
+export const makeGlobalFilterFn =
+  <T extends object>(searchableColumns: string[]): FilterFn<T> =>
   (row, _columnId, filterValue) => {
     return searchableColumns.some((id) => {
       const value = row.getValue(id) as string | string[] | undefined;
@@ -34,7 +35,7 @@ export const makeGlobalFilterFn = <T extends object>(searchableColumns: string[]
       if (!value) return false;
 
       if (Array.isArray(value)) {
-        return value.join(",").toLowerCase().includes(filterValue.toLowerCase());
+        return value.join(',').toLowerCase().includes(filterValue.toLowerCase());
       }
 
       return String(value).toLowerCase().includes(filterValue.toLowerCase());
@@ -42,21 +43,20 @@ export const makeGlobalFilterFn = <T extends object>(searchableColumns: string[]
   };
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  filterColumns?: string[]
-  rowOnClick?: (row: TData) => void
-
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  filterColumns?: string[];
+  rowOnClick?: (row: TData) => void;
 }
- 
+
 export default function DataTable<TData extends object, TValue>({
   columns,
   data,
   filterColumns,
   rowOnClick,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [globalFilter, setGlobalFilter] = useState("");
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = useState('');
 
   // TanStack Table returns functions that aren't safe for React Compiler memoization.
   // eslint-disable-next-line react-hooks/incompatible-library
@@ -68,24 +68,23 @@ export default function DataTable<TData extends object, TValue>({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: filterColumns && filterColumns.length ? (
-      makeGlobalFilterFn<TData>(filterColumns)
-    ): (
-      "includesString"
-    ),
+    globalFilterFn:
+      filterColumns && filterColumns.length
+        ? makeGlobalFilterFn<TData>(filterColumns)
+        : 'includesString',
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
       globalFilter,
     },
-  })
- 
+  });
+
   return (
     <Card className="flex flex-col flex-1 w-full rounded-sm border">
       <CardHeader className="flex items-center justify-center gap-5">
         <Input
           placeholder={`Filter by ${filterColumns?.join(', ')}...`}
-          value={globalFilter ?? ""}
+          value={globalFilter ?? ''}
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
         />
@@ -116,12 +115,9 @@ export default function DataTable<TData extends object, TValue>({
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                        : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -131,9 +127,12 @@ export default function DataTable<TData extends object, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                   onClick={() => rowOnClick?.(row.original)}
-                  className={cn("transition-all", rowOnClick && "cursor-pointer hover:bg-secondary")}
+                  className={cn(
+                    'transition-all',
+                    rowOnClick && 'cursor-pointer hover:bg-secondary',
+                  )}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -152,9 +151,7 @@ export default function DataTable<TData extends object, TValue>({
           </TableBody>
         </Table>
       </CardContent>
-      <CardFooter className="mx-auto">
-        Total Pages {table.getPageCount()}
-      </CardFooter>
+      <CardFooter className="mx-auto">Total Pages {table.getPageCount()}</CardFooter>
     </Card>
-  )
+  );
 }

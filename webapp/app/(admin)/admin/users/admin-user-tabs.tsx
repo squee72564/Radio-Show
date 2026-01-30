@@ -1,20 +1,18 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import UserGroupTabContent from "./user-group-tab-content";
-import { $Enums } from "@prisma/client";
+import { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import UserGroupTabContent from './user-group-tab-content';
+import { $Enums } from '@prisma/client';
 
 const userTabs = [
-  { value: $Enums.Role.ADMIN, label: "Admins" },
-  { value: $Enums.Role.STREAMER, label: "Streamers" },
-  { value: $Enums.Role.USER, label: "Users" },
+  { value: $Enums.Role.ADMIN, label: 'Admins' },
+  { value: $Enums.Role.STREAMER, label: 'Streamers' },
+  { value: $Enums.Role.USER, label: 'Users' },
 ];
 
-export default function AdminUserTabs({isOwnerViewing} : {isOwnerViewing: boolean}) {
-  const [activeTab, setActiveTab] = useState<$Enums.Role>(
-    $Enums.Role.ADMIN
-  );
+export default function AdminUserTabs({ isOwnerViewing }: { isOwnerViewing: boolean }) {
+  const [activeTab, setActiveTab] = useState<$Enums.Role>($Enums.Role.ADMIN);
 
   return (
     <Tabs
@@ -32,7 +30,9 @@ export default function AdminUserTabs({isOwnerViewing} : {isOwnerViewing: boolea
 
       {userTabs.map(({ value }) => (
         <TabsContent key={value} value={value}>
-          {activeTab === value && <UserGroupTabContent status={value} isOwnerViewing={isOwnerViewing} />}
+          {activeTab === value && (
+            <UserGroupTabContent status={value} isOwnerViewing={isOwnerViewing} />
+          )}
         </TabsContent>
       ))}
     </Tabs>

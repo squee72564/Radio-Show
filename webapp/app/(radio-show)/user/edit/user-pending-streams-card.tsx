@@ -1,14 +1,14 @@
-"use server";
+'use server';
 
-import { findAllStreamsByStatusAndUser } from "@/lib/db/actions/streamscheduleActions";
-import { $Enums } from "@prisma/client";
-import { Badge } from "@/components/ui/badge";
-import StreamInfoCard from "@/components/stream-info-card";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { findAllStreamsByStatusAndUser } from '@/lib/db/actions/streamscheduleActions';
+import { $Enums } from '@prisma/client';
+import { Badge } from '@/components/ui/badge';
+import StreamInfoCard from '@/components/stream-info-card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-export default async function UserPendingStreamsCard({userId}: {userId: string}) {
+export default async function UserPendingStreamsCard({ userId }: { userId: string }) {
   const pendingStreams = await findAllStreamsByStatusAndUser(userId, $Enums.ScheduleStatus.PENDING);
-  
+
   return (
     <Card className="flex-1">
       <CardHeader>
@@ -16,7 +16,7 @@ export default async function UserPendingStreamsCard({userId}: {userId: string})
       </CardHeader>
       <CardContent className="overflow-y-auto">
         {pendingStreams.length == 0 ? (
-          <Badge variant={"outline"}>No Pending Streams</Badge>
+          <Badge variant={'outline'}>No Pending Streams</Badge>
         ) : (
           <div className="flex flex-col gap-2">
             {pendingStreams.map((stream, idx) => (
@@ -26,5 +26,5 @@ export default async function UserPendingStreamsCard({userId}: {userId: string})
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

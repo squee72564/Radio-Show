@@ -38,8 +38,11 @@ services:
     command: server /data --console-address ":9001"
 
   prometheus:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./prometheus.dev.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data-dev:/prometheus
 
   grafana:
     env_file:
@@ -51,3 +54,4 @@ volumes:
   grafana-storage-dev:
   dev-postgres-data:
   minio-data-dev:
+  prometheus-data-dev:

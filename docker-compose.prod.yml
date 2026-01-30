@@ -45,6 +45,7 @@ services:
   prometheus:
     volumes:
       - ./prometheus.prod.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
 
   grafana:
     env_file:
@@ -57,3 +58,4 @@ volumes:
   postgres-data:
   prod-icecast-logs:
   prod-liq-files:
+  prometheus-data:

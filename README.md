@@ -27,7 +27,7 @@ An internet radio platform for live streaming, DJ scheduling, show archiving, an
 ### Prerequisites
 
 - [Docker & Docker Compose](https://docs.docker.com/compose/install/)
-- Node.js (for frontend dev)
+- Node.js (for webapp dev / Prisma CLI)
 
 ### Development Setup
 
@@ -35,9 +35,12 @@ An internet radio platform for live streaming, DJ scheduling, show archiving, an
 2. cd Radio-Show
 3. cp .env.dev.template .env.dev
 4. Fill out env vars
-5. docker compose up --build
-6. npx primsa migrate dev --name init
-7. npm run dev
+5. make dev
+6. cd webapp
+7. npm install
+8. npm run db:generate:dev
+9. npm run db:migrate:dev
+10. npm run dev
 
 ### Prod Setup
 
@@ -45,5 +48,22 @@ An internet radio platform for live streaming, DJ scheduling, show archiving, an
 2. cd Radio-Show
 3. cp .env.prod.template .env.prod
 4. Fill out env vars
-5. docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-6. npm run prod-run
+5. make prod
+6. cd webapp
+7. npm install
+8. npx dotenv -e ../.env.prod -- prisma generate
+9. npx dotenv -e ../.env.prod -- prisma migrate deploy
+10. npm run prod-run
+
+### Useful Make Targets
+
+- make dev (dev stack)
+- make prod (prod stack)
+- make test (postgres only)
+- make build (build dev images)
+- make rebuild (rebuild dev images without cache)
+- make logs (tail dev logs)
+- make ps (show dev stack)
+- make down (stop dev stack)
+- make down-all (stop dev + prod stacks)
+- make clean (stop dev stack + remove dev volumes)

@@ -10,6 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "prepare": "next-ws patch",
     "test": "APP_ENV=test jest --runInBand",
     "db:migrate:dev": "dotenv -e ../.env.dev -- prisma migrate dev",

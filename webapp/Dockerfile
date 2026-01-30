@@ -6,9 +6,11 @@ ENV DATABASE_URL=${DATABASE_URL}
 
 WORKDIR /app
 
-COPY package*.json ./
+RUN corepack enable
+
+COPY package.json pnpm-lock.yaml ./
 COPY prisma ./prisma/
-RUN npm install --legacy-peer-deps
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
@@ -19,6 +21,8 @@ WORKDIR /app
 
 # Install postgresql-client to use pg_isready
 RUN apk add --no-cache postgresql-client
+
+RUN corepack enable
 
 COPY --from=builder /app .
 

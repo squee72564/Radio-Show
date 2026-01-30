@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "Building nextjs app..."
-npm run build
+pnpm run build
 
 # Wait for Postgres to be ready (adjust env vars as needed)
 until pg_isready -h ${POSTGRES_HOST:-postgres} -p ${POSTGRES_PORT:-5432} -U ${POSTGRES_USER:-user}; do
@@ -16,4 +16,4 @@ npx prisma generate
 npx prisma migrate deploy
 
 echo "Starting app..."
-npm run start
+pnpm run start

@@ -11,7 +11,9 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "next-ws patch",
-    "test": "APP_ENV=test jest --runInBand"
+    "test": "APP_ENV=test jest --runInBand",
+    "db:migrate:dev": "dotenv -e ../.env.dev -- prisma migrate dev",
+    "db:generate:dev": "dotenv -e ../.env.dev -- prisma generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.9.1",

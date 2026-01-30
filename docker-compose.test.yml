@@ -1,7 +1,6 @@
 services:
   postgres:
     image: postgres:15
-    container_name: postgres
     env_file:
       - .env.test
     ports:
@@ -9,3 +8,8 @@ services:
     tmpfs:
       - /var/lib/postgresql/data
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

@@ -60,9 +60,7 @@ export default async function StreamWithButtInfo() {
             height={1084}
           />
           <p>
-            Click on "Settings" to open the settings tab.
-            Under the "Main" tab in the settings window you will see "Server Settings".
-            Under this press the "Add" button to add a new server to connect to.
+            {"Click on \"Settings\" to open the settings tab. Under the \"Main\" tab in the settings window you will see \"Server Settings\". Under this press the \"Add\" button to add a new server to connect to."}
           </p>
         </CardContent>
       </Card>

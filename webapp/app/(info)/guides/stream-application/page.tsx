@@ -19,7 +19,7 @@ export default async function StreamApplicationInfo() {
           </p>
           <p>
             A stream application is filled out by an existing user and submitted to be reviewed by an Admin.
-            Once initially submitted, the livestream defined by the stream application has a pending status and will not be added to Mugen Beat's schedule.
+            {"Once initially submitted, the livestream defined by the stream application has a pending status and will not be added to Mugen Beat's schedule."}
           </p>
           <p>
             Once an Admin approves of the stream it is added to the schedule and future instances of the stream will appear on the calendar.
@@ -59,13 +59,11 @@ export default async function StreamApplicationInfo() {
           </p>
           <p>
             <strong>Repeat weekly on</strong> represents the days of the week that the stream will be scheduled at the time range you input.
-            For example, if you have a start and end time of 7:00-8:30 and select the days "MO", "WE", "FR", the stream will take place from 7:00-8:30 on Monday, Wednesday, and Friday.
+            {"For example, if you have a start and end time of 7:00-8:30 and select the days \"MO\", \"WE\", \"FR\", the stream will take place from 7:00-8:30 on Monday, Wednesday, and Friday."}
           </p>
           <p>
             <strong>Interval</strong> represents the weekly interval that the stream is scheduled on.
-            For example if we have a stream from 7:00-8:30 on Monday, Wednesday, and Friday and set the interval to "1", this means that it will be scheduled on those days at the designated time every week.
-            Setting the interval to "2" would mean the stream would be scheduled on those days every other week.
-            Setting the interval to "3" means that the stream would be scheduled on those days every three weeks, and so on.
+            {"For example if we have a stream from 7:00-8:30 on Monday, Wednesday, and Friday and set the interval to \"1\", this means that it will be scheduled on those days at the designated time every week. Setting the interval to \"2\" would mean the stream would be scheduled on those days every other week. Setting the interval to \"3\" means that the stream would be scheduled on those days every three weeks, and so on."}
           </p>
           <p>
             <strong>Credential</strong> is the username that will be used for authentication when connecting to the livestream.
@@ -81,8 +79,7 @@ export default async function StreamApplicationInfo() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p>
-          To sumbit a stream application you can click the "Sign Up To DJ" button in the top navigation bar above.
-          Alternatively, you can navigate to the dashboard, and when signed in click the profile card in the bottom of the sidebar and select "Apply To Stream".
+          {"To sumbit a stream application you can click the \"Sign Up To DJ\" button in the top navigation bar above. Alternatively, you can navigate to the dashboard, and when signed in click the profile card in the bottom of the sidebar and select \"Apply To Stream\"."}
           </p>
         </CardContent>
       </Card>

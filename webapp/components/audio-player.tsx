@@ -172,8 +172,8 @@ export function CustomPlayer({
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
-    setHasMounted(true);
-    return () => setHasMounted(false);
+    const id = setTimeout(() => setHasMounted(true), 0);
+    return () => clearTimeout(id);
   }, []);
 
   useEffect(() => {

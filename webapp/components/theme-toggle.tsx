@@ -32,7 +32,10 @@ export function ModeToggle() {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme()
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    const id = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(id);
+  }, []);
 
   if (!mounted) return null;
   

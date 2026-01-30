@@ -1,18 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import useWebSocket from 'react-use-websocket';
 
 export function useStreamStatus(getUrl: () => string) {
-  const [status, setStatus] = useState<'live' | 'offline'>('offline');
-
   const { lastMessage, readyState } = useWebSocket(getUrl(), {
     shouldReconnect: () => true,
     retryOnError: true,
   });
 
-  useEffect(() => {
-    if (!lastMessage) return;
+  const status = useMemo(() => {
+    if (readyState === WebSocket.CLOSED || readyState === WebSocket.CLOSING) {
+      return 'offline';
+    }
+
+    if (!lastMessage) return 'offline';
 
     try {
       const data =
@@ -22,18 +24,14 @@ export function useStreamStatus(getUrl: () => string) {
 
       const payload = JSON.parse(data);
       if (payload.status === 'live' || payload.status === 'offline') {
-        setStatus(payload.status);
+        return payload.status;
       }
     } catch {
-      setStatus('offline');
+      return 'offline';
     }
-  }, [lastMessage]);
 
-  useEffect(() => {
-    if (readyState === WebSocket.CLOSED || readyState === WebSocket.CLOSING) {
-      setStatus('offline');
-    }
-  }, [readyState]);
+    return 'offline';
+  }, [lastMessage, readyState]);
 
   return status;
 }

@@ -14,3 +14,5 @@
 /icecast/logs
 
 /liquidsoap/files
+!/liquidsoap/files/
+!/liquidsoap/files/.gitkeep

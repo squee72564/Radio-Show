@@ -13,6 +13,7 @@ services:
       - .env.dev
     volumes:
       - ./liquidsoap:/app
+      - ./liquidsoap/files:/app/files
 
   postgres:
     env_file:

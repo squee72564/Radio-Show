@@ -13,7 +13,7 @@ COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
 
 # Create log directory and make it writable for the runtime user
-RUN mkdir -p /var/log/icecast2 && chown -R icecast2:icecast2 /var/log/icecast2
+RUN mkdir -p /var/log/icecast2 && chown -R icecast2 /var/log/icecast2
 
 # Expose default Icecast port
 EXPOSE 8000

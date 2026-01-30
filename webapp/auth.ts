@@ -1,4 +1,4 @@
-import { type Adapter } from "@auth/core/adapters"
+import { type Adapter } from "next-auth/adapters"
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google";
 

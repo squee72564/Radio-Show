@@ -22,18 +22,22 @@ output.file(
   on_close = fun(_) -> begin
     log(level=3, label="outfile.on_close", "Stopped Recording to #{radioshow.temp_filename}.")
 
+    archive_in_progress_ref := true
+    meta_snapshot = meta_ref()
+    temp_filename = radioshow.temp_filename
+
     thread.run(
       delay=0.,
       fun () -> begin
         try
-          userId = list.assoc("userId", meta_ref())
-          streamScheduleId = list.assoc("streamScheduleId", meta_ref())
-          streamInstanceId = list.assoc("streamInstanceId", meta_ref())
+          userId = list.assoc("userId", meta_snapshot)
+          streamScheduleId = list.assoc("streamScheduleId", meta_snapshot)
+          streamInstanceId = list.assoc("streamInstanceId", meta_snapshot)
 
           filePath = "/app/files/archive-#{userId}-#{streamScheduleId}-#{streamInstanceId}.mp3"
 
-          file.copy(radioshow.temp_filename, filePath)
-          log(level=3, label="outfile.on_close", "\t- Copied #{radioshow.temp_filename} file to #{filePath}.")
+          file.copy(temp_filename, filePath)
+          log(level=3, label="outfile.on_close", "\t- Copied #{temp_filename} file to #{filePath}.")
 
           # Make the HTTP POST file upload call
           let response = http.post.file(
@@ -41,7 +45,7 @@ output.file(
             name="file",
             filename="archive.mp3",
             content_type="audio/mpeg",
-            headers=[("Authorization", "Bearer secretToken"),
+            headers=[("Authorization", "Bearer #{radioshow.secret_token}"),
                     ("userId", userId),
                     ("streamScheduleId", streamScheduleId),
                     ("streamInstanceId", streamInstanceId)],
@@ -51,10 +55,12 @@ output.file(
           log(level=3, label="outfile.on_close", "\t- Upload status: #{response.status_code} #{response.status_message}")
           log(level=3, label="outfile.on_close", "\t- Upload response body: #{response}")
 
-          meta_ref := []
-
         catch err do
           log(level=1, label="outfile.on_close", "Error in on_close thread: #{err}")
+        finally
+          meta_ref := []
+          live_stream_active := false
+          archive_in_progress_ref := false
         end
       end
     )

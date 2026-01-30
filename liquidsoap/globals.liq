@@ -37,3 +37,5 @@ disconnect_called_ref = ref(false)    # Keeps track of if disconnect callback wa
 live_stream_active    = ref(false)    # Keep track of if we are recording
 
 timeout_ref           = ref(30.)
+
+archive_in_progress_ref = ref(false) # Prevent new auth while archiving/uploading

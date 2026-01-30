@@ -9,7 +9,14 @@ def radioshow.auth_callback(auth_info)
     "Client #{auth_info.user} at #{auth_info.address} attempting to authenticate..."
   )
 
-  if not live_stream_active() then
+  if archive_in_progress_ref() then
+    log(
+      level=3,
+      label="radioshow.auth_callback",
+      "\t- Archive/upload still in progress, auth failed"
+    )
+    false
+  elsif not live_stream_active() then
     try
       auth_response = radioshow.post(
         timeout=5.0,

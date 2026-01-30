@@ -2,6 +2,7 @@
 def harbor_connect_callback(headers)
   live_stream_active := true
   disconnect_called_ref := false
+  archive_in_progress_ref := false
 
   log(
     level=2,
@@ -43,6 +44,7 @@ def harbor_disconnect_callback()
     disconnect_called_ref := true
     client_addr_ref := "None"
     live_stream_active := false
+    archive_in_progress_ref := true
 
     ignore(server.execute("live_dj.log_status"))
   # end

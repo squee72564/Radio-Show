@@ -4,7 +4,7 @@ services:
       - .env.dev
     volumes:
       - ./icecast/icecast_template.xml:/etc/icecast2/icecast_template.xml:ro
-      - ./icecast/logs:/logs
+      - ./icecast/logs:/var/log/icecast2
     ports:
       - "8000:8000"
 

@@ -5,6 +5,7 @@ services:
     volumes:
       - ./icecast/icecast_template.xml:/etc/icecast2/icecast_template.xml:ro
       - prod-icecast-logs:/var/log/icecast2
+    user: icecast2
 
   liquidsoap:
     env_file:

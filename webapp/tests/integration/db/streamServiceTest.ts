@@ -146,11 +146,14 @@ describe("Stream Service Integration", () => {
         rrule: "RRULE:FREQ=DAILY;INTERVAL=1",
         password: "abc123",
       });
+      if (!streamSchedule) {
+        throw new Error("Expected stream schedule to be created");
+      }
 
       const instance = await prisma.streamInstance.create({
         data: {
           userId: user.id,
-          streamScheduleId: streamSchedule?.id!,
+          streamScheduleId: streamSchedule.id,
           scheduledStart: new Date(),
           scheduledEnd: new Date()
         }
@@ -158,7 +161,7 @@ describe("Stream Service Integration", () => {
 
       const archive = await streamService.createStreamArchive({
         userId: user.id,
-        streamScheduleId: streamSchedule?.id!,
+        streamScheduleId: streamSchedule.id,
         streamInstanceId: instance.id,
         url: "https://archive.example.com",
         createdAt: new Date(),

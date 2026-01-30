@@ -18,7 +18,10 @@ help:
 	"  logs      Tail dev logs" \
 	"  build     Build dev images" \
 	"  rebuild   Rebuild dev images without cache" \
-	"  clean     Stop dev stack and remove dev volumes"
+	"  clean     Stop dev stack and remove dev volumes" \
+	"" \
+	"Notes:" \
+	"  docker-compose.yml is a base scaffold; use dev/prod/test targets."
 
 dev:
 	$(COMPOSE) $(DEV) up -d

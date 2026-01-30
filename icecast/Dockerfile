@@ -2,7 +2,7 @@ FROM debian:bullseye
 
 # Install Icecast and envsubst (via gettext package)
 RUN apt-get update && \
-    apt-get install -y icecast2 gettext && \
+    apt-get install -y icecast2 gettext media-types && \
     apt-get clean
 
 # Copy Icecast config template

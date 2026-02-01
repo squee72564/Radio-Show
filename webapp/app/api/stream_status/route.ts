@@ -1,6 +1,12 @@
 import { LiveState } from '@/lib/live-state';
 
 export async function POST(request: Request) {
+  const auth = request.headers.get('Authorization') || '';
+
+  if (auth !== `Bearer ${process.env.STREAM_STATUS_SECRET}`) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
   const body = await request.text();
 
   let parsed: unknown;

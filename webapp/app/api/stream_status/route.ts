@@ -1,5 +1,5 @@
-import { LiveState } from '@/lib/live-state';
 import { z } from 'zod';
+import { setStreamStatus } from '@/lib/stream-status';
 
 const StreamStatusSchema = z.object({
   status: z.enum(['live', 'offline']),
@@ -27,9 +27,8 @@ export async function POST(request: Request) {
 
   const { status } = parsed.data;
 
-  LiveState.setStatus(status);
-  console.log('Broadcasting status:', LiveState.getStatus());
-  LiveState.broadcastStatus();
+  await setStreamStatus(status);
+  console.log('Broadcasting status:', status);
 
   return new Response('Status updated');
 }
@@ -44,9 +43,8 @@ export async function GET() {
   try {
     const upstream = await fetch(`http://${ICECAST_HOST_WEBAPP}:${ICECAST_PORT}/${ICECAST_MOUNT}`);
     const status = upstream.ok ? 'live' : 'offline';
-    LiveState.setStatus(status);
-    console.log('Broadcasting status:', LiveState.getStatus());
-    LiveState.broadcastStatus();
+    await setStreamStatus(status);
+    console.log('Broadcasting status:', status);
 
     return new Response(JSON.stringify({ status: status }), {
       status: 200,

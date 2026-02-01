@@ -22,7 +22,9 @@ let radioshow.url = environment.get("SITE_URL", default="http://host.docker.inte
 
 let radioshow.temp_filename = "/app/files/test.mp3"
 
-let radioshow.secret_token = environment.get("SECRET_ARCHIVE_TOKEN", default="secretToken")
+let radioshow.secret_token = environment.get("SECRET_ARCHIVE_TOKEN", default="")
+
+let radioshow.stream_status_secret = environment.get("STREAM_STATUS_SECRET", default="")
 
 # <-----
 # Global References

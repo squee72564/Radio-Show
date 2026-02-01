@@ -21,7 +21,8 @@ def radioshow.post(~timeout=10., url, payload) =
     response = http.post(full_url,
       headers=[
         ("Content-Type", "application/json"),
-        ("User-Agent", "Liquidsoap MugenBeat")
+        ("User-Agent", "Liquidsoap MugenBeat"),
+        ("Authorization", "Bearer #{radioshow.stream_status_secret}")
       ],
       timeout=timeout,
       data=payload

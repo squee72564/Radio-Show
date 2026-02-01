@@ -8,7 +8,7 @@ export async function GET(req: Request) {
   const range = req.headers.get('range');
 
   if (!archiveId) {
-    return new NextResponse('Missing filename', { status: 400 });
+    return new NextResponse('Missing archiveId', { status: 400 });
   }
 
   const archive = await findStreamArchiveById(archiveId);

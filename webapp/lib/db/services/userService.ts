@@ -35,8 +35,8 @@ export async function findUsersByRole(
       status: {
         in: roles,
       },
-      ...(options ?? {}),
     },
+    ...(options ?? {}),
   });
 }
 

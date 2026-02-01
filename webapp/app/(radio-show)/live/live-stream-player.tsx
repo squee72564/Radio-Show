@@ -6,10 +6,11 @@ import { useStreamStatus } from '@/hooks/use-streamstatus';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CustomPlayer } from '@/components/audio-player';
 import { ErrorBoundary } from 'react-error-boundary';
+import { getWebSocketUrl } from '@/lib/urls';
 
 export default function LiveStreamPlayer() {
-  const streamUrl: string = 'http://localhost:3000/api/live';
-  const status = useStreamStatus(() => 'ws://localhost:3000/api/ws');
+  const streamUrl = '/api/live';
+  const status = useStreamStatus(() => getWebSocketUrl());
   const [isStreamLive, SetStreamLive] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [hasMounted, setHasMounted] = useState<boolean>(false);

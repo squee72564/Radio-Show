@@ -1,15 +1,27 @@
 import { prisma } from '@/lib/db/prismaClient';
 import { findStreamScheduleByIdAndPass } from '@/lib/db/actions/streamscheduleActions';
 import { StreamSchedule } from '@prisma/client';
+import { z } from 'zod';
+
+const DjAuthSchema = z.object({
+  password: z.string().min(1),
+  user: z.string().min(1),
+  address: z.string().optional(),
+});
 
 export async function POST(req: Request) {
   try {
     const bodyText = await req.text();
-    const body: {
-      password: string;
-      user: string;
-      address: string;
-    } = JSON.parse(bodyText);
+    const parsed = DjAuthSchema.safeParse(JSON.parse(bodyText));
+
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ authenticated: false, message: 'Invalid request body' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const body = parsed.data;
 
     const streamScheduleId = body.user;
     const password = body.password;
@@ -80,8 +92,9 @@ export async function POST(req: Request) {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
-    return new Response(JSON.stringify({ authenticated: false, message: err }), {
-      status: 200,
+    console.error('DJ auth error:', err);
+    return new Response(JSON.stringify({ authenticated: false, message: 'Internal server error' }), {
+      status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
   }

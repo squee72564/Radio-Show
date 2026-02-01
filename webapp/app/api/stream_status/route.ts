@@ -2,7 +2,7 @@ import { LiveState } from '@/lib/live-state';
 import { z } from 'zod';
 
 const StreamStatusSchema = z.object({
-  status: z.enum(['live', 'offline'])
+  status: z.enum(['live', 'offline']),
 });
 
 export async function POST(request: Request) {

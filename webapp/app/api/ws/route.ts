@@ -1,4 +1,6 @@
-import type WebSocket from 'ws';
+import type { WebSocket, WebSocketServer } from 'ws';
+import type { NextRequest } from 'next/server';
+import type { RouteContext } from 'next-ws/server';
 import { LiveState } from '@/lib/live-state';
 
 export function GET() {
@@ -8,7 +10,12 @@ export function GET() {
   return new Response('Upgrade Required', { status: 426, headers });
 }
 
-export function SOCKET(client: WebSocket) {
+export function UPGRADE(
+  client: WebSocket,
+  _server: WebSocketServer,
+  _request: NextRequest,
+  _context: RouteContext<'/api/ws'>,
+) {
   LiveState.addClient(client);
   client.send(JSON.stringify({ status: LiveState.getStatus() }));
 

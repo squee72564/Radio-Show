@@ -7,10 +7,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function saltAndHashPassword(password: string): string {
-  return password;
-}
-
 export function isUserRole(userStatus: $Enums.Role, role: $Enums.Role) {
   return userStatus == role;
 }

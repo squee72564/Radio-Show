@@ -167,11 +167,11 @@ export async function streamScheduleFormSubmit(
 
   const rrule = `FREQ=WEEKLY;BYDAY=${validatedData.days.join(',')};INTERVAL=${interval}`;
 
-  if (!(endTime > startTime)) {
+  if (endTime <= startTime) {
     return {
       ...prevState,
       success: false,
-      message: 'Start time cannot be before end time',
+      message: 'Start time must be before end time',
       errors: {
         ['start-time']: ['Start time must be before end time'],
         ['end-time']: ['End time must be after start time'],
@@ -193,11 +193,11 @@ export async function streamScheduleFormSubmit(
     };
   }
 
-  if (!(endDate > startDate)) {
+  if (endDate <= startDate) {
     return {
       ...prevState,
       success: false,
-      message: 'Start time cannot be before end time',
+      message: 'Start date must be before end date',
       errors: {
         ['start-date']: ['Start date must be before end date'],
         ['end-date']: ['End date must be after start date'],

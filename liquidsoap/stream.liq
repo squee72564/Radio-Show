@@ -87,7 +87,7 @@ output.icecast(%mp3(bitrate=320),
     ignore(radioshow.post(
       timeout=5.0,
       "stream_status",
-      json.stringify("live")
+      json.stringify([("status","live")])
     ))
   end,
   on_stop= fun() -> begin
@@ -100,7 +100,7 @@ output.icecast(%mp3(bitrate=320),
     ignore(radioshow.post(
       timeout=5.0,
       "stream_status",
-      json.stringify("offline")
+      json.stringify([("status","offline")])
     ))
     end,
   base_stream

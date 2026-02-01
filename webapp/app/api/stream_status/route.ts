@@ -1,4 +1,9 @@
 import { LiveState } from '@/lib/live-state';
+import { z } from 'zod';
+
+const StreamStatusSchema = z.object({
+  status: z.enum(['live', 'offline'])
+});
 
 export async function POST(request: Request) {
   const auth = request.headers.get('Authorization') || '';
@@ -9,18 +14,20 @@ export async function POST(request: Request) {
 
   const body = await request.text();
 
-  let parsed: unknown;
+  let parsed;
   try {
-    parsed = JSON.parse(body);
+    parsed = StreamStatusSchema.safeParse(JSON.parse(body));
   } catch {
     return new Response('Invalid JSON', { status: 400 });
   }
 
-  if (parsed !== 'live' && parsed !== 'offline') {
-    return new Response('Invalid status', { status: 400 });
+  if (!parsed.success) {
+    return new Response('Invalid Stream Status', { status: 400 });
   }
 
-  LiveState.setStatus(parsed);
+  const { status } = parsed.data;
+
+  LiveState.setStatus(status);
   console.log('Broadcasting status:', LiveState.getStatus());
   LiveState.broadcastStatus();
 

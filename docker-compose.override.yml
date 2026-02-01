@@ -49,6 +49,10 @@ services:
     volumes:
       - grafana-storage-dev:/var/lib/grafana
 
+  redis:
+    ports:
+      - "6379:6379"
+
 volumes:
   grafana-storage-dev:
   dev-postgres-data:

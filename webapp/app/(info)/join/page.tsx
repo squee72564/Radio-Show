@@ -12,6 +12,14 @@ export const metadata: Metadata = {
   description: 'Join Information page for MugenBeat',
 };
 
+const loginAndApply = async () => {
+  'use server';
+  await signIn('google', {
+    redirect: true,
+    redirectTo: '/user/apply',
+  });
+};
+
 export default async function DJSignupPage() {
   const session = await auth();
   const user = session?.user;
@@ -71,18 +79,11 @@ export default async function DJSignupPage() {
                 <Button variant="outline">Apply to DJ</Button>
               </Link>
             ) : (
-              <Button
-                variant="outline"
-                onClick={async () => {
-                  'use server';
-                  await signIn('google', {
-                    redirect: true,
-                    redirectTo: '/user/apply',
-                  });
-                }}
-              >
-                Login with Google and Apply
-              </Button>
+              <form action={loginAndApply}>
+                <Button variant="outline" type="submit">
+                  Login with Google and Apply
+                </Button>
+              </form>
             )}
           </div>
         </CardContent>

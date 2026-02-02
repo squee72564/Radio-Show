@@ -74,9 +74,12 @@ export async function POST(req: Request) {
     const userId = streamschedule.userId;
     const streamInstanceId = streamInstance.id;
     const title = streamschedule.title;
-    const timelimit = Math.max(
-      0,
-      Math.floor((streamInstance.scheduledEnd.getTime() - Date.now()) / 1000),
+    const timelimit = Math.min(
+      Math.max(
+        0,
+        Math.floor((streamInstance.scheduledEnd.getTime() - Date.now()) / 1000),
+      ),
+      4.0 * 60.0 * 60.0
     );
 
     const data = {

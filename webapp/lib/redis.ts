@@ -18,14 +18,20 @@ async function connectClient() {
 
 export function getRedisClient() {
   if (!clientPromise) {
-    clientPromise = connectClient();
+    clientPromise = connectClient().catch((err) => {
+      clientPromise = null;
+      throw err;
+    });
   }
   return clientPromise;
 }
 
 export function getRedisSubscriber() {
   if (!subscriberPromise) {
-    subscriberPromise = connectClient();
+    subscriberPromise = connectClient().catch((err) => {
+      subscriberPromise = null;
+      throw err;
+    });
   }
   return subscriberPromise;
 }

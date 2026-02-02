@@ -2,6 +2,7 @@ import { createStreamArchive } from '@/lib/db/actions/streamscheduleActions';
 import { deleteArchiveFileFromS3, uploadArchiveFileToS3 } from '@/lib/S3Utils';
 import { parseBuffer } from 'music-metadata';
 import { Result } from '@/types/generic';
+import { serverConfig } from '@/lib/server-config';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -9,7 +10,7 @@ export const runtime = 'nodejs';
 export async function POST(req: Request) {
   try {
     const authHeader = req.headers.get('Authorization') || '';
-    if (authHeader !== `Bearer ${process.env.SECRET_ARCHIVE_TOKEN}`) {
+    if (authHeader !== `Bearer ${serverConfig.secretArchiveToken}`) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
 

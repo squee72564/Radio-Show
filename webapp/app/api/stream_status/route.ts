@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { setStreamStatus } from '@/lib/stream-status';
+import { serverConfig } from '@/lib/server-config';
 
 const StreamStatusSchema = z.object({
   status: z.enum(['live', 'offline']),
@@ -8,7 +9,7 @@ const StreamStatusSchema = z.object({
 export async function POST(request: Request) {
   const auth = request.headers.get('Authorization') || '';
 
-  if (auth !== `Bearer ${process.env.STREAM_STATUS_SECRET}`) {
+  if (auth !== `Bearer ${serverConfig.streamStatusSecret}`) {
     return new Response('Unauthorized', { status: 401 });
   }
 
@@ -34,14 +35,10 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-  const { ICECAST_HOST_WEBAPP, ICECAST_PORT, ICECAST_MOUNT } = process.env;
-
-  if (!ICECAST_HOST_WEBAPP || !ICECAST_PORT || !ICECAST_MOUNT) {
-    return new Response('Env vars not set on server', { status: 500 });
-  }
-
   try {
-    const upstream = await fetch(`http://${ICECAST_HOST_WEBAPP}:${ICECAST_PORT}/${ICECAST_MOUNT}`);
+    const upstream = await fetch(
+      `http://${serverConfig.icecastHost}:${serverConfig.icecastPort}/${serverConfig.icecastMount}`,
+    );
     const status = upstream.ok ? 'live' : 'offline';
     await setStreamStatus(status);
     console.log('Broadcasting status:', status);

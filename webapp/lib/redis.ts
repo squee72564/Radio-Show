@@ -1,15 +1,12 @@
 import { createClient } from 'redis';
 import type { RedisClientType } from 'redis';
+import { serverConfig } from '@/lib/server-config';
 
 let clientPromise: Promise<RedisClientType> | null = null;
 let subscriberPromise: Promise<RedisClientType> | null = null;
 
 function getRedisUrl() {
-  const url = process.env.REDIS_URL;
-  if (!url) {
-    throw new Error('REDIS_URL is not set');
-  }
-  return url;
+  return serverConfig.redisUrl;
 }
 
 async function connectClient() {

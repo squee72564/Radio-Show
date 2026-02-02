@@ -1,5 +1,6 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { Result } from '@/types/generic';
+import { serverConfig } from '@/lib/server-config';
 
 export async function uploadArchiveFileToS3({
   fileBuffer,
@@ -8,29 +9,20 @@ export async function uploadArchiveFileToS3({
   fileBuffer: Buffer;
   filename: string;
 }): Promise<Result<{ location: string }>> {
-  const { S3_ENDPOINT, S3_BUCKET_NAME, S3_ROOT_USER, S3_ROOT_PASSWORD, S3_REGION } = process.env;
-
-  if (!S3_ENDPOINT || !S3_BUCKET_NAME || !S3_ROOT_USER || !S3_ROOT_PASSWORD || !S3_REGION) {
-    return {
-      type: 'error',
-      message: 'Missing required S3 environment variables',
-    };
-  }
-
   const s3 = new S3Client({
-    endpoint: S3_ENDPOINT,
+    endpoint: serverConfig.s3Endpoint,
     credentials: {
-      accessKeyId: S3_ROOT_USER,
-      secretAccessKey: S3_ROOT_PASSWORD,
+      accessKeyId: serverConfig.s3RootUser,
+      secretAccessKey: serverConfig.s3RootPassword,
     },
     forcePathStyle: true,
-    region: S3_REGION,
+    region: serverConfig.s3Region,
   });
 
   try {
     await s3.send(
       new PutObjectCommand({
-        Bucket: S3_BUCKET_NAME,
+        Bucket: serverConfig.s3BucketName,
         Key: filename,
         Body: fileBuffer,
         ContentType: 'audio/mpeg',
@@ -49,29 +41,20 @@ export async function uploadArchiveFileToS3({
 export async function deleteArchiveFileFromS3(
   streamArchiveURL: string,
 ): Promise<Result<{ success: boolean }>> {
-  const { S3_ENDPOINT, S3_BUCKET_NAME, S3_ROOT_USER, S3_ROOT_PASSWORD, S3_REGION } = process.env;
-
-  if (!S3_ENDPOINT || !S3_BUCKET_NAME || !S3_ROOT_USER || !S3_ROOT_PASSWORD || !S3_REGION) {
-    return {
-      type: 'error',
-      message: 'Missing required S3 environment variables',
-    };
-  }
-
   const s3 = new S3Client({
-    endpoint: S3_ENDPOINT,
+    endpoint: serverConfig.s3Endpoint,
     credentials: {
-      accessKeyId: S3_ROOT_USER,
-      secretAccessKey: S3_ROOT_PASSWORD,
+      accessKeyId: serverConfig.s3RootUser,
+      secretAccessKey: serverConfig.s3RootPassword,
     },
     forcePathStyle: true,
-    region: S3_REGION,
+    region: serverConfig.s3Region,
   });
 
   try {
     await s3.send(
       new DeleteObjectCommand({
-        Bucket: S3_BUCKET_NAME,
+        Bucket: serverConfig.s3BucketName,
         Key: streamArchiveURL,
       }),
     );

@@ -1,12 +1,10 @@
+import { serverConfig } from '@/lib/server-config';
+
 export async function GET() {
-  const { ICECAST_HOST_WEBAPP, ICECAST_PORT, ICECAST_MOUNT } = process.env;
-
-  if (!ICECAST_HOST_WEBAPP || !ICECAST_PORT || !ICECAST_MOUNT) {
-    return new Response('Env vars not set on server', { status: 500 });
-  }
-
   try {
-    const upstream = await fetch(`http://${ICECAST_HOST_WEBAPP}:${ICECAST_PORT}/${ICECAST_MOUNT}`);
+    const upstream = await fetch(
+      `http://${serverConfig.icecastHost}:${serverConfig.icecastPort}/${serverConfig.icecastMount}`,
+    );
 
     return new Response(upstream.body, {
       status: upstream.status,

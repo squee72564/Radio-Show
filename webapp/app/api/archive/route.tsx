@@ -1,6 +1,7 @@
 import { findStreamArchiveById } from '@/lib/db/actions/streamscheduleActions';
 import { S3Client, GetObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
 import { NextResponse } from 'next/server';
+import { serverConfig } from '@/lib/server-config';
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -17,25 +18,18 @@ export async function GET(req: Request) {
     return new NextResponse('Archive not found', { status: 404 });
   }
 
-  const { S3_ENDPOINT, S3_REGION, S3_ROOT_USER, S3_ROOT_PASSWORD, S3_BUCKET_NAME } = process.env;
-
-  if (!S3_ENDPOINT || !S3_REGION || !S3_ROOT_USER || !S3_ROOT_PASSWORD || !S3_BUCKET_NAME) {
-    console.log('Missing env vars');
-    return new NextResponse('Missing env vars', { status: 500 });
-  }
-
   const s3 = new S3Client({
-    endpoint: S3_ENDPOINT,
-    region: S3_REGION,
+    endpoint: serverConfig.s3Endpoint,
+    region: serverConfig.s3Region,
     credentials: {
-      accessKeyId: S3_ROOT_USER,
-      secretAccessKey: S3_ROOT_PASSWORD,
+      accessKeyId: serverConfig.s3RootUser,
+      secretAccessKey: serverConfig.s3RootPassword,
     },
     forcePathStyle: true,
   });
 
   const s3Data = {
-    Bucket: S3_BUCKET_NAME,
+    Bucket: serverConfig.s3BucketName,
     Key: archive.url,
   };
 

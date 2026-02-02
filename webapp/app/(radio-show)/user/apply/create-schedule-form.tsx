@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from 'react';
 import { CircleHelpIcon } from 'lucide-react';
-import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { streamScheduleFormSubmit } from '@/lib/db/actions/streamscheduleActions';
 import {
   StreamScheduleFormState,
@@ -137,7 +137,11 @@ export default function CreateScheduleForm({ user }: { user: User }) {
             Your schedule is now pending and will only be activated once approved by an admin.
           </AlertDescription>
         </Alert>
-        <Button onClick={() => redirect(`/user/edit`)}>Understood</Button>
+        <Button asChild>
+          <Link href={'/user/edit'}>
+            Understood
+          </Link>
+        </Button>
       </div>
     );
   }

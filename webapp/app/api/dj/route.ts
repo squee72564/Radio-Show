@@ -15,10 +15,13 @@ export async function POST(req: Request) {
     const parsed = DjAuthSchema.safeParse(JSON.parse(bodyText));
 
     if (!parsed.success) {
-      return new Response(JSON.stringify({ authenticated: false, message: 'Invalid request body' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return new Response(
+        JSON.stringify({ authenticated: false, message: 'Invalid request body' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
     }
 
     const body = parsed.data;
@@ -93,9 +96,12 @@ export async function POST(req: Request) {
     });
   } catch (err) {
     console.error('DJ auth error:', err);
-    return new Response(JSON.stringify({ authenticated: false, message: 'Internal server error' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({ authenticated: false, message: 'Internal server error' }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    );
   }
 }

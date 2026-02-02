@@ -1,7 +1,7 @@
 import type { WebSocket, WebSocketServer } from 'ws';
 import type { NextRequest } from 'next/server';
 import type { RouteContext } from 'next-ws/server';
-import { getRedisSubscriber } from '@/lib/redis';
+import { getRedisSubscriber, resetRedisSubscriber } from '@/lib/redis';
 import { getStreamStatus, STREAM_STATUS_CHANNEL } from '@/lib/stream-status';
 
 let wsServer: WebSocketServer | null = null;
@@ -37,6 +37,7 @@ function attachSubscriberListeners(subscriber: Awaited<ReturnType<typeof getRedi
     subscriberInitialized = false;
     activeSubscriber = null;
     subscriberListenersAttached = false;
+    resetRedisSubscriber();
     scheduleSubscriberRetry();
   });
 }
@@ -79,6 +80,7 @@ async function initSubscriber() {
       }
       activeSubscriber = null;
       subscriberListenersAttached = false;
+      resetRedisSubscriber();
       console.error('Failed to initialize Redis subscriber:', err);
       scheduleSubscriberRetry();
     } finally {

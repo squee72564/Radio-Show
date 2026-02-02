@@ -35,3 +35,7 @@ export function getRedisSubscriber() {
   }
   return subscriberPromise;
 }
+
+export function resetRedisSubscriber() {
+  subscriberPromise = null;
+}

@@ -2,6 +2,33 @@ import { findStreamArchiveById } from '@/lib/db/actions/streamscheduleActions';
 import { S3Client, GetObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
 import { NextResponse } from 'next/server';
 import { serverConfig } from '@/lib/server-config';
+import { Readable } from 'node:stream';
+
+function toResponseBody(body: unknown): ReadableStream<Uint8Array> | Uint8Array | null {
+  if (!body) return null;
+
+  if (body instanceof Readable) {
+    return Readable.toWeb(body) as ReadableStream<Uint8Array>;
+  }
+
+  if (typeof ReadableStream !== 'undefined' && body instanceof ReadableStream) {
+    return body;
+  }
+
+  if (body instanceof Uint8Array) {
+    return body;
+  }
+
+  if (body instanceof ArrayBuffer) {
+    return new Uint8Array(body);
+  }
+
+  if (typeof Blob !== 'undefined' && body instanceof Blob) {
+    return body.stream();
+  }
+
+  return null;
+}
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -62,12 +89,17 @@ export async function GET(req: Request) {
     });
 
     const { Body, ContentType } = await s3.send(command);
+    const responseBody = toResponseBody(Body);
+
+    if (!responseBody) {
+      return new NextResponse('File not found or inaccessible', { status: 404 });
+    }
 
     headers.set('Content-Type', ContentType || 'audio/mpeg');
     headers.set('Cache-Control', 'public, max-age=31536000');
     headers.set('Accept-Ranges', 'bytes');
 
-    return new NextResponse(Body as ReadableStream, {
+    return new NextResponse(responseBody, {
       status: range ? 206 : 200,
       headers,
     });

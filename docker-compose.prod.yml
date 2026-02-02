@@ -44,6 +44,7 @@ services:
   prometheus:
     volumes:
       - ./prometheus.prod.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus.redis_exporter_recording_rules.yml:/etc/prometheus/redis_exporter_recording_rules.yml:ro
       - prometheus-data:/prometheus
 
   grafana:

@@ -41,6 +41,7 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - ./prometheus.dev.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus.redis_exporter_recording_rules.yml:/etc/prometheus/redis_exporter_recording_rules.yml:ro
       - prometheus-data-dev:/prometheus
 
   grafana:

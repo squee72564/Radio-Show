@@ -162,19 +162,21 @@ export function CustomPlayer({
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio || hasMounted) return;
+    if (!audio || !hasMounted) return;
+
+    audio.pause();
+    setIsPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
 
     if (isStreamLive) {
-      audio.pause();
-      audio.removeAttribute('src');
-      audio.load();
-      audio.src = streamUrl;
-      audio.load();
+      setIsLoading(true);
     } else {
-      audio.pause();
+      setIsLoading(false);
       audio.removeAttribute('src');
-      audio.load();
     }
+
+    audio.load();
   }, [streamUrl, isStreamLive, hasMounted]);
 
   useEffect(() => {
@@ -343,7 +345,7 @@ export function CustomPlayer({
           </Button>
         </>
       )}
-      <audio ref={audioRef} src={streamUrl} />
+      <audio ref={audioRef} src={isStreamLive ? streamUrl : undefined} />
     </div>
   );
 }

@@ -165,14 +165,9 @@ export function CustomPlayer({
     if (!audio || !hasMounted) return;
 
     audio.pause();
-    setIsPlaying(false);
-    setCurrentTime(0);
-    setDuration(0);
+    audio.currentTime = 0;
 
-    if (isStreamLive) {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
+    if (!isStreamLive) {
       audio.removeAttribute('src');
     }
 
@@ -192,6 +187,23 @@ export function CustomPlayer({
       setIsPlaying(false);
     };
 
+    const handleEmptied = () => {
+      setCurrentTime(0);
+      setDuration(0);
+      setIsPlaying(false);
+      if (!audio.src) {
+        setIsLoading(false);
+      }
+    };
+
+    const handlePlay = () => {
+      setIsPlaying(true);
+    };
+
+    const handlePause = () => {
+      setIsPlaying(false);
+    };
+
     const handleTimeUpdate = () => {
       setCurrentTime(audio.currentTime);
     };
@@ -203,12 +215,18 @@ export function CustomPlayer({
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
 
+    audio.addEventListener('emptied', handleEmptied);
     audio.addEventListener('loadstart', handleLoadStart);
     audio.addEventListener('canplay', handleCanPlay);
+    audio.addEventListener('play', handlePlay);
+    audio.addEventListener('pause', handlePause);
 
     return () => {
+      audio.removeEventListener('pause', handlePause);
+      audio.removeEventListener('play', handlePlay);
       audio.removeEventListener('canplay', handleCanPlay);
       audio.removeEventListener('loadstart', handleLoadStart);
+      audio.removeEventListener('emptied', handleEmptied);
 
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);

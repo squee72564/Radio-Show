@@ -1,11 +1,44 @@
 import { createStreamArchive } from '@/lib/db/actions/streamscheduleActions';
-import { deleteArchiveFileFromS3, uploadArchiveFileToS3 } from '@/lib/S3Utils';
-import { parseBuffer } from 'music-metadata';
+import { deleteArchiveFileFromS3, startArchiveUploadToS3 } from '@/lib/S3Utils';
+import { parseStream } from 'music-metadata';
 import { Result } from '@/types/generic';
 import { serverConfig } from '@/lib/server-config';
+import formidable from 'formidable';
+import { randomUUID } from 'node:crypto';
+import { PassThrough, Readable, Writable } from 'node:stream';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
+
+const MAX_ARCHIVE_BYTES = 10 * 1024 * 1024 * 1024;
+
+function createDiscardStream() {
+  return new Writable({
+    write(_chunk, _encoding, callback) {
+      callback();
+    },
+  });
+}
+
+function getMissingHeaderError(
+  userId: string | undefined,
+  scheduleId: string | undefined,
+  instanceId: string | undefined,
+) {
+  if (!userId) {
+    return 'Missing header `userId`';
+  }
+
+  if (!scheduleId) {
+    return 'Missing header `streamScheduleId`';
+  }
+
+  if (!instanceId) {
+    return 'Missing header `streamInstanceId`';
+  }
+
+  return null;
+}
 
 export async function POST(req: Request) {
   try {
@@ -14,66 +47,182 @@ export async function POST(req: Request) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
 
-    const formData = await req.formData();
+    let userId = req.headers.get('userId') || undefined;
+    let scheduleId = req.headers.get('streamScheduleId') || undefined;
+    let instanceId = req.headers.get('streamInstanceId') || undefined;
 
-    const file = formData.get('file') as File | null;
+    if (!req.body) {
+      return new Response(JSON.stringify({ error: 'Missing request body' }), { status: 400 });
+    }
 
-    if (!file) {
+    let fileReceived = false;
+    let fileMimeType: string | null = null;
+    let fileSizeBytes = 0;
+    let filename: string | null = null;
+    let fileError: string | null = null;
+    let uploadPromise: Promise<Result<{ location: string }>> | null = null;
+    let uploadAbort: (() => void) | null = null;
+    let metadataPromise: ReturnType<typeof parseStream> | null = null;
+    let uploadLocation: string | null = null;
+    let teeStream: PassThrough | null = null;
+    let uploadStream: PassThrough | null = null;
+    let metadataStream: PassThrough | null = null;
+
+    const form = formidable({
+      multiples: false,
+      allowEmptyFiles: false,
+      maxFileSize: MAX_ARCHIVE_BYTES,
+      fileWriteStreamHandler: (file) => {
+        fileReceived = true;
+        fileMimeType = file.mimetype || null;
+
+        if (file.mimetype !== 'audio/mpeg') {
+          fileError = 'Invalid file type';
+          return createDiscardStream();
+        }
+
+        filename =
+          userId && scheduleId && instanceId
+            ? `archive-${userId}-${scheduleId}-${instanceId}-${Date.now()}.mp3`
+            : `archive-${Date.now()}-${randomUUID()}.mp3`;
+
+        const tee = new PassThrough();
+        const uploadStreamLocal = new PassThrough();
+        const metadataStreamLocal = new PassThrough();
+        teeStream = tee;
+        uploadStream = uploadStreamLocal;
+        metadataStream = metadataStreamLocal;
+
+        tee.on('data', (chunk) => {
+          fileSizeBytes += chunk.length;
+        });
+
+        tee.pipe(uploadStreamLocal);
+        tee.pipe(metadataStreamLocal);
+
+        const uploadHandle = startArchiveUploadToS3({
+          body: uploadStreamLocal,
+          filename,
+          contentType: file.mimetype ?? 'audio/mpeg',
+        });
+
+        uploadPromise = uploadHandle.done;
+        uploadAbort = uploadHandle.abort;
+
+        metadataPromise = parseStream(
+          metadataStreamLocal,
+          { mimeType: file.mimetype ?? 'audio/mpeg' },
+          { duration: true },
+        );
+
+        return tee;
+      },
+    });
+
+    form.on('field', (name, value) => {
+      if (!userId && name === 'userId') {
+        userId = value;
+      }
+
+      if (!scheduleId && name === 'streamScheduleId') {
+        scheduleId = value;
+      }
+
+      if (!instanceId && name === 'streamInstanceId') {
+        instanceId = value;
+      }
+    });
+
+    const nodeStream = Readable.fromWeb(req.body as ReadableStream<Uint8Array>);
+    (nodeStream as { headers?: Record<string, string> }).headers = Object.fromEntries(req.headers);
+    (nodeStream as { method?: string }).method = req.method;
+    (nodeStream as { url?: string }).url = req.url;
+
+    try {
+      await new Promise<void>((resolve, reject) => {
+        form.parse(nodeStream as never, (err) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          resolve();
+        });
+      });
+    } catch (err) {
+      if (uploadAbort) {
+        uploadAbort();
+      }
+      teeStream?.destroy(err instanceof Error ? err : undefined);
+      uploadStream?.destroy(err instanceof Error ? err : undefined);
+      metadataStream?.destroy(err instanceof Error ? err : undefined);
+      void uploadPromise?.catch(() => {});
+      void metadataPromise?.catch(() => {});
+      if (filename) {
+        await deleteArchiveFileFromS3(filename);
+      }
+      throw err;
+    }
+
+    if (!fileReceived) {
       return new Response(JSON.stringify({ error: 'File is required' }), { status: 400 });
     }
 
-    if (file.type !== 'audio/mpeg') {
-      return new Response(JSON.stringify({ error: 'Invalid file type' }), { status: 400 });
+    if (fileError) {
+      return new Response(JSON.stringify({ error: fileError }), { status: 400 });
     }
 
-    const userId = req.headers.get('userId') || formData.get('userId')?.toString();
-    const scheduleId =
-      req.headers.get('streamScheduleId') || formData.get('streamScheduleId')?.toString();
-    const instanceId =
-      req.headers.get('streamInstanceId') || formData.get('streamInstanceId')?.toString();
-
-    if (!userId) {
-      return new Response(JSON.stringify({ error: 'Missing header `userId`' }), { status: 400 });
-    }
-
-    if (!scheduleId) {
-      return new Response(JSON.stringify({ error: 'Missing header `streamScheduleId`' }), {
-        status: 400,
+    if (!uploadPromise || !metadataPromise || !filename) {
+      return new Response(JSON.stringify({ error: 'Failed to process upload stream' }), {
+        status: 500,
       });
     }
 
-    if (!instanceId) {
-      return new Response(JSON.stringify({ error: 'Missing header `streamInstanceId`' }), {
-        status: 400,
-      });
+    const [uploadResult, metadataResult] = await Promise.allSettled([
+      uploadPromise,
+      metadataPromise,
+    ]);
+
+    if (uploadResult.status === 'fulfilled' && uploadResult.value.type === 'success') {
+      uploadLocation = uploadResult.value.data.location;
     }
 
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    if (metadataResult.status === 'rejected') {
+      if (uploadLocation) {
+        await deleteArchiveFileFromS3(uploadLocation);
+      }
+      throw metadataResult.reason;
+    }
 
-    const metadata = await parseBuffer(buffer, file.type);
+    if (uploadResult.status === 'rejected') {
+      throw uploadResult.reason;
+    }
 
-    const durationInSeconds = metadata.format.duration
-      ? Math.round(metadata.format.duration)
-      : undefined;
+    const result = uploadResult.value;
 
-    const result = (await uploadArchiveFileToS3({
-      fileBuffer: buffer,
-      filename: `archive-${userId}-${scheduleId}-${instanceId}-${Date.now()}.mp3`,
-    })) as Result<{ location: string }>;
+    const missingHeaderError = getMissingHeaderError(userId, scheduleId, instanceId);
+    if (missingHeaderError) {
+      if (uploadLocation) {
+        await deleteArchiveFileFromS3(uploadLocation);
+      }
+      return new Response(JSON.stringify({ error: missingHeaderError }), { status: 400 });
+    }
 
     if (result.type === 'error') {
       return new Response(JSON.stringify({ error: result.message }), { status: 501 });
     }
 
+    const metadata = metadataResult.value;
     const data = {
-      userId,
-      streamScheduleId: scheduleId,
-      streamInstanceId: instanceId,
+      userId: userId!,
+      streamScheduleId: scheduleId!,
+      streamInstanceId: instanceId!,
       url: result.data.location,
-      durationInSeconds: durationInSeconds || null,
-      fileSizeBytes: buffer.length,
-      format: file.type || null,
+      durationInSeconds: metadata.format.duration
+        ? Math.round(metadata.format.duration)
+        : null,
+      fileSizeBytes,
+      format: fileMimeType || null,
       createdAt: new Date(),
     };
 

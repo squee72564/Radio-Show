@@ -1,0 +1,6 @@
+{
+	"dependencies": {
+		"formidable": "^3.5.4",
+		"music-metadata": "^11.11.2"
+	}
+}

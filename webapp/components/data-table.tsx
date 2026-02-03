@@ -106,7 +106,7 @@ export default function DataTable<TData extends object, TValue>({
         </Button>
       </CardHeader>
       <CardContent className="border flex flex-1">
-        <Table className="flex-1 table-fixed w-full`">
+        <Table className="flex-1 table-fixed w-full">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

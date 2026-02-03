@@ -7,6 +7,7 @@ import { StreamInstance, StreamSchedule, User } from '@prisma/client';
 import { motion } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
+import { formatLocalDateParam, parseLocalDateParam } from '@/lib/date';
 import { getStreamInstancesByDateRange } from '@/lib/db/actions/streamscheduleActions';
 
 import { Button } from '@/components/ui/button';
@@ -24,11 +25,18 @@ export function DatePicker() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialDateParam = searchParams.get('date');
+  const parsedDateParam = parseLocalDateParam(initialDateParam);
 
-  const [date, setDate] = useState<Date>(() => {
-    const parsed = new Date(initialDateParam ?? '');
-    return isNaN(parsed.getTime()) ? new Date() : parsed;
-  });
+  const [date, setDate] = useState<Date>(() => parsedDateParam ?? new Date());
+
+  useEffect(() => {
+    if (initialDateParam === null) return;
+    if (parsedDateParam) return;
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('date', formatLocalDateParam(date));
+    router.replace(`?${params.toString()}`);
+  }, [initialDateParam, parsedDateParam, searchParams, router, date]);
 
   useEffect(() => {
     if (!date) return;
@@ -62,7 +70,7 @@ export function DatePicker() {
     newDate.setDate(newDate.getDate() + offset);
     setDate(newDate);
 
-    const formatted = newDate.toLocaleDateString();
+    const formatted = formatLocalDateParam(newDate);
     const params = new URLSearchParams(searchParams.toString());
     params.set('date', formatted);
     router.replace(`?${params.toString()}`);
@@ -91,7 +99,7 @@ export function DatePicker() {
               onSelect={(selectedDate) => {
                 if (selectedDate) {
                   setDate(selectedDate);
-                  const formatted = selectedDate.toLocaleDateString();
+                  const formatted = formatLocalDateParam(selectedDate);
                   const params = new URLSearchParams(searchParams.toString());
                   params.set('date', formatted);
 

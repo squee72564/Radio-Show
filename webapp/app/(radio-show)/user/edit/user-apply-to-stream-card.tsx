@@ -20,7 +20,7 @@ export default async function UserApplyToStreamCard() {
         <Link href={'/user/apply'}>
           <Button variant={'outline'}>Apply</Button>
         </Link>
-        <Link href={'/user/apply'}>
+        <Link href={'/guides'}>
           <Button variant={'outline'}>Live Streaming Information</Button>
         </Link>
       </CardFooter>

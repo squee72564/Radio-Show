@@ -88,7 +88,7 @@
          If you don't want this, comment out the following line or read up on CORS.
     -->
     <http-headers>
-        <header name="Access-Control-Allow-Origin" value="http://webapp:3000"/>
+        <header name="Access-Control-Allow-Origin" value="${ICECAST_CORS_ORIGIN}"/>
         <header name="Access-Control-Allow-Headers" value="GET, OPTIONS, HEAD" />
         <header name="Access-Control-Expose-Headers" value="Content-Type"/>
     </http-headers>
